@@ -1,0 +1,507 @@
+@import './styles/fonts.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    color: #0F172A;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+  }
+  #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    position: relative;
+  }
+}
+
+/* ======================================================== */
+/* DEEP NAVY HERO ATMOSPHERE: SUBTLE BREATHING & DRIFT      */
+/* Deep Navy #062D78, Royal Blue #0646A8, Bright Blue #078BE8, Cyan #12B9F2 */
+/* Very slow, smooth, barely noticeable 60fps movement       */
+/* ======================================================== */
+@keyframes heroAtmosphereDrift {
+  0% {
+    transform: translate3d(-1.5%, 0, 0) scale(1);
+    opacity: 0.90;
+  }
+  50% {
+    transform: translate3d(1.5%, 1%, 0) scale(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-1.5%, 0, 0) scale(1);
+    opacity: 0.90;
+  }
+}
+
+@keyframes heroCyanGlowPulse {
+  0%, 100% {
+    transform: translate3d(0, -1%, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(1.5%, 1%, 0) scale(1.08);
+    opacity: 0.70;
+  }
+}
+
+.animate-hero-atmosphere {
+  animation: heroAtmosphereDrift 24s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-cyan-glow {
+  animation: heroCyanGlowPulse 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* ======================================================== */
+/* CENTER SPOTLIGHT GLOW PULSE ANIMATION (6-8s ease-in-out) */
+/* ======================================================== */
+@keyframes centerGlowPulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: translate(-50%, -15%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -15%) scale(1.1);
+  }
+}
+
+.center-spotlight-glow {
+  animation: centerGlowPulse 6.5s ease-in-out infinite;
+}
+
+/* ======================================================== */
+/* CARD BORDER TRACE ANIMATION */
+/* ======================================================== */
+@keyframes cardBorderTrace {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes borderTraceRotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ======================================================== */
+/* ANIMATED TEXT GLOW & GRADIENT SHIMMER */
+/* ======================================================== */
+@keyframes textGlowPulse {
+  0%, 100% {
+    text-shadow: 0 0 15px rgba(18, 185, 242, 0.4), 0 0 30px rgba(7, 139, 232, 0.25);
+    filter: drop-shadow(0 0 10px rgba(18, 185, 242, 0.35));
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(18, 185, 242, 0.85), 0 0 50px rgba(7, 139, 232, 0.6), 0 0 75px rgba(255, 255, 255, 0.4);
+    filter: drop-shadow(0 0 18px rgba(18, 185, 242, 0.7));
+  }
+}
+
+.animate-text-glow {
+  animation: textGlowPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes textShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shimmer {
+  background-size: 200% auto;
+  animation: textShimmer 4s ease-in-out infinite;
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 3.5s ease-in-out infinite;
+}
+
+/* ======================================================== */
+/* HOVER & TAP GLOW + DROP SHADOW + LIFT ANIMATIONS */
+/* ======================================================== */
+.hover-glow-lift,
+.interactive-card,
+.interactive-btn {
+  transition: all 0.25s ease-out;
+}
+
+.hover-glow-lift:hover,
+.hover-glow-lift:active,
+.interactive-card:hover,
+.interactive-card:active,
+.interactive-btn:hover,
+.interactive-btn:active {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4), 0 0 24px rgba(80, 140, 255, 0.35);
+}
+
+.hover-glow-nav {
+  transition: all 0.25s ease-out;
+}
+
+.hover-glow-nav:hover,
+.hover-glow-nav:active {
+  transform: translateY(-2px);
+  text-shadow: 0 0 12px rgba(80, 140, 255, 0.6);
+}
+
+/* ======================================================== */
+/* DARK GLASS CARD SPECIFICATION */
+/* ======================================================== */
+.dark-glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+.dark-glass-card-active {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(80, 140, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(80, 140, 255, 0.4);
+}
+
+/* ======================================================== */
+/* WHATSAPP BUTTON PULSING GLOW ANIMATION (2.5s cycle) */
+/* ======================================================== */
+@keyframes whatsappPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7), 0 8px 25px rgba(37, 211, 102, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0), 0 8px 25px rgba(37, 211, 102, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 8px 25px rgba(37, 211, 102, 0.45);
+  }
+}
+
+.whatsapp-pulse-btn {
+  animation: whatsappPulse 2.5s infinite;
+}
+
+@keyframes heroBadgeFloat1 {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-8px) rotate(-1deg); }
+}
+
+@keyframes heroBadgeFloat2 {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-10px) rotate(1.2deg); }
+}
+
+@keyframes heroBadgeFloat3 {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-7px) rotate(-0.8deg); }
+}
+
+.animate-hero-float-1 {
+  animation: heroBadgeFloat1 3.2s ease-in-out infinite alternate;
+}
+
+.animate-hero-float-2 {
+  animation: heroBadgeFloat2 4.1s ease-in-out infinite alternate;
+  animation-delay: 0.6s;
+}
+
+.animate-hero-float-3 {
+  animation: heroBadgeFloat3 3.7s ease-in-out infinite alternate;
+  animation-delay: 1.2s;
+}
+
+/* ======================================================== */
+/* HERO SECTION CROSSFADING ILLUSTRATION & ROW ANIMATIONS */
+/* ======================================================== */
+@keyframes illustrationCrossfadeA {
+  0%, 37.5% {
+    opacity: 1;
+  }
+  50%, 87.5% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes illustrationCrossfadeB {
+  0%, 37.5% {
+    opacity: 0;
+  }
+  50%, 87.5% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes illustrationFloat {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+}
+
+/* Icon-level animations on phone mockup in Image B */
+@keyframes rowFloat1 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3.5px); }
+}
+
+@keyframes rowFloat2 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-2.8px); }
+}
+
+@keyframes rowFloat3 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3.8px); }
+}
+
+@keyframes rowFloat4 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3px); }
+}
+
+@keyframes badgeGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px rgba(18, 185, 242, 0.3);
+    opacity: 0.55;
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(18, 185, 242, 0.8), 0 0 20px 6px rgba(7, 139, 232, 0.4);
+    opacity: 1;
+  }
+}
+
+.animate-illustration-float {
+  animation: illustrationFloat 5s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.animate-crossfade-a {
+  animation: illustrationCrossfadeA 8s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.animate-crossfade-b {
+  animation: illustrationCrossfadeB 8s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.animate-row-1 {
+  animation: rowFloat1 3.2s ease-in-out infinite alternate;
+  animation-delay: 0s;
+  will-change: transform;
+}
+
+.animate-row-2 {
+  animation: rowFloat2 2.7s ease-in-out infinite alternate;
+  animation-delay: 0.3s;
+  will-change: transform;
+}
+
+.animate-row-3 {
+  animation: rowFloat3 3.6s ease-in-out infinite alternate;
+  animation-delay: 0.6s;
+  will-change: transform;
+}
+
+.animate-row-4 {
+  animation: rowFloat4 3.0s ease-in-out infinite alternate;
+  animation-delay: 0.9s;
+  will-change: transform;
+}
+
+.animate-badge-glow {
+  animation: badgeGlowPulse 3.5s ease-in-out infinite;
+  will-change: box-shadow, opacity;
+}
+
+/* Speech bubble floating animations for Image A (Problem State) */
+@keyframes bubbleFloat1 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3.5px); }
+}
+
+@keyframes bubbleFloat2 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-2.6px); }
+}
+
+@keyframes bubbleFloat3 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3.8px); }
+}
+
+@keyframes bubbleFloat4 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-2.8px); }
+}
+
+@keyframes bubbleFloat5 {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3.2px); }
+}
+
+@keyframes redDotGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px rgba(22, 140, 255, 0.4);
+    opacity: 0.6;
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(22, 140, 255, 0.9), 0 0 18px 5px rgba(7, 139, 232, 0.5);
+    opacity: 1;
+  }
+}
+
+.animate-bubble-1 {
+  animation: bubbleFloat1 3.4s ease-in-out infinite alternate;
+  animation-delay: 0s;
+  will-change: transform;
+}
+
+.animate-bubble-2 {
+  animation: bubbleFloat2 2.8s ease-in-out infinite alternate;
+  animation-delay: 0.3s;
+  will-change: transform;
+}
+
+.animate-bubble-3 {
+  animation: bubbleFloat3 3.6s ease-in-out infinite alternate;
+  animation-delay: 0.6s;
+  will-change: transform;
+}
+
+.animate-bubble-4 {
+  animation: bubbleFloat4 3.0s ease-in-out infinite alternate;
+  animation-delay: 0.9s;
+  will-change: transform;
+}
+
+.animate-bubble-5 {
+  animation: bubbleFloat5 3.3s ease-in-out infinite alternate;
+  animation-delay: 1.2s;
+  will-change: transform;
+}
+
+.animate-red-dot-glow {
+  animation: redDotGlowPulse 3.2s ease-in-out infinite;
+  will-change: box-shadow, opacity;
+}
+
+/* Background blend — fully dissolved edges (no visible rectangle) */
+.mask-dissolved-edges {
+  mask-image: radial-gradient(ellipse 55% 55% at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 55% 55% at center, black 30%, transparent 75%);
+}
+
+.mask-radial-fade-strong {
+  mask-image: radial-gradient(ellipse 55% 55% at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 55% 55% at center, black 30%, transparent 75%);
+}
+
+/* ======================================================== */
+/* CUSTOM CURSOR & 3D TILT UTILITIES */
+/* ======================================================== */
+@media (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active [role="button"],
+  body.custom-cursor-active input,
+  body.custom-cursor-active select,
+  body.custom-cursor-active textarea,
+  body.custom-cursor-active .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounceSubtle 4s ease-in-out infinite;
+}
+
+/* ======================================================== */
+/* SKELETON SHIMMER & ILLUSTRATION LOADING ANIMATIONS      */
+/* ======================================================== */
+@keyframes shimmerPulse {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(241, 245, 249, 0.7) 25%, rgba(226, 232, 240, 0.95) 50%, rgba(241, 245, 249, 0.7) 75%);
+  background-size: 200% 100%;
+  animation: shimmerPulse 2s infinite ease-in-out;
+}
+
+.animate-shimmer-dark {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmerPulse 2s infinite ease-in-out;
+}
+

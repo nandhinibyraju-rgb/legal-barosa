@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 0. leads collection (consultation leads from booking page & modal popup)
+    // - Unauthenticated and authenticated visitors can submit leads (public CREATE only)
+    // - No public READ, UPDATE, or DELETE access (data can only be viewed/managed by admins or Firebase Console)
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 1. consultations collection
+    // - Unauthenticated users cannot read any data at all, but CAN submit a consultation request (public lead capture)
+    // - Any user (authenticated or not) can CREATE a "consultations" document
+    // - Only admins or the submitting user (matched by userId) can READ it
+    // - Only admins can update or delete consultations (e.g. changing status)
+    match /consultations/{consultationId} {
+      allow create: if true;
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // 2. users collection (extends Firebase Auth with profile data)
+    // - Users can read and initialize their own profile
+    // - Users cannot promote themselves to 'admin' (only admin can change role or manual console edit)
+    // - Admins have full read/write access to all user profiles
+    match /users/{userId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow create: if isAdmin() || (isOwner(userId) && (!request.resource.data.keys().hasAny(['role']) || request.resource.data.role == 'client'));
+      allow update: if isAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role);
+      allow delete: if isAdmin();
+    }
+
+    // 3. cases collection (case records linked to a client)
+    // - Users can only read and write their own cases (matched by userId)
+    // - Admins can read and write all cases across all clients
+    match /cases/{caseId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (isAuthenticated() && request.resource.data.userId == request.auth.uid);
+      allow update: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    // 4. messages collection (message thread per case)
+    // - Users can read and create messages for their own cases (matched by senderId / case ownership)
+    // - Admins can read and write all messages across all cases
+    match /messages/{messageId} {
+      allow read: if isAdmin() || (isAuthenticated() && (
+        resource.data.senderId == request.auth.uid ||
+        get(/databases/$(database)/documents/cases/$(resource.data.caseId)).data.userId == request.auth.uid
+      ));
+      allow create: if isAdmin() || (
+        isAuthenticated() &&
+        request.resource.data.senderId == request.auth.uid &&
+        get(/databases/$(database)/documents/cases/$(request.resource.data.caseId)).data.userId == request.auth.uid
+      );
+      allow update, delete: if isAdmin();
+    }
+  }
+}

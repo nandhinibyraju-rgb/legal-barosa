@@ -1,0 +1,8 @@
+# Compiled output and dependencies
+node_modules/
+
+# Local environment and debug files
+.env*
+firebase-debug.log
+firebase-debug.*.log
+*.local
