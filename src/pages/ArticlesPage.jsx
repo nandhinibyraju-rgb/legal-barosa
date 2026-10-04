@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   Search, 
   PenTool, 
@@ -38,6 +39,7 @@ export default function ArticlesPage({
   onOpenSignIn,
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Articles state (Real data from Firestore)
   const [articles, setArticles] = useState([]);
@@ -58,7 +60,8 @@ export default function ArticlesPage({
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
+    document.title = `${t('articles.title', 'Articles')} | LegalBharosa`;
+  }, [t]);
 
   // 1. Subscribe to published articles (Real-time Firestore)
   useEffect(() => {
@@ -170,7 +173,7 @@ export default function ArticlesPage({
       {/* ======================================================== */}
       <div className="w-full px-2 sm:px-3 pt-2 sm:pt-3">
         <DarkPageHeader
-          breadcrumbText="Knowledge Hub / Articles"
+          breadcrumbText={`${t('nav.home', 'Home')} / ${t('nav.articles', 'Articles')}`}
           maxWidth="max-w-5xl"
         >
           <div className="relative z-10 max-w-4xl mx-auto px-4 pt-5 sm:pt-7 text-center flex flex-col items-center">
@@ -178,17 +181,17 @@ export default function ArticlesPage({
             {/* Subtle Category/Community Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0A2660]/85 backdrop-blur-md border border-[#168CFF]/35 text-[#BAE6FD] text-xs font-semibold shadow-xs mb-3.5">
               <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse" />
-              <span>LegalBharosa Knowledge Hub & Community</span>
+              <span>{t('articles.badge', 'LegalBharosa Knowledge Hub & Community')}</span>
             </div>
 
             {/* Page Heading */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading">
-              LegalBharosa Articles
+              {t('articles.title', 'LegalBharosa Articles')}
             </h1>
 
             {/* Subtitle */}
             <p className="mt-3.5 sm:mt-4 text-base sm:text-lg text-slate-200 max-w-2xl mx-auto font-normal leading-relaxed">
-              Learn, share, and understand your legal and financial options.
+              {t('articles.subtitle', 'Learn, share, and understand your legal and financial options.')}
             </p>
 
             {/* Action Row: Prominent "+ Write an Article" Button */}
@@ -255,7 +258,7 @@ export default function ArticlesPage({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search articles..."
+              placeholder={t('articles.searchPlaceholder', 'Search legal topics, RBI rules, or settlement advice...')}
               className="w-full pl-10 pr-9 py-2.5 rounded-full border border-neutral-300/90 text-sm placeholder-neutral-400 focus:outline-none focus:border-[#168CFF] focus:ring-2 focus:ring-[#168CFF]/15 transition-all bg-white shadow-2xs"
             />
             {searchQuery && (
@@ -306,7 +309,7 @@ export default function ArticlesPage({
                   : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200/80 hover:text-neutral-900'
               }`}
             >
-              All Categories
+              {t('articles.allCategories', 'All Categories')}
             </button>
 
             {/* Predefined 9 Categories */}
@@ -440,15 +443,15 @@ export default function ArticlesPage({
                 {/* User Requested Empty State Title */}
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2A5B] tracking-tight">
                   {searchQuery || selectedCategory !== 'All' 
-                    ? 'No matching articles found' 
-                    : 'No articles yet'}
+                    ? t('articles.noArticles', 'No matching articles found')
+                    : t('articles.noArticles', 'No articles yet')}
                 </h2>
 
                 {/* User Requested Empty State Subtitle */}
                 <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-neutral-600 max-w-md leading-relaxed">
                   {searchQuery || selectedCategory !== 'All'
-                    ? 'Try adjusting your search terms or choose "All Categories" to see everything.'
-                    : 'Be the first to share useful legal or financial knowledge with the LegalBharosa community.'}
+                    ? t('articles.noArticles', 'Try adjusting your search terms or choose "All Categories" to see everything.')
+                    : t('articles.noArticles', 'Be the first to share useful legal or financial knowledge with the LegalBharosa community.')}
                 </p>
 
                 {/* Actions Row */}

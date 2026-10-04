@@ -1,16 +1,19 @@
 import React from 'react';
 import { ShieldCheck, Star, Scale } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import CardBorderTrace from './CardBorderTrace';
 
 export default function StatsBar({ onOpenConsult }) {
+  const { t } = useTranslation();
+
   const stats = [
     {
       id: 'guidance',
       icon: ShieldCheck,
       iconColor: 'text-[#168CFF]',
       iconBg: 'bg-blue-50/80 border border-[#168CFF]/20',
-      title: 'Clear Guidance',
-      subtitle: 'Understand your situation and possible next steps.',
+      title: t('common.guidanceTitle', 'Clear Guidance'),
+      subtitle: t('common.guidanceSub', 'Understand your situation and possible next steps.'),
       action: () => onOpenConsult?.('Clear Guidance'),
     },
     {
@@ -18,8 +21,8 @@ export default function StatsBar({ onOpenConsult }) {
       icon: Star,
       iconColor: 'text-[#F4B400] fill-[#F4B400]',
       iconBg: 'bg-amber-50/80 border border-[#F4B400]/25',
-      title: 'Client Feedback',
-      subtitle: 'Learn about our client-first service and feedback.',
+      title: t('common.feedbackTitle', 'Client Feedback'),
+      subtitle: t('common.feedbackSub', 'Learn about our client-first service and feedback.'),
       action: () => {
         const el = document.getElementById('client-stories');
         if (el) {
@@ -34,8 +37,8 @@ export default function StatsBar({ onOpenConsult }) {
       icon: Scale,
       iconColor: 'text-[#123E8A]',
       iconBg: 'bg-blue-50/80 border border-[#123E8A]/20',
-      title: 'Confidential Enquiries',
-      subtitle: 'Discuss your concerns through the available contact channels.',
+      title: t('common.enquiriesTitle', 'Confidential Enquiries'),
+      subtitle: t('common.enquiriesSub', 'Discuss your concerns through the available contact channels.'),
       action: () => onOpenConsult?.('Confidential Enquiries'),
     },
   ];

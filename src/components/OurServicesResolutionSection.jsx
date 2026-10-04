@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   HeartHandshake, 
   CreditCard, 
@@ -13,6 +14,25 @@ import {
   Sparkles,
   ChevronRight
 } from 'lucide-react';
+
+const SERVICE_KEY_MAP = {
+  'debt-counselling': 'debtManagement',
+  'emi-debt-management': 'debtManagement',
+  'harassment-protection': 'harassmentProtection',
+  'loan-settlement-ots': 'loanSettlement',
+  'legal-notice-support': 'legalNoticeReview',
+  'npa-secured-loans': 'npaSecuredLoans',
+};
+
+const getLocalizedService = (service, t) => {
+  const key = SERVICE_KEY_MAP[service.id];
+  if (!key) return service;
+  return {
+    ...service,
+    title: t(`services.items.${key}.title`, service.title),
+    description: t(`services.items.${key}.shortDesc`, service.description),
+  };
+};
 
 // Left Side 3 Floating Services
 const LEFT_SERVICES = [
@@ -107,6 +127,7 @@ const RIGHT_SERVICES = [
 ];
 
 export default function OurServicesResolutionSection({ onOpenConsult }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleCardClick = (route) => {
@@ -189,24 +210,17 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
           {/* Small Pill: "OUR SERVICES" */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50/90 border border-[#078BE8]/25 text-[#0646A8] text-xs font-semibold tracking-widest uppercase mb-3.5 shadow-2xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#078BE8] animate-pulse" />
-            OUR SERVICES
+            <span>{t('services.badge', 'OUR SERVICES')}</span>
           </div>
 
           {/* Large Heading: "One Place. Multiple Paths to Resolution." */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-heading font-bold text-[#0B2A5B] tracking-tight leading-[1.18]">
-            One Place.{' '}
-            <span 
-              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 600 }}
-              className="text-[#0646A8]"
-            >
-              Multiple Paths
-            </span>{' '}
-            to Resolution.
+            {t('services.title', 'One Place. Multiple Paths to Resolution.')}
           </h2>
 
           {/* Subtitle */}
           <p className="mt-3.5 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
-            Practical financial guidance, legal support and resolution pathways — all in one place.
+            {t('services.subtitle', 'Practical financial guidance, legal support and resolution pathways — all in one place.')}
           </p>
         </motion.div>
 
@@ -362,7 +376,8 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
             
             {/* LEFT 3 FLOATING SERVICE ITEMS */}
             <div className="flex flex-col gap-3.5 xl:gap-4 w-full max-w-[390px] xl:max-w-[420px] justify-self-end">
-              {LEFT_SERVICES.map((service, index) => {
+              {LEFT_SERVICES.map((rawService, index) => {
+                const service = getLocalizedService(rawService, t);
                 const Icon = service.icon;
                 return (
                   <motion.div
@@ -503,7 +518,8 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
 
             {/* RIGHT 3 FLOATING SERVICE ITEMS */}
             <div className="flex flex-col gap-3.5 xl:gap-4 w-full max-w-[390px] xl:max-w-[420px] justify-self-start">
-              {RIGHT_SERVICES.map((service, index) => {
+              {RIGHT_SERVICES.map((rawService, index) => {
+                const service = getLocalizedService(rawService, t);
                 const Icon = service.icon;
                 return (
                   <motion.div
@@ -613,7 +629,8 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
 
             {/* 6 Stacked Floating Cards */}
             <div className="flex flex-col gap-3 sm:gap-3.5 w-full">
-              {[...LEFT_SERVICES, ...RIGHT_SERVICES].map((service, index) => {
+              {[...LEFT_SERVICES, ...RIGHT_SERVICES].map((rawService, index) => {
+                const service = getLocalizedService(rawService, t);
                 const Icon = service.icon;
                 return (
                   <motion.div

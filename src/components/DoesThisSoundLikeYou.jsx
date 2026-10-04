@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   PhoneCall, 
   FileText, 
@@ -13,6 +14,33 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import TrustStrip from './TrustStrip';
+
+const PROBLEM_KEY_MAP = {
+  'recovery-calls': 'recoveryCalls',
+  'legal-notice': 'legalNotice',
+  'emi-payments': 'emiPayments',
+  'property-disputes': 'propertyDisputes',
+  'workplace-issues': 'workplaceIssues',
+  'credit-score': 'cibilImpact',
+};
+
+const getLocalizedProblem = (item, t) => {
+  const key = PROBLEM_KEY_MAP[item.id];
+  if (!key) return item;
+  return {
+    ...item,
+    problem: t(`doesThisSoundLikeYou.problems.${key}.problem`, item.problem),
+    tag: t(`doesThisSoundLikeYou.problems.${key}.tag`, item.tag),
+    reassurance: t(`doesThisSoundLikeYou.problems.${key}.reassurance`, item.reassurance),
+    explanation: t(`doesThisSoundLikeYou.problems.${key}.explanation`, item.explanation),
+    nextSteps: {
+      gather: t(`doesThisSoundLikeYou.problems.${key}.gather`, item.nextSteps?.gather),
+      review: t(`doesThisSoundLikeYou.problems.${key}.review`, item.nextSteps?.review),
+      advice: t(`doesThisSoundLikeYou.problems.${key}.advice`, item.nextSteps?.advice),
+    },
+    serviceName: t(`doesThisSoundLikeYou.problems.${key}.serviceName`, item.serviceName),
+  };
+};
 
 const PROBLEMS = [
   {
@@ -165,6 +193,8 @@ function DiagnosticCard({
     setTilt({ rx: 0, ry: 0, x: 50, y: 50, isHovered: false });
   };
 
+  const { t } = useTranslation();
+
   return (
     <motion.div
       ref={cardRef}
@@ -263,7 +293,7 @@ function DiagnosticCard({
       {/* Card Bottom: Subtle Hint */}
       <div className="relative z-10 mt-3 flex items-center justify-end">
         <span className="text-[12px] font-semibold text-[#078BE8] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-          <span>{isExplored ? 'Review solution' : 'See resolution'}</span>
+          <span>{isExplored ? t('doesThisSoundLikeYou.reviewSolution', 'Review solution') : t('doesThisSoundLikeYou.seeResolution', 'See resolution')}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </span>
       </div>
@@ -318,6 +348,7 @@ function ConfettiBurst() {
 }
 
 export default function DoesThisSoundLikeYou({ onOpenConsult }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const cardRefs = useRef([]);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -360,7 +391,8 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
     const el = cardRefs.current[index];
     if (!el) return;
 
-    const problem = PROBLEMS[index];
+    const rawProblem = PROBLEMS[index];
+    const problem = getLocalizedProblem(rawProblem, t);
     const problemId = problem.id;
 
     // Increment gamified solution progress
@@ -491,20 +523,14 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
           {/* Top Pill Diagnostic Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50/90 border border-[#078BE8]/25 text-xs font-semibold uppercase tracking-wider text-[#0646A8] mb-3 shadow-2xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#078BE8] animate-pulse" />
-            Quick Issue Diagnostic
+            <span>{t('doesThisSoundLikeYou.badge', 'Quick Issue Diagnostic')}</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] leading-[1.2] font-bold text-[#0B2A5B] tracking-tight">
-            Does This Sound Like{' '}
-            <span 
-              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 600 }} 
-              className="text-[#0646A8]"
-            >
-              You?
-            </span>
+            {t('doesThisSoundLikeYou.title', 'Does This Sound Like You?')}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed mt-2 max-w-xl mx-auto">
-            Tap on any situation below to see immediate legal defense and relief options.
+            {t('doesThisSoundLikeYou.subtitle', 'Tap on any situation below to see immediate legal defense and relief options.')}
           </p>
 
           {/* Gamified Progress / Counter Element: 'X out of 6 solutions explored' */}
@@ -553,7 +579,8 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
             selectedCard ? 'opacity-40 filter blur-[1px]' : 'opacity-100'
           }`}
         >
-          {PROBLEMS.map((item, idx) => {
+          {PROBLEMS.map((rawItem, idx) => {
+            const item = getLocalizedProblem(rawItem, t);
             const isCurrentlyAnimating = animatingIndex === idx;
             const isExplored = exploredCards.includes(item.id);
 
@@ -609,7 +636,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                 onClick={() => onOpenConsult?.('Full Diagnostic Review')}
                 className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#062D78] hover:bg-[#0646A8] text-white text-[13.5px] font-semibold shadow-[0_4px_16px_rgba(6,45,120,0.22)] hover:shadow-[0_6px_22px_rgba(6,45,120,0.32)] transition-all hover:scale-105 active:scale-95 cursor-pointer ring-4 ring-[#12B9F2]/25 animate-pulse"
               >
-                <span>Book Free Consultation</span>
+                <span>{t('common.getFreeConsultation', 'Book Free Consultation')}</span>
                 <ArrowRight className="w-4 h-4 text-amber-400" />
               </button>
             </motion.div>
@@ -623,7 +650,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                 onClick={() => onOpenConsult?.('General Legal Consultation')}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#062D78] hover:bg-[#0646A8] text-white text-[13.5px] font-semibold shadow-[0_4px_16px_rgba(6,45,120,0.18)] hover:shadow-[0_6px_22px_rgba(6,45,120,0.28)] transition-all hover:scale-105 cursor-pointer active:scale-95 min-h-[44px]"
               >
-                <span>Book a Free Consultation</span>
+                <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
                 <ArrowRight className="w-4 h-4 text-amber-400" />
               </button>
             </div>
@@ -827,12 +854,12 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                   {/* Practical Guidance Next Steps Box */}
                   <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-2.5 sm:p-3 text-left space-y-1.5 text-[11px] sm:text-[11.5px]">
                     <div className="font-semibold text-[#0B2A5B] text-xs">
-                      Practical Next Steps:
+                      {t('doesThisSoundLikeYou.recommendedNextSteps', 'Practical Next Steps:')}
                     </div>
                     <div className="text-slate-600 space-y-1">
-                      <p><span className="font-medium text-slate-800">• Information to gather:</span> {selectedCard.data.nextSteps?.gather}</p>
-                      <p><span className="font-medium text-slate-800">• What to review:</span> {selectedCard.data.nextSteps?.review}</p>
-                      <p><span className="font-medium text-slate-800">• When to seek advice:</span> {selectedCard.data.nextSteps?.advice}</p>
+                      <p><span className="font-medium text-slate-800">• {t('doesThisSoundLikeYou.whatToGather', 'Information to gather')}:</span> {selectedCard.data.nextSteps?.gather}</p>
+                      <p><span className="font-medium text-slate-800">• {t('doesThisSoundLikeYou.whatToReview', 'What to review')}:</span> {selectedCard.data.nextSteps?.review}</p>
+                      <p><span className="font-medium text-slate-800">• {t('doesThisSoundLikeYou.whenToSeekAdvice', 'When to seek advice')}:</span> {selectedCard.data.nextSteps?.advice}</p>
                     </div>
                   </div>
 
@@ -853,7 +880,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                     onClick={() => handleNavigateToService(selectedCard.data.serviceLink)}
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 rounded-xl bg-[#062D78] hover:bg-[#0646A8] text-white text-[12.5px] sm:text-[13px] font-semibold shadow-md transition-all hover:scale-[1.02] cursor-pointer active:scale-95 min-h-[44px] sm:min-h-0"
                   >
-                    <span>Explore {selectedCard.data.serviceName}</span>
+                    <span>{t('common.viewDetails', 'Explore')} {selectedCard.data.serviceName}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
                   </button>
 
@@ -862,7 +889,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                     onClick={() => handleConsultClick(selectedCard.data.problem)}
                     className="inline-flex items-center justify-center gap-1 px-3 py-2.5 sm:py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#078BE8] text-[12px] font-semibold border border-[#078BE8]/30 transition-colors cursor-pointer active:scale-95 min-h-[44px] sm:min-h-0"
                   >
-                    <span>Talk to Advocate</span>
+                    <span>{t('doesThisSoundLikeYou.talkToAdvocate', 'Talk to Advocate')}</span>
                   </button>
                 </motion.div>
               </div>

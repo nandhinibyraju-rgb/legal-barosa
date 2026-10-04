@@ -20,6 +20,7 @@ import {
   REVIEW_CATEGORIES 
 } from '../data/reviewsData';
 import { subscribePublishedClientStories } from '../services/firestoreService';
+import { useTranslation } from 'react-i18next';
 
 export default function ClientStoriesPage({
   user: _user,
@@ -27,6 +28,7 @@ export default function ClientStoriesPage({
   onOpenConsult,
   onOpenSignIn: _onOpenSignIn,
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,7 +86,7 @@ export default function ClientStoriesPage({
       
       {/* 1. TOP HERO HEADER */}
       <DarkPageHeader
-        breadcrumbText="Verified Case Studies"
+        breadcrumbText={t('clientStories.breadcrumb', 'Verified Case Studies')}
         maxWidth="max-w-5xl"
       >
         <motion.div 
@@ -95,29 +97,29 @@ export default function ClientStoriesPage({
         >
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-            <span>Real Client Case Studies</span>
+            <span>{t('clientStories.heroBadge', 'Real Client Case Studies')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading">
-            Real People. Real Results.
+            {t('clientStories.heroTitle', 'Real People. Real Results.')}
           </h1>
 
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-            Read factual case summaries documenting how borrowers and business promoters resolved debt, defended statutory rights, stayed auctions, and reached structured settlements.
+            {t('clientStories.heroSubtitle', 'Read factual case summaries documenting how borrowers and business promoters resolved debt, defended statutory rights, stayed auctions, and reached structured settlements.')}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              Documented Outcomes
+              {t('clientStories.outcomesBadge', 'Documented Outcomes')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-              OTS &bull; SARFAESI &bull; DRT &bull; ARC
+              {t('clientStories.lawsBadge', 'OTS • SARFAESI • DRT • ARC')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
-              Strict RBI Fair Practice Compliance
+              {t('clientStories.rbiBadge', 'Strict RBI Fair Practice Compliance')}
             </span>
           </div>
         </motion.div>
@@ -131,7 +133,7 @@ export default function ClientStoriesPage({
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <span className="text-xs font-semibold text-neutral-500 flex items-center gap-1 mr-1 shrink-0">
                 <Filter className="w-3.5 h-3.5" />
-                <span>Filter:</span>
+                <span>{t('clientStories.filterLabel', 'Filter:')}</span>
               </span>
 
               {REVIEW_CATEGORIES.map((category) => {
@@ -148,7 +150,7 @@ export default function ClientStoriesPage({
                         : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200/80 hover:text-neutral-900'
                     }`}
                   >
-                    <span>{category}</span>
+                    <span>{category === 'All' ? t('clientStories.all', 'All') : category}</span>
                   </button>
                 );
               })}
@@ -163,7 +165,7 @@ export default function ClientStoriesPage({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search case stories (e.g. Shiva, ₹4.2 Cr, auction, stay, OTS)..."
+                placeholder={t('clientStories.searchPlaceholder', 'Search case stories (e.g. Shiva, ₹4.2 Cr, auction, stay, OTS)...')}
                 className="w-full pl-9 pr-4 py-2 rounded-xl bg-neutral-50 border border-neutral-200 text-xs sm:text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#168CFF]/30 focus:border-[#168CFF] transition-all"
               />
               {searchQuery && (
@@ -179,9 +181,9 @@ export default function ClientStoriesPage({
 
             <div className="text-xs text-neutral-500 font-medium self-center">
               {selectedCategory !== 'All' || searchQuery.trim() ? (
-                <>Showing <span className="font-bold text-[#0B2A5B]">{filteredReviews.length}</span> matching stories</>
+                <>{t('clientStories.showingMatching', { count: filteredReviews.length, defaultValue: `Showing ${filteredReviews.length} matching stories` })}</>
               ) : (
-                <span className="text-neutral-500">Verified Client Case Stories</span>
+                <span className="text-neutral-500">{t('clientStories.verifiedStoriesHeading', 'Verified Client Case Stories')}</span>
               )}
             </div>
           </div>
@@ -194,9 +196,9 @@ export default function ClientStoriesPage({
           {filteredReviews.length === 0 ? (
             <div className="bg-white rounded-2xl border border-neutral-200/90 p-12 text-center flex flex-col items-center justify-center my-8">
               <Layers className="w-10 h-10 text-neutral-300 mb-3" />
-              <h3 className="text-base font-bold text-[#0B2A5B]">No matching case studies found</h3>
+              <h3 className="text-base font-bold text-[#0B2A5B]">{t('clientStories.noStoriesTitle', 'No matching case studies found')}</h3>
               <p className="text-xs text-neutral-500 mt-1 max-w-sm">
-                Try selecting another category or clearing your search keywords.
+                {t('clientStories.noStoriesSubtitle', 'Try selecting another category or clearing your search keywords.')}
               </p>
               <button
                 type="button"
@@ -206,7 +208,7 @@ export default function ClientStoriesPage({
                 }}
                 className="mt-4 px-4 py-2 rounded-full bg-[#0B2A5B] text-white text-xs font-semibold hover:bg-[#168CFF] transition-colors"
               >
-                Reset Filters
+                {t('clientStories.resetFilters', 'Reset Filters')}
               </button>
             </div>
           ) : (
@@ -231,10 +233,10 @@ export default function ClientStoriesPage({
             />
 
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B2A5B] tracking-tight">
-              Facing a similar loan or recovery situation?
+              {t('clientStories.ctaTitle', 'Facing a similar loan or recovery situation?')}
             </h2>
             <p className="mt-2 text-sm sm:text-base text-neutral-600 max-w-lg leading-relaxed">
-              Book a 100% confidential consultation. Our verified panel advocates evaluate your case merits and draft actionable legal options.
+              {t('clientStories.ctaSubtitle', 'Book a 100% confidential consultation. Our verified panel advocates evaluate your case merits and draft actionable legal options.')}
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
@@ -243,7 +245,7 @@ export default function ClientStoriesPage({
                 onClick={() => onOpenConsult?.('Client Stories Page Consultation')}
                 className="inline-flex items-center justify-center gap-2.5 px-7 py-3 rounded-full bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-[14px] font-semibold transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer min-h-[44px] group"
               >
-                <span>Book a Free Consultation</span>
+                <span>{t('clientStories.ctaButton', 'Book a Free Consultation')}</span>
                 <ArrowRight className="w-4 h-4 text-[#F4B400] group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -252,7 +254,7 @@ export default function ClientStoriesPage({
                 onClick={() => navigate('/faq')}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-[#0B2A5B] text-[13.5px] font-semibold transition-colors cursor-pointer min-h-[44px]"
               >
-                <span>Read FAQ</span>
+                <span>{t('clientStories.readFaq', 'Read FAQ')}</span>
               </button>
             </div>
 

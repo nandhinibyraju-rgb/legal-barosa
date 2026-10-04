@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AnimatedIllustration from './AnimatedIllustration';
 import TrustStrip from './TrustStrip';
 import { defaultBadgeIcons } from './HeroIssueBadges';
@@ -263,6 +264,7 @@ const wordVariants = {
 };
 
 export default function HeroIllustrationCarousel({ className = '', onOpenConsult }) {
+  const { t, i18n } = useTranslation();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   // Automatically advance every 3.5 seconds (loops continuously)
@@ -316,6 +318,22 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
   };
 
   const currentSlide = HERO_SLIDES[currentSlideIndex];
+  const slideKey = `slide${currentSlideIndex + 1}`;
+  const localizedCategory = t(`hero.slides.${slideKey}.category`, currentSlide.category);
+  const localizedHeadline = t(`hero.slides.${slideKey}.headline`, currentSlide.headline);
+
+  const headlineWords = i18n.language === 'en'
+    ? currentSlide.headlineTokens
+    : localizedHeadline.split(' ').map((word) => ({ text: word, isAccent: false }));
+
+  const getLocalizedBadge = (badge, idx) => {
+    const num = idx + 1;
+    return {
+      ...badge,
+      title: t(`hero.slides.${slideKey}.badge${num}Title`, badge.title),
+      subtitle: t(`hero.slides.${slideKey}.badge${num}Sub`, badge.subtitle),
+    };
+  };
 
   return (
     <div 
@@ -351,7 +369,7 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0E2656]/90 border border-[#38BDF8]/40 text-[#BAE6FD] text-[10px] sm:text-[10.5px] font-semibold tracking-wider uppercase mb-1.5 shadow-[0_2px_12px_rgba(14,38,86,0.6)]"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_8px_#38BDF8] animate-pulse" />
-                <span>{currentSlide.category}</span>
+                <span>{localizedCategory}</span>
               </motion.div>
 
               {/* Main Headline with word-by-word stagger */}
@@ -362,12 +380,12 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
                 exit="exit"
                 style={{
                   fontSize: 'clamp(24px, 3.5vw, 38px)',
-                  lineHeight: 1.18,
+                  lineHeight: 1.25,
                   letterSpacing: '-0.02em',
                 }}
                 className="font-heading font-bold text-white tracking-tight text-center max-w-4xl px-2 sm:px-4 break-words"
               >
-                {currentSlide.headlineTokens.map((token, idx) => (
+                {headlineWords.map((token, idx) => (
                   <motion.span
                     key={`token-${idx}-${token.text}`}
                     variants={wordVariants}
@@ -414,7 +432,8 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
               </motion.div>
 
               {/* DESKTOP/TABLET: ROUND ICON CIRCLES WITH CONTINUOUS BREATHING GLOW & HOVER TOOLTIPS */}
-              {currentSlide.badges.map((badge, idx) => {
+              {currentSlide.badges.map((rawBadge, idx) => {
+                const badge = getLocalizedBadge(rawBadge, idx);
                 const badgeX = idx === 0 ? badge0X : idx === 1 ? badge1X : badge2X;
                 const badgeY = idx === 0 ? badge0Y : idx === 1 ? badge1Y : badge2Y;
 
@@ -494,28 +513,31 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
 
             {/* MOBILE: Contextual Badges neatly positioned below the character (>= 44px tap targets) */}
             <div className="flex md:hidden flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-1.5 sm:mt-2 px-2 z-20">
-              {currentSlide.badges.map((badge) => (
-                <motion.button
-                  key={`mob-${currentSlide.id}-${badge.id}`}
-                  type="button"
-                  initial={{ opacity: 0, y: 6, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.4 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={() => onOpenConsult?.(badge.title)}
-                  className="flex flex-col items-center gap-1 cursor-pointer group min-h-[44px] justify-center p-1 bg-transparent border-0 focus:outline-none"
-                  aria-label={`Inquire about ${badge.title}`}
-                >
-                  <div className="w-8 h-8 rounded-full bg-white/95 backdrop-blur-md border border-[#12B9F2]/40 shadow-[0_3px_10px_rgba(6,45,120,0.12)] flex items-center justify-center text-[#078BE8] [&>svg]:w-4 [&>svg]:h-4 group-hover:scale-105 transition-transform">
-                    {badge.icon}
-                  </div>
-                  <div className="px-2 py-0.5 rounded-full bg-white/95 border border-slate-200/90 shadow-2xs text-center max-w-[125px]">
-                    <span className="text-[9.5px] font-semibold text-[#0B2A5B] whitespace-nowrap block leading-tight truncate">
-                      {badge.title}
-                    </span>
-                  </div>
-                </motion.button>
-              ))}
+              {currentSlide.badges.map((rawBadge, idx) => {
+                const badge = getLocalizedBadge(rawBadge, idx);
+                return (
+                  <motion.button
+                    key={`mob-${currentSlide.id}-${badge.id}`}
+                    type="button"
+                    initial={{ opacity: 0, y: 6, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                    whileTap={{ scale: 0.94 }}
+                    onClick={() => onOpenConsult?.(badge.title)}
+                    className="flex flex-col items-center gap-1 cursor-pointer group min-h-[44px] justify-center p-1 bg-transparent border-0 focus:outline-none"
+                    aria-label={`Inquire about ${badge.title}`}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white/95 backdrop-blur-md border border-[#12B9F2]/40 shadow-[0_3px_10px_rgba(6,45,120,0.12)] flex items-center justify-center text-[#078BE8] [&>svg]:w-4 [&>svg]:h-4 group-hover:scale-105 transition-transform">
+                      {badge.icon}
+                    </div>
+                    <div className="px-2 py-0.5 rounded-full bg-white/95 border border-slate-200/90 shadow-2xs text-center max-w-[125px]">
+                      <span className="text-[9.5px] font-semibold text-[#0B2A5B] whitespace-nowrap block leading-tight truncate">
+                        {badge.title}
+                      </span>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -554,7 +576,7 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
           onClick={() => onOpenConsult?.('Hero Consultation')}
           className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#0A2660] hover:bg-[#0D3280] text-white text-[14px] font-semibold shadow-[0_4px_20px_rgba(6,45,120,0.5)] hover:shadow-[0_6px_24px_rgba(56,189,248,0.4)] border border-[#168CFF]/40 transition-all hover:scale-105 active:scale-95 cursor-pointer min-h-[42px]"
         >
-          <span>Book a Free Consultation</span>
+          <span>{t('hero.ctaPrimary', 'Book a Free Consultation')}</span>
           <ArrowRight className="w-4 h-4 text-amber-400" />
         </button>
 

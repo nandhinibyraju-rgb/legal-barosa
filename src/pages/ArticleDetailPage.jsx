@@ -42,6 +42,7 @@ import {
   getUserArticlesCount,
   subscribeArticles
 } from '../services/firestoreService';
+import { useTranslation } from 'react-i18next';
 
 export default function ArticleDetailPage({
   user,
@@ -49,6 +50,7 @@ export default function ArticleDetailPage({
   onOpenConsult,
   onOpenSignIn,
 }) {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -307,7 +309,7 @@ export default function ArticleDetailPage({
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <div className="w-10 h-10 border-3 border-[#168CFF] border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm font-medium text-neutral-500">Loading article...</p>
+        <p className="text-sm font-medium text-neutral-500">{t('articleDetail.loadingArticle', 'Loading article...')}</p>
       </div>
     );
   }
@@ -319,9 +321,9 @@ export default function ArticleDetailPage({
         <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
           <AlertTriangle className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-neutral-900 mb-2">Article Not Found</h2>
+        <h2 className="text-xl font-bold text-neutral-900 mb-2">{t('articleDetail.articleNotFound', 'Article Not Found')}</h2>
         <p className="text-sm text-neutral-600 max-w-sm mb-6">
-          {error || 'This article may have been removed or the link is incorrect.'}
+          {error || t('articleDetail.articleNotFoundDesc', 'This article may have been removed or the link is incorrect.')}
         </p>
         <button
           type="button"
@@ -329,7 +331,7 @@ export default function ArticleDetailPage({
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold bg-[#168CFF] text-white hover:bg-[#078BE8] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Return to Articles Feed</span>
+          <span>{t('articleDetail.returnToArticles', 'Return to Articles Feed')}</span>
         </button>
       </div>
     );
@@ -356,9 +358,9 @@ export default function ArticleDetailPage({
           {/* Breadcrumb & Navigation */}
           <div className="flex items-center justify-between gap-3 text-xs text-blue-200/80 mb-6">
             <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 truncate">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
+              <Link to="/" className="hover:text-white transition-colors">{t('nav.home', 'Home')}</Link>
               <ChevronRight className="w-3.5 h-3.5 text-blue-300/40 shrink-0" />
-              <Link to="/articles" className="hover:text-white transition-colors">Articles</Link>
+              <Link to="/articles" className="hover:text-white transition-colors">{t('nav.articles', 'Articles')}</Link>
               <ChevronRight className="w-3.5 h-3.5 text-blue-300/40 shrink-0" />
               <span className="text-white font-medium truncate max-w-[200px] sm:max-w-xs">
                 {article.category}
@@ -371,7 +373,7 @@ export default function ArticleDetailPage({
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-300 hover:text-white transition-colors shrink-0 bg-white/10 hover:bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Articles</span>
+              <span>{t('articleDetail.backToArticles', 'Back to Articles')}</span>
             </button>
           </div>
 
@@ -382,10 +384,10 @@ export default function ArticleDetailPage({
             </span>
             <span className="inline-flex items-center gap-1 text-xs text-blue-200 bg-white/10 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-full">
               <Clock className="w-3 h-3 text-[#58A6FF]" />
-              <span>{article.readingTime || 3} min read</span>
+              <span>{article.readingTime || 3} {t('articles.readTime', 'min read')}</span>
             </span>
             <span className="text-xs text-blue-200/70">
-              Published on {formatDate(article.createdAt)}
+              {t('articles.publishedOn', 'Published on')} {formatDate(article.createdAt)}
             </span>
           </div>
 

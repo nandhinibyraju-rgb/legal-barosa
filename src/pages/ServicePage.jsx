@@ -23,8 +23,18 @@ import ServiceAnimatedIllustration from '../components/ServiceAnimatedIllustrati
 import ResolutionProcessDeck from '../components/ResolutionProcessDeck';
 import ServiceConsultationSection from '../components/ServiceConsultationSection';
 import TrustStrip from '../components/TrustStrip';
+import { useTranslation } from 'react-i18next';
 import { SERVICE_SPECIFIC_DATA } from '../data/serviceSpecificDetailData';
 import { SERVICES_DATA } from '../data/servicesData';
+
+const SLUG_TO_KEY = {
+  'harassment-protection': 'harassmentProtection',
+  'loan-settlement': 'loanSettlement',
+  'legal-notice-review': 'legalNoticeReview',
+  'debt-management': 'debtManagement',
+  'npa-secured-loans': 'npaSecuredLoans',
+  'credit-recovery': 'creditRecovery',
+};
 
 export default function ServicePage({
   serviceKey,
@@ -35,17 +45,24 @@ export default function ServicePage({
 }) {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Resolve service data from prop or URL slug
   const activeSlug = serviceKey || slug || 'harassment-protection';
   const detailData = SERVICE_SPECIFIC_DATA[activeSlug] || SERVICE_SPECIFIC_DATA['harassment-protection'];
   const legacyService = SERVICES_DATA[activeSlug] || SERVICES_DATA['harassment-protection'];
+  const localeKey = SLUG_TO_KEY[activeSlug];
+
+  const displayTitle = localeKey ? t(`services.items.${localeKey}.title`, detailData.serviceTitle) : detailData.serviceTitle;
+  const displayIntro = localeKey ? t(`services.items.${localeKey}.intro`, detailData.heroIntro) : detailData.heroIntro;
+  const displayHeading = localeKey ? t(`services.items.${localeKey}.heading`, detailData.heroHeading) : detailData.heroHeading;
+  const displayTag = localeKey ? t(`services.items.${localeKey}.tag`, detailData.tag) : detailData.tag;
 
   // Scroll to top when service changes
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.title = `${detailData.serviceTitle} | LegalBharosa`;
-  }, [activeSlug, detailData.serviceTitle]);
+    document.title = `${displayTitle} | LegalBharosa`;
+  }, [activeSlug, displayTitle]);
 
   const scrollToForm = () => {
     const el = document.getElementById('consultation-section');
@@ -76,11 +93,11 @@ export default function ServicePage({
               className="inline-flex items-center gap-2 text-xs font-semibold text-[#E0F2FE] hover:text-white bg-[#0B2456]/80 hover:bg-[#123E8A] px-3.5 py-1.5 rounded-full border border-[#168CFF]/30 shadow-xs transition-colors cursor-pointer group"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform text-[#38BDF8]" />
-              <span>Back to All Services</span>
+              <span>{t('common.back', 'Back to All Services')}</span>
             </button>
 
             <span className="text-[11px] font-mono text-slate-300 uppercase tracking-wider hidden sm:inline">
-              Services / <span className="text-[#38BDF8] font-bold">{detailData.serviceTitle}</span>
+              {t('nav.services', 'Services')} / <span className="text-[#38BDF8] font-bold">{displayTitle}</span>
             </span>
           </div>
 
@@ -97,32 +114,32 @@ export default function ServicePage({
               {/* Category Tag Badge */}
               <div className="inline-flex items-center gap-2 bg-[#0D2654]/90 rounded-full px-3.5 py-1.5 shadow-sm border border-[#168CFF]/40 text-[11.5px] sm:text-[12px] font-semibold text-[#E0F2FE] mb-3.5">
                 <span className="w-2 h-2 rounded-full bg-[#F4B400] shadow-[0_0_6px_#F4B400] animate-pulse" />
-                <span>{detailData.tag}</span>
+                <span>{displayTag}</span>
               </div>
 
               {/* High-Contrast White Heading */}
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading break-words mb-3.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-                {detailData.heroHeading}
+                {displayHeading}
               </h1>
 
               {/* Plain Language Explanatory Paragraph */}
               <p className="text-[#E2E8F0] text-sm sm:text-base md:text-[16px] leading-relaxed max-w-xl mb-5 font-normal">
-                {detailData.heroIntro}
+                {displayIntro}
               </p>
 
               {/* Quick Trust Row */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs font-medium text-[#E0F2FE] mb-6 sm:mb-8">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B2456]/80 border border-[#168CFF]/30 shadow-2xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-                  <span>100% Confidential</span>
+                  <span>{t('common.confidentialGuaranteed', '100% Confidential')}</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B2456]/80 border border-[#168CFF]/30 shadow-2xs">
                   <Scale className="w-3.5 h-3.5 text-[#F4B400]" />
-                  <span>Advocate Assisted</span>
+                  <span>{t('common.barCouncilAdvocates', 'Advocate Assisted')}</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B2456]/80 border border-[#168CFF]/30 shadow-2xs">
                   <Lock className="w-3.5 h-3.5 text-[#38BDF8]" />
-                  <span>Statutory Compliance</span>
+                  <span>{t('common.rbiCompliant', 'Statutory Compliance')}</span>
                 </span>
               </div>
 
@@ -133,7 +150,7 @@ export default function ServicePage({
                   onClick={scrollToForm}
                   className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#062D78] to-[#0A4294] hover:from-[#08358C] hover:to-[#0C4EA8] text-white rounded-full pl-6 pr-2 py-2.5 text-[14px] font-semibold transition-all shadow-[0_4px_16px_rgba(6,45,120,0.4)] hover:shadow-[0_6px_22px_rgba(22,140,255,0.35)] border border-[#168CFF]/40 cursor-pointer hover:scale-105 active:scale-[0.98] min-h-[44px]"
                 >
-                  <span>Free Case Assessment</span>
+                  <span>{t('common.getFreeConsultation', 'Free Case Assessment')}</span>
                   <span className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                     <ChevronRight className="w-4 h-4 text-[#F4B400]" />
                   </span>
@@ -144,7 +161,7 @@ export default function ServicePage({
                   onClick={() => onOpenConsult?.(detailData.ctaTopic)}
                   className="text-xs sm:text-sm font-semibold text-[#E0F2FE] hover:text-white bg-[#0B2456]/70 hover:bg-[#123E8A] px-4 py-2.5 rounded-full border border-[#168CFF]/30 transition-all cursor-pointer min-h-[44px] flex items-center justify-center shadow-xs"
                 >
-                  Request Instant Callback
+                  {t('booking.fastWhatsAppCallback', 'Request Instant Callback')}
                 </button>
               </div>
 

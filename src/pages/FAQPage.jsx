@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   ChevronDown, 
   ArrowLeft, 
@@ -20,48 +21,56 @@ import DarkPageHeader from '../components/DarkPageHeader';
 export const FAQ_ITEMS = [
   {
     id: 'confidentiality',
+    key: 'confidentiality',
     question: 'Is my information kept confidential?',
     answer: 'Yes. Everything you share with us is completely confidential and protected under attorney-client privilege where applicable. We never share your details with third parties without your consent.',
     tag: 'Privacy & Privilege'
   },
   {
     id: 'cost',
+    key: 'cost',
     question: 'How much does a consultation cost?',
     answer: "Your first consultation is completely free. We'll assess your situation and explain your options before any commitment is required.",
     tag: 'Free Consultation'
   },
   {
     id: 'timeline',
+    key: 'timeline',
     question: 'How long does it take to resolve a case?',
     answer: "It depends on the complexity of your situation. Simple harassment cases can see relief within days, while settlements or legal disputes may take a few weeks to months. We'll give you a realistic timeline during your consultation.",
     tag: 'Case Timeline'
   },
   {
     id: 'advocates',
+    key: 'advocates',
     question: 'Are your advocates verified and qualified?',
     answer: 'Yes. All advocates on our panel are Bar Council registered and go through a verification process before joining LegalBharosa.',
     tag: 'Bar Council Panel'
   },
   {
     id: 'coverage',
+    key: 'coverage',
     question: "Can you help if I'm outside a major city?",
     answer: 'Yes, we support borrowers across India through remote consultations via phone, WhatsApp, or video call, and can advise on legal options applicable to your jurisdiction.',
     tag: 'Remote Consultation'
   },
   {
     id: 'harassment',
+    key: 'harassment',
     question: 'What if recovery agents are calling my family or workplace?',
     answer: "Calling family or employers violates the RBI's Fair Practices Code. We can help you understand your legal remedies and assist in issuing formal legal notices where appropriate.",
     tag: 'RBI Compliance'
   },
   {
     id: 'upfront-fees',
+    key: 'upfrontFees',
     question: 'Do I need to pay anything upfront for loan settlement services?',
     answer: "We'll explain our fee structure clearly during your consultation — there are no hidden charges, and everything is agreed upon before we begin.",
     tag: 'Transparent Fees'
   },
   {
     id: 'getting-started',
+    key: 'gettingStarted',
     question: 'How do I get started?',
     answer: "Simply click 'Book a Free Consultation' anywhere on the site, share your details, and our team will reach out within 24 hours.",
     tag: 'Easy Onboarding'
@@ -75,13 +84,14 @@ export default function FAQPage({
   onOpenSignIn: _onOpenSignIn,
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   // Open the first item by default for quick glance
   const [openItems, setOpenItems] = useState({ confidentiality: true });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.title = 'Frequently Asked Questions | LegalBharosa';
-  }, []);
+    document.title = `${t('faq.title', 'Frequently Asked Questions')} | LegalBharosa`;
+  }, [t]);
 
   const toggleAccordion = (id) => {
     setOpenItems((prev) => ({
@@ -97,7 +107,7 @@ export default function FAQPage({
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline)   */}
       {/* ======================================================== */}
       <DarkPageHeader
-        breadcrumbText="Help Center / FAQ"
+        breadcrumbText={`${t('nav.home', 'Home')} / ${t('nav.faq', 'FAQ')}`}
         maxWidth="max-w-4xl"
       >
         <motion.div 
@@ -109,32 +119,32 @@ export default function FAQPage({
           {/* Category Tag Badge */}
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-            <span>Help Center & Answers</span>
+            <span>{t('faq.badge', 'Help Center & Answers')}</span>
           </div>
 
           {/* Page Heading */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading break-words px-2 max-w-3xl">
-            Frequently Asked Questions
+            {t('faq.title', 'Frequently Asked Questions')}
           </h1>
 
           {/* Subheading */}
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-            Everything you need to know about how LegalBharosa can help.
+            {t('faq.subtitle', 'Everything you need to know about how LegalBharosa can help.')}
           </p>
 
           {/* Quick Trust Highlights */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-              100% Confidential
+              {t('common.confidentialGuaranteed', '100% Confidential')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
-              Bar Council Advocates
+              {t('common.barCouncilAdvocates', 'Bar Council Advocates')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Lock className="w-3.5 h-3.5 text-[#38BDF8]" />
-              RBI Compliant
+              {t('common.rbiCompliant', 'RBI Compliant')}
             </span>
           </div>
         </motion.div>
@@ -185,10 +195,10 @@ export default function FAQPage({
 
                       <div>
                         <h2 className="text-[15px] sm:text-[17px] font-bold text-[#0B2A5B] tracking-tight leading-snug">
-                          {item.question}
+                          {t(`faq.questions.${item.key}.q`, item.question)}
                         </h2>
                         <span className="text-[10.5px] sm:text-[11px] font-medium text-[#0646A8] tracking-wide mt-0.5 block">
-                          {item.tag}
+                          {t(`faq.questions.${item.key}.tag`, item.tag)}
                         </span>
                       </div>
                     </div>
@@ -220,7 +230,7 @@ export default function FAQPage({
                         className="overflow-hidden"
                       >
                         <div className="px-5 sm:px-7 pb-5 sm:pb-6 pt-1 text-sm sm:text-[15px] text-neutral-600 leading-relaxed border-t border-neutral-100/90 mt-1">
-                          <p>{item.answer}</p>
+                          <p>{t(`faq.questions.${item.key}.a`, item.answer)}</p>
                         </div>
                       </motion.div>
                     )}
@@ -239,10 +249,10 @@ export default function FAQPage({
             </div>
 
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0B2A5B] tracking-tight">
-              Still have questions?
+              {t('faq.stillHaveQuestions', 'Still have questions?')}
             </h2>
             <p className="mt-2 text-sm sm:text-base text-neutral-600 max-w-lg leading-relaxed">
-              Connect directly with our advisory desk for an immediate, confidential evaluation of your case.
+              {t('faq.subtitle', 'Connect directly with our advisory desk for an immediate, confidential evaluation of your case.')}
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
@@ -251,7 +261,7 @@ export default function FAQPage({
                 onClick={() => onOpenConsult?.('FAQ Page Consultation')}
                 className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 rounded-full bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-[14px] font-semibold transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer min-h-[44px] group"
               >
-                <span>Book a Free Consultation</span>
+                <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
                 <ArrowRight className="w-4 h-4 text-[#F4B400] group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -260,7 +270,7 @@ export default function FAQPage({
                 onClick={() => navigate('/services')}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-[#0B2A5B] text-[13.5px] font-semibold transition-colors cursor-pointer min-h-[44px]"
               >
-                <span>Explore All Services</span>
+                <span>{t('common.exploreServices', 'Explore All Services')}</span>
               </button>
             </div>
 

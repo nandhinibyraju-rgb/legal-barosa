@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   FileSearch, 
   UploadCloud, 
@@ -51,6 +52,7 @@ const STEPS = [
 ];
 
 export default function HowItWorks({ onOpenConsult }) {
+  const { t } = useTranslation();
   const timelineRef = useRef(null);
   const [fillProgress, setFillProgress] = useState(0);
   const [visibleSteps, setVisibleSteps] = useState({});
@@ -130,27 +132,18 @@ export default function HowItWorks({ onOpenConsult }) {
         className="max-w-6xl mx-auto bg-[#f5f2ee] rounded-2xl sm:rounded-3xl border border-neutral-300/60 shadow-sm p-4 sm:p-7 md:p-8 flex flex-col items-center justify-center text-center"
       >
         {/* ======================================================== */}
+        {/* ======================================================== */}
         {/* 1. SECTION HEADLINE */}
         {/* ======================================================== */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#168CFF]/20 text-xs font-mono uppercase tracking-widest text-[#123E8A] mb-3 sm:mb-4 shadow-xs mx-auto">
           <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF] animate-pulse" />
-          How It Works
+          <span>{t('howItWorks.badge', 'How It Works')}</span>
         </div>
 
         <h2 
           className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] leading-[1.2] font-semibold text-[#0B2A5B] text-center max-w-[720px] mx-auto mb-6 sm:mb-8 tracking-tight"
         >
-          From initial review to complete resolution, a transparent step-by-step path built around{' '}
-          <span 
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif", 
-              fontStyle: 'italic', 
-              fontWeight: 600
-            }}
-            className="text-[#123E8A] text-3xl sm:text-4xl md:text-5xl"
-          >
-            your consent
-          </span>.
+          {t('howItWorks.title', 'How LegalBharosa Works')}
         </h2>
 
         {/* ======================================================== */}
@@ -190,6 +183,11 @@ export default function HowItWorks({ onOpenConsult }) {
               const isEven = index % 2 === 1;
               const isVisible = !!visibleSteps[index];
               const Icon = step.icon;
+              const stepNum = index + 1;
+              const stepKey = `step${stepNum}`;
+              const localizedTitle = t(`howItWorks.steps.${stepKey}.title`, step.title);
+              const localizedDesc = t(`howItWorks.steps.${stepKey}.desc`, step.description);
+              const localizedStep = t(`howItWorks.steps.${stepKey}.step`, step.step);
 
               return (
                 <div 
@@ -202,7 +200,7 @@ export default function HowItWorks({ onOpenConsult }) {
                   <div className="hidden md:flex md:w-[calc(50%-36px)] justify-end">
                     {!isEven ? (
                       <div
-                        onClick={() => onOpenConsult && onOpenConsult(`${step.step}: ${step.title}`)}
+                        onClick={() => onOpenConsult && onOpenConsult(`${localizedStep}: ${localizedTitle}`)}
                         className={`group relative w-full max-w-[380px] p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_-4px_rgba(11,42,91,0.09),0_0_16px_rgba(22,140,255,0.12)] cursor-pointer transition-all duration-300 text-right hover:-translate-y-0.5 overflow-visible select-none ${
                           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                         }`}
@@ -212,14 +210,14 @@ export default function HowItWorks({ onOpenConsult }) {
                           <Icon className="w-4 h-4 text-neutral-400 group-hover:text-[#168CFF] transition-colors" />
                           <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF]" />
                           <span className="text-xs font-mono text-[#123E8A] uppercase tracking-wider font-semibold">
-                            {step.step}
+                            {localizedStep}
                           </span>
                         </div>
                         <h3 className="relative z-10 text-[#0B2A5B] font-semibold text-base sm:text-lg tracking-tight mb-1 group-hover:text-[#168CFF] transition-colors">
-                          {step.title}
+                          {localizedTitle}
                         </h3>
                         <p className="relative z-10 text-neutral-600 text-xs sm:text-sm leading-relaxed">
-                          {step.description}
+                          {localizedDesc}
                         </p>
                       </div>
                     ) : null}
@@ -242,7 +240,7 @@ export default function HowItWorks({ onOpenConsult }) {
                   <div className="w-full pl-12 sm:pl-16 md:pl-0 md:w-[calc(50%-36px)] flex justify-start">
                     {(isEven || typeof window !== 'undefined') && (
                       <div
-                        onClick={() => onOpenConsult && onOpenConsult(`${step.step}: ${step.title}`)}
+                        onClick={() => onOpenConsult && onOpenConsult(`${localizedStep}: ${localizedTitle}`)}
                         className={`group relative w-full max-w-[380px] p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_-4px_rgba(11,42,91,0.09),0_0_16px_rgba(22,140,255,0.12)] cursor-pointer transition-all duration-300 text-left hover:-translate-y-0.5 overflow-visible select-none ${
                           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                         } ${!isEven ? 'md:hidden' : ''}`}
@@ -250,16 +248,16 @@ export default function HowItWorks({ onOpenConsult }) {
                         <CardBorderTrace delay={(index * 0.8) % 6} borderRadius={16} />
                         <div className="relative z-10 flex items-center justify-start gap-2 mb-1.5">
                           <span className="text-xs font-mono text-[#123E8A] uppercase tracking-wider font-semibold">
-                            {step.step}
+                            {localizedStep}
                           </span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF]" />
                           <Icon className="w-4 h-4 text-neutral-400 group-hover:text-[#168CFF] transition-colors" />
                         </div>
                         <h3 className="relative z-10 text-[#0B2A5B] font-semibold text-base sm:text-lg tracking-tight mb-1 group-hover:text-[#168CFF] transition-colors">
-                          {step.title}
+                          {localizedTitle}
                         </h3>
                         <p className="relative z-10 text-neutral-600 text-xs sm:text-sm leading-relaxed">
-                          {step.description}
+                          {localizedDesc}
                         </p>
                       </div>
                     )}
@@ -277,7 +275,7 @@ export default function HowItWorks({ onOpenConsult }) {
             onClick={() => onOpenConsult?.('How It Works Step 1 Action')}
             className="inline-flex items-center gap-2 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-6 py-2.5 sm:py-3 text-sm font-semibold shadow-sm transition-all cursor-pointer min-h-[44px]"
           >
-            <span>Start Step 01 Review</span>
+            <span>{t('howItWorks.ctaButton', 'Start Step 01 Review')}</span>
             <ArrowRight className="w-4 h-4 text-[#F4B400]" />
           </button>
         </div>

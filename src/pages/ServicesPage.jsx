@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   ShieldCheck, 
   Scale, 
@@ -23,6 +24,7 @@ import { subscribePublishedServices } from '../services/firestoreService';
 export const ALL_SERVICES = [
   {
     id: 'harassment',
+    serviceKey: 'harassmentProtection',
     slug: 'harassment-protection',
     path: '/services/harassment-protection',
     title: 'Harassment Protection',
@@ -32,6 +34,7 @@ export const ALL_SERVICES = [
   },
   {
     id: 'settlement',
+    serviceKey: 'loanSettlement',
     slug: 'loan-settlement',
     path: '/services/loan-settlement',
     title: 'Loan Settlement',
@@ -41,6 +44,7 @@ export const ALL_SERVICES = [
   },
   {
     id: 'legal',
+    serviceKey: 'legalNoticeReview',
     slug: 'legal-notice-review',
     path: '/services/legal-notice-review',
     title: 'Legal Notice Review',
@@ -50,6 +54,7 @@ export const ALL_SERVICES = [
   },
   {
     id: 'debt',
+    serviceKey: 'debtManagement',
     slug: 'debt-management',
     path: '/services/debt-management',
     title: 'Debt Management',
@@ -59,6 +64,7 @@ export const ALL_SERVICES = [
   },
   {
     id: 'npa',
+    serviceKey: 'npaSecuredLoans',
     slug: 'npa-secured-loans',
     path: '/services/npa-secured-loans',
     title: 'NPA & Secured Loans',
@@ -68,6 +74,7 @@ export const ALL_SERVICES = [
   },
   {
     id: 'credit',
+    serviceKey: 'creditRecovery',
     slug: 'credit-recovery',
     path: '/services/credit-recovery',
     title: 'Credit Recovery',
@@ -84,10 +91,12 @@ export default function ServicesPage({
   onOpenSignIn,
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [servicesList, setServicesList] = useState(ALL_SERVICES);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.title = `${t('nav.services', 'Services')} | LegalBharosa`;
     const unsub = subscribePublishedServices((live) => {
       if (live && live.length > 0) {
         setServicesList(live);
@@ -96,7 +105,7 @@ export default function ServicesPage({
       }
     });
     return () => unsub();
-  }, []);
+  }, [t]);
 
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
@@ -105,7 +114,7 @@ export default function ServicesPage({
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
       {/* ======================================================== */}
       <DarkPageHeader
-        breadcrumbText="LegalBharosa / Services"
+        breadcrumbText={`${t('nav.home', 'Home')} / ${t('nav.services', 'Services')}`}
         maxWidth="max-w-5xl"
       >
         <motion.div 
@@ -116,24 +125,24 @@ export default function ServicesPage({
         >
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-            <span>Comprehensive Borrower Protection & Legal Defense</span>
+            <span>{t('services.badge', 'Comprehensive Borrower Protection & Legal Defense')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.18] max-w-3xl font-heading uppercase break-words px-2">
-            OUR LEGAL & FINANCIAL SERVICES
+            {t('services.title', 'OUR LEGAL & FINANCIAL SERVICES')}
           </h1>
 
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-            Explore specialized legal defense, structured loan settlements, and harassment relief delivered by Bar Council-registered advocates.
+            {t('services.subtitle', 'Explore specialized legal defense, structured loan settlements, and harassment relief delivered by Bar Council-registered advocates.')}
           </p>
 
           <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('Services Page Hero') : navigate('/book-consultation')}
               className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full pl-6 sm:pl-7 pr-2 py-2.5 sm:py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px] border border-[#168CFF]/40"
             >
-              <span>Book a Free Consultation</span>
+              <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
               <span className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                 <ChevronRight className="w-4 h-4 text-[#F4B400]" />
               </span>
@@ -144,7 +153,7 @@ export default function ServicesPage({
               onClick={() => navigate('/how-it-works')}
               className="text-xs sm:text-sm font-semibold text-white hover:text-white px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 transition-all cursor-pointer min-h-[44px] flex items-center justify-center backdrop-blur-md"
             >
-              See How It Works →
+              {t('nav.howItWorks', 'See How It Works')} →
             </button>
           </div>
 
@@ -211,24 +220,24 @@ export default function ServicesPage({
                       </div>
 
                       <span className="text-[11px] font-semibold tracking-wide font-mono px-2.5 py-0.5 rounded-full bg-[#0B2A5B]/5 text-[#123E8A] border border-[#0B2A5B]/10">
-                        {item.tag}
+                        {item.serviceKey ? t(`services.items.${item.serviceKey}.tag`, item.tag) : item.tag}
                       </span>
                     </div>
 
                     {/* Title */}
                     <h3 className="text-lg sm:text-[19px] font-bold text-[#0B2A5B] tracking-tight mb-2 group-hover:text-[#168CFF] transition-colors">
-                      {item.title}
+                      {item.serviceKey ? t(`services.items.${item.serviceKey}.title`, item.title) : item.title}
                     </h3>
 
                     {/* Description */}
                     <p className="text-neutral-600 text-[13.5px] sm:text-sm leading-relaxed">
-                      {item.description}
+                      {item.serviceKey ? t(`services.items.${item.serviceKey}.shortDesc`, item.description) : item.description}
                     </p>
                   </div>
 
                   {/* Bottom: Action Link */}
                   <div className="relative z-10 mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-semibold text-[#123E8A] group-hover:text-[#168CFF] transition-colors">
-                    <span>View Service Details</span>
+                    <span>{t('common.viewDetails', 'View Service Details')}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -246,20 +255,20 @@ export default function ServicesPage({
               </div>
               <div>
                 <div className="text-[14px] sm:text-[15px] font-bold text-[#0B2A5B]">
-                  Legal & Financial Advisory Panel
+                  {t('common.barCouncilAdvocates', 'Legal & Financial Advisory Panel')}
                 </div>
                 <div className="text-xs text-neutral-500">
-                  Every service is delivered under strict advocate-client confidentiality and RBI statutory adherence.
+                  {t('common.confidentialGuaranteed', 'Every service is delivered under strict advocate-client confidentiality and RBI statutory adherence.')}
                 </div>
               </div>
             </div>
 
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('Services Strip') : navigate('/book-consultation')}
               className="relative z-10 inline-flex items-center gap-2 bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-xs sm:text-[13px] font-medium px-4 py-2 rounded-full transition-colors shrink-0 cursor-pointer shadow-xs active:scale-[0.98]"
             >
-              <span>Consult an Advocate</span>
+              <span>{t('common.consultNow', 'Consult an Advocate')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#F4B400]" />
             </button>
           </div>
@@ -283,7 +292,7 @@ export default function ServicesPage({
 
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('Services Bottom CTA') : navigate('/book-consultation')}
               className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-7 py-3 text-sm font-semibold transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px]"
             >
               <span>Book a Free Consultation</span>

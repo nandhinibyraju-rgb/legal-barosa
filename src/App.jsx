@@ -20,6 +20,7 @@ import FAQPage from './pages/FAQPage';
 import ClientStoriesPage from './pages/ClientStoriesPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
+import ProfilePage from './pages/ProfilePage';
 import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
 import ReviewsSlideoutWidget from './components/ReviewsSlideoutWidget';
@@ -524,6 +525,21 @@ export default function App() {
             />
           } 
         />
+
+        {/* Dedicated User Profile Page (Authenticated) */}
+        <Route 
+          path="/profile" 
+          element={
+            <ProfilePage
+              user={user}
+              userProfile={userProfile}
+              authLoading={authLoading}
+              onOpenSignIn={() => setSignInModalOpen(true)}
+              onOpenConsult={handleOpenConsult}
+            />
+          } 
+        />
+        <Route path="/my-profile" element={<Navigate to="/profile" replace />} />
 
         {/* 6. Client Dashboard (Authenticated) */}
         <Route 

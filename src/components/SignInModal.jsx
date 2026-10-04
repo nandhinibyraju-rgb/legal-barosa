@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { auth, googleProvider } from '../firebase';
 import { 
   signInWithEmailAndPassword, 
@@ -12,6 +13,7 @@ import {
 import { syncUserProfile } from '../services/firestoreService';
 
 export default function SignInModal({ isOpen, onClose, onSuccess }) {
+  const { t } = useTranslation();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -172,6 +174,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
           {/* Close Button */}
           <button
             onClick={onClose}
+            aria-label={t('common.close', 'Close')}
             className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -183,7 +186,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                 <ShieldCheck className="w-8 h-8" />
               </div>
               <h3 className="font-manrope font-bold text-xl text-white">
-                {isSignUp ? 'Account Created!' : 'Welcome back!'}
+                {isSignUp ? t('auth.signUpTitle', 'Create Your Client Account') : t('auth.successAuth', 'Successfully signed in! Welcome back.')}
               </h3>
               <p className="font-inter text-xs text-slate-400 mt-1">
                 {isSignUp 
@@ -198,17 +201,17 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                   <Lock className="w-4 h-4 text-[#12B9F2]" />
                 </div>
                 <span className="font-manrope text-xs font-semibold text-[#12B9F2] uppercase tracking-wider">
-                  SECURE CLIENT PORTAL
+                  {t('nav.clientPortal', 'SECURE CLIENT PORTAL')}
                 </span>
               </div>
 
               <h2 className="font-heading font-bold text-2xl text-white tracking-tight">
-                {isSignUp ? 'Create Client Account' : 'Sign In'}
+                {isSignUp ? t('auth.signUpTitle', 'Create Client Account') : t('auth.signInTitle', 'Sign In')}
               </h2>
               <p className="font-inter text-xs text-slate-400 mt-1 mb-5">
                 {isSignUp 
-                  ? 'Register to track dispute files, notices, and advisor responses.' 
-                  : 'Access your active cases, advisor notes, and legal filings.'}
+                  ? t('auth.signUpSubtitle', 'Register in seconds to track consultations and receive advocate support.') 
+                  : t('auth.signInSubtitle', 'Access your case updates, messages, and legal documentation securely.')}
               </p>
 
               {error && (
@@ -221,7 +224,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
               {resetSent && (
                 <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-2.5 text-xs text-emerald-300">
                   <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <span>Password reset link sent to your email address.</span>
+                  <span>{t('auth.resetSent', 'Password reset link sent to your email!')}</span>
                 </div>
               )}
 
@@ -257,7 +260,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                         d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"
                       />
                     </svg>
-                    <span>Continue with Google</span>
+                    <span>{t('auth.googleSignIn', 'Continue with Google')}</span>
                   </>
                 )}
               </button>
@@ -266,7 +269,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
               <div className="relative my-4 flex items-center justify-center">
                 <div className="border-t border-white/10 w-full" />
                 <span className="bg-[#0A101C] px-3 text-[11px] font-mono uppercase tracking-wider text-slate-400 absolute">
-                  or with email
+                  {t('auth.orEmail', 'or with email')}
                 </span>
               </div>
 
@@ -274,14 +277,14 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-manrope font-medium text-slate-300 mb-1">
-                    Email Address
+                    {t('auth.email', 'Email Address')}
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
-                      placeholder="client@legalbharosa.com"
+                      placeholder={t('auth.emailPlaceholder', 'you@example.com')}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#078BE8] transition-colors"
@@ -292,7 +295,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-manrope font-medium text-slate-300">
-                      Password
+                      {t('auth.password', 'Password')}
                     </label>
                     {!isSignUp && (
                       <button 
@@ -300,7 +303,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                         onClick={handleForgotPassword}
                         className="text-[11px] text-[#12B9F2] hover:underline cursor-pointer"
                       >
-                        Forgot?
+                        {t('auth.forgotPassword', 'Forgot password?')}
                       </button>
                     )}
                   </div>
@@ -309,7 +312,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                     <input
                       type="password"
                       required
-                      placeholder="••••••••"
+                      placeholder={t('auth.passwordPlaceholder', 'Enter your password')}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#078BE8] transition-colors"
@@ -330,7 +333,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                       </>
                     ) : (
                       <>
-                        <span>{isSignUp ? 'Create Case Account' : 'Sign In to Portal'}</span>
+                        <span>{isSignUp ? t('auth.signUpBtn', 'Create Account') : t('auth.signInBtn', 'Sign In')}</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
@@ -339,7 +342,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
 
                 <div className="text-center pt-2 flex flex-col gap-1.5">
                   <span className="text-xs text-slate-400">
-                    {isSignUp ? 'Already registered?' : "Don't have a case file yet?"}{' '}
+                    {isSignUp ? t('auth.alreadyAccount', 'Already have an account?') : t('auth.noAccount', 'Don’t have an account?')}{' '}
                     <button
                       type="button"
                       onClick={() => {
@@ -348,7 +351,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                       }}
                       className="text-[#12B9F2] hover:underline font-medium cursor-pointer"
                     >
-                      {isSignUp ? 'Sign In instead' : 'Create an Account'}
+                      {isSignUp ? t('auth.signInLink', 'Sign In') : t('auth.signUpLink', 'Register now')}
                     </button>
                   </span>
                 </div>
@@ -360,3 +363,4 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
     </AnimatePresence>
   );
 }
+

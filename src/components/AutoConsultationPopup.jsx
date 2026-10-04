@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Phone, Scale, Clock, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Official SVG WhatsApp Icon
 function WhatsAppIcon({ className = "w-4 h-4" }) {
@@ -19,6 +20,7 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
 const CALL_URL = `tel:${PHONE_NUMBER}`;
 
 export default function AutoConsultationPopup({ isOpen, onClose }) {
+  const { t } = useTranslation();
   const cardRef = useRef(null);
 
   // Close on click outside
@@ -76,7 +78,7 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close popup"
+              aria-label={t('common.close', 'Close')}
               className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/25 text-white/90 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
@@ -85,7 +87,7 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
             {/* Small Badge: BEFORE YOU LEAVE */}
             <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-white text-[10px] font-bold tracking-wider uppercase mb-1.5">
               <Clock className="w-2.5 h-2.5 text-blue-200" />
-              <span>BEFORE YOU LEAVE</span>
+              <span>{t('autoPopup.badge', 'BEFORE YOU LEAVE')}</span>
             </div>
 
             {/* Bold Headline */}
@@ -93,12 +95,12 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
               id="auto-popup-heading"
               className="text-[15px] sm:text-[16px] font-bold text-white tracking-tight leading-snug pr-6"
             >
-              Get a Free Expert Review of Your Case
+              {t('autoPopup.title', 'Get a Free Expert Review of Your Case')}
             </h3>
 
             {/* Short 1-2 line Supporting Text */}
             <p className="text-[11.5px] sm:text-[12px] text-blue-100/90 mt-1 leading-relaxed pr-4">
-              One 15-minute call could change your resolution path. Strictly confidential.
+              {t('autoPopup.subtitle', 'One 15-minute call could change your resolution path. Strictly confidential.')}
             </p>
           </div>
 
@@ -109,17 +111,17 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
               {/* Icon + Short Label */}
               <div className="flex items-center gap-1.5 text-[10.5px] font-bold text-[#062D78] tracking-wider uppercase mb-1">
                 <Scale className="w-3 h-3 text-[#062D78] shrink-0" />
-                <span>FREE NPA CASE REVIEW</span>
+                <span>{t('autoPopup.cardBadge', 'FREE NPA CASE REVIEW')}</span>
               </div>
 
               {/* Short Bold Sub-Headline */}
               <h4 className="text-[13px] font-bold text-slate-900 leading-snug">
-                Unsure what to do next?
+                {t('autoPopup.cardTitle', 'Unsure what to do next?')}
               </h4>
 
               {/* 1-2 Lines Supporting Text */}
               <p className="text-[11.5px] text-slate-600 mt-0.5 leading-relaxed">
-                Get a personalized strategy from an NPA expert based on your bank, loan and legal stage.
+                {t('autoPopup.cardDesc', 'Get a personalized strategy from an NPA expert based on your bank, loan and legal stage.')}
               </p>
             </div>
 
@@ -134,7 +136,7 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
                 className="bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1da851] text-white font-semibold text-xs py-2.5 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5 shrink-0 text-white" />
-                <span className="truncate">WhatsApp Expert</span>
+                <span className="truncate">{t('autoPopup.whatsappBtn', 'WhatsApp Expert')}</span>
               </a>
 
               {/* RIGHT: Dark Call Now button */}
@@ -144,14 +146,14 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
                 className="bg-[#062D78] hover:bg-[#093994] active:bg-[#052361] text-white font-semibold text-xs py-2.5 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
               >
                 <Phone className="w-3 h-3 fill-current shrink-0 text-white" />
-                <span className="truncate">Call Now</span>
+                <span className="truncate">{t('autoPopup.callBtn', 'Call Now')}</span>
               </a>
             </div>
 
             {/* SMALL TRUST LINE AT BOTTOM */}
             <div className="flex items-center justify-center gap-1.5 text-[10.5px] text-slate-500 font-medium mt-2.5 pt-0.5 text-center">
               <ShieldCheck className="w-3 h-3 text-[#168CFF]" />
-              <span>100% Confidential • Professional Case Intake</span>
+              <span>{t('autoPopup.trustText', '100% Confidential • Professional Case Intake')}</span>
             </div>
           </div>
         </motion.div>
@@ -159,3 +161,4 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+

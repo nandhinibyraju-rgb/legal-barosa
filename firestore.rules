@@ -44,7 +44,7 @@ service cloud.firestore {
       allow read: if isAdmin() || isOwner(userId);
       allow create: if isAdmin() || (isOwner(userId) && (!request.resource.data.keys().hasAny(['role']) || request.resource.data.role == 'client'));
       allow update: if isAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role);
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isOwner(userId);
     }
 
     // 3. cases collection (case records linked to a client)

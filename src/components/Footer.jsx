@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Phone, Mail, MapPin, ShieldCheck, ChevronRight, ExternalLink } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Brand Social SVG Icons
 function WhatsAppIcon({ className = "w-4 h-4" }) {
@@ -42,6 +43,7 @@ export default function Footer({
   onNavigateHome 
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Smooth scroll handler for landing page anchors
   const handleScrollTo = (sectionId, e) => {
@@ -94,14 +96,14 @@ export default function Footer({
             </a>
 
             <p className="mt-4 text-sm text-slate-300 leading-relaxed max-w-sm">
-              Trusted legal support, dispute resolution and protection — all in one place.
+              {t('footer.tagline', 'Trusted legal support, dispute resolution and protection — all in one place.')}
             </p>
 
             {/* Accreditation Badge */}
             <div className="mt-5 flex items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0B2A5B]/80 border border-[#168CFF]/30 text-xs text-slate-200">
                 <ShieldCheck className="w-4 h-4 text-[#F4B400] shrink-0" />
-                <span>Bar Council Panel & RBI Aligned</span>
+                <span>{t('footer.accreditation', 'Bar Council Panel & RBI Aligned')}</span>
               </div>
             </div>
           </div>
@@ -109,7 +111,7 @@ export default function Footer({
           {/* COLUMN 1: LEGAL SERVICES (Span 2) */}
           <div className="lg:col-span-2 sm:col-span-1 flex flex-col">
             <h3 className="text-xs font-bold font-inter tracking-wider text-white uppercase mb-4 flex items-center gap-1.5">
-              <span>LEGAL SERVICES</span>
+              <span>{t('footer.legalServices', 'LEGAL SERVICES')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF]" />
             </h3>
             <ul className="space-y-2.5 text-[13.5px]">
@@ -119,7 +121,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/harassment-protection')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Harassment Protection
+                  {t('services.items.harassmentProtection.title', 'Harassment Protection')}
                 </button>
               </li>
               <li>
@@ -128,7 +130,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/loan-settlement')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Loan Settlement
+                  {t('services.items.loanSettlement.title', 'Loan Settlement')}
                 </button>
               </li>
               <li>
@@ -137,7 +139,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/legal-notice-review')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Legal Notice Review
+                  {t('services.items.legalNoticeReview.title', 'Legal Notice Review')}
                 </button>
               </li>
               <li>
@@ -146,7 +148,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/debt-management')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Debt Management
+                  {t('services.items.debtManagement.title', 'Debt Management')}
                 </button>
               </li>
               <li>
@@ -155,7 +157,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/npa-secured-loans')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  NPA & Secured Loans
+                  {t('services.items.npaSecuredLoans.title', 'NPA & Secured Loans')}
                 </button>
               </li>
               <li>
@@ -164,7 +166,7 @@ export default function Footer({
                   onClick={() => handleServiceNav('/services/credit-recovery')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Credit Recovery
+                  {t('services.items.creditRecovery.title', 'Credit Recovery')}
                 </button>
               </li>
             </ul>
@@ -173,7 +175,7 @@ export default function Footer({
           {/* COLUMN 2: COMPANY (Span 2) */}
           <div className="lg:col-span-2 sm:col-span-1 flex flex-col">
             <h3 className="text-xs font-bold font-inter tracking-wider text-white uppercase mb-4 flex items-center gap-1.5">
-              <span>COMPANY</span>
+              <span>{t('footer.company', 'COMPANY')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF]" />
             </h3>
             <ul className="space-y-2.5 text-[13.5px]">
@@ -186,7 +188,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Our Services
+                  {t('nav.services', 'Our Services')}
                 </button>
               </li>
               <li>
@@ -198,7 +200,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  How It Works
+                  {t('nav.howItWorks', 'How It Works')}
                 </button>
               </li>
               <li>
@@ -207,7 +209,7 @@ export default function Footer({
                   onClick={() => onNavigateToAbout ? onNavigateToAbout() : navigate('/about')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  About Us
+                  {t('nav.about', 'About Us')}
                 </button>
               </li>
               <li>
@@ -219,7 +221,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Client Stories
+                  {t('nav.clientStories', 'Client Stories')}
                 </button>
               </li>
               <li>
@@ -231,7 +233,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Articles
+                  {t('nav.articles', 'Articles')}
                 </button>
               </li>
               <li>
@@ -243,7 +245,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  FAQ
+                  {t('nav.faq', 'FAQ')}
                 </button>
               </li>
               <li>
@@ -255,7 +257,7 @@ export default function Footer({
                   }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Contact Us
+                  {t('nav.contact', 'Contact Us')}
                 </button>
               </li>
             </ul>
@@ -264,7 +266,7 @@ export default function Footer({
           {/* COLUMN 3: LEGAL (Span 2) */}
           <div className="lg:col-span-2 sm:col-span-1 flex flex-col">
             <h3 className="text-xs font-bold font-inter tracking-wider text-white uppercase mb-4 flex items-center gap-1.5">
-              <span>LEGAL</span>
+              <span>{t('footer.legal', 'LEGAL')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#F4B400]" />
             </h3>
             <ul className="space-y-2.5 text-[13.5px]">
@@ -274,7 +276,7 @@ export default function Footer({
                   onClick={() => onOpenConsult?.('Privacy Policy')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Privacy Policy
+                  {t('footer.privacyPolicy', 'Privacy Policy')}
                 </button>
               </li>
               <li>
@@ -283,7 +285,7 @@ export default function Footer({
                   onClick={() => onOpenConsult?.('Terms of Service')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Terms of Service
+                  {t('footer.termsOfService', 'Terms of Service')}
                 </button>
               </li>
               <li>
@@ -292,7 +294,7 @@ export default function Footer({
                   onClick={() => onOpenConsult?.('Disclaimer')}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
-                  Disclaimer
+                  {t('footer.disclaimer', 'Disclaimer')}
                 </button>
               </li>
               <li>
@@ -301,7 +303,7 @@ export default function Footer({
                   onClick={() => onOpenConsult?.('RBI Guidelines')}
                   className="text-slate-300 hover:text-[#F4B400] hover:translate-x-0.5 transition-all text-left cursor-pointer font-medium"
                 >
-                  RBI Fair Practices
+                  {t('footer.rbiGuidelines', 'RBI Fair Practices')}
                 </button>
               </li>
             </ul>
@@ -310,7 +312,7 @@ export default function Footer({
           {/* COLUMN 4: CONTACT & SOCIALS (Span 3 on lg) */}
           <div className="lg:col-span-3 sm:col-span-1 flex flex-col">
             <h3 className="text-xs font-bold font-inter tracking-wider text-white uppercase mb-4 flex items-center gap-1.5">
-              <span>CONTACT</span>
+              <span>{t('footer.contact', 'CONTACT')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF]" />
             </h3>
             <ul className="space-y-3 text-[13.5px]">
@@ -336,7 +338,7 @@ export default function Footer({
                 <div className="flex flex-col gap-1.5 text-slate-300">
                   <div className="flex items-center gap-2 text-slate-200">
                     <MapPin className="w-4 h-4 text-[#F4B400] shrink-0" />
-                    <span className="font-semibold text-xs uppercase tracking-wider text-white">Company Location</span>
+                    <span className="font-semibold text-xs uppercase tracking-wider text-white">{t('footer.companyLocation', 'Company Location')}</span>
                   </div>
                   <a 
                     href="https://maps.app.goo.gl/AUEVoh3Y6EPQoV5n6?g_st=ac" 
@@ -344,7 +346,7 @@ export default function Footer({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs text-[#38BDF8] hover:text-[#7DD3FC] hover:underline pl-6 transition-colors"
                   >
-                    <span>View on Google Maps</span>
+                    <span>{t('footer.viewOnGoogleMaps', 'View on Google Maps')}</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -354,7 +356,7 @@ export default function Footer({
             {/* Social Icons (using project verified links) */}
             <div className="mt-5 pt-3 border-t border-white/10">
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-2.5">
-                Connect With Us
+                {t('footer.connectWithUs', 'Connect With Us')}
               </span>
               <div className="flex items-center gap-2.5">
                 {/* 1. WhatsApp */}
@@ -416,7 +418,7 @@ export default function Footer({
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 text-center sm:text-left">
           <p className="font-sans font-medium text-slate-300">
-            © 2026 LegalBharosa Technologies Pvt. Ltd. All rights reserved.
+            {t('footer.copyright', '© 2026 LegalBharosa Technologies Pvt. Ltd. All rights reserved.')}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-medium">
@@ -425,7 +427,7 @@ export default function Footer({
               onClick={() => onOpenConsult?.('Privacy Policy')} 
               className="hover:text-white transition-colors cursor-pointer py-1.5 min-h-[36px] flex items-center"
             >
-              Privacy Policy
+              {t('footer.privacyPolicy', 'Privacy Policy')}
             </button>
             <span className="text-slate-600 hidden xs:inline">|</span>
             <button 
@@ -433,7 +435,7 @@ export default function Footer({
               onClick={() => onOpenConsult?.('Terms of Service')} 
               className="hover:text-white transition-colors cursor-pointer py-1.5 min-h-[36px] flex items-center"
             >
-              Terms of Service
+              {t('footer.termsOfService', 'Terms of Service')}
             </button>
             <span className="text-slate-600 hidden xs:inline">|</span>
             <button 
@@ -441,7 +443,7 @@ export default function Footer({
               onClick={() => onOpenConsult?.('Disclaimer')} 
               className="hover:text-white transition-colors cursor-pointer py-1.5 min-h-[36px] flex items-center"
             >
-              Disclaimer
+              {t('footer.disclaimer', 'Disclaimer')}
             </button>
           </div>
         </div>
@@ -449,3 +451,4 @@ export default function Footer({
     </footer>
   );
 }
+

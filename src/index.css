@@ -34,6 +34,54 @@
 }
 
 /* ======================================================== */
+/* SCRIPT-SPECIFIC TYPOGRAPHY: TELUGU, HINDI & TAMIL        */
+/* ======================================================== */
+html[lang="te"],
+.font-telugu {
+  font-family: 'Noto Sans Telugu', 'Inter', -apple-system, sans-serif;
+}
+html[lang="te"] body {
+  font-family: 'Noto Sans Telugu', 'Inter', -apple-system, sans-serif;
+  line-height: 1.65;
+}
+html[lang="te"] h1, html[lang="te"] h2, html[lang="te"] h3, html[lang="te"] h4, html[lang="te"] .font-heading {
+  font-family: 'Noto Sans Telugu', sans-serif;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+html[lang="hi"],
+.font-hindi {
+  font-family: 'Noto Sans Devanagari', 'Inter', -apple-system, sans-serif;
+}
+html[lang="hi"] body {
+  font-family: 'Noto Sans Devanagari', 'Inter', -apple-system, sans-serif;
+  line-height: 1.65;
+}
+html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] .font-heading {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+html[lang="ta"],
+.font-tamil {
+  font-family: 'Noto Sans Tamil', 'Inter', -apple-system, sans-serif;
+}
+html[lang="ta"] body {
+  font-family: 'Noto Sans Tamil', 'Inter', -apple-system, sans-serif;
+  line-height: 1.65;
+}
+html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, html[lang="ta"] .font-heading {
+  font-family: 'Noto Sans Tamil', sans-serif;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+/* ======================================================== */
 /* DEEP NAVY HERO ATMOSPHERE: SUBTLE BREATHING & DRIFT      */
 /* Deep Navy #062D78, Royal Blue #0646A8, Bright Blue #078BE8, Cyan #12B9F2 */
 /* Very slow, smooth, barely noticeable 60fps movement       */

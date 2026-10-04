@@ -177,6 +177,154 @@ export function subscribeUserProfile(uid, callback) {
 }
 
 /**
+ * Update user's personal profile data in Firestore `users/{uid}`
+ * Preserves system fields: role, uid, createdAt are never overwritten by client
+ */
+export async function updateUserProfile(uid, profileData) {
+  if (!uid) throw new Error('User ID is required');
+
+  const userRef = doc(db, 'users', uid);
+  
+  // Clean safe fields
+  const safeData = {};
+  if (profileData.name !== undefined) safeData.name = String(profileData.name).trim();
+  if (profileData.phone !== undefined) safeData.phone = String(profileData.phone).trim();
+  if (profileData.photoURL !== undefined) safeData.photoURL = profileData.photoURL;
+  if (profileData.city !== undefined) safeData.city = String(profileData.city).trim();
+  if (profileData.state !== undefined) safeData.state = String(profileData.state).trim();
+  if (profileData.preferredLanguage !== undefined) safeData.preferredLanguage = profileData.preferredLanguage;
+  if (profileData.communicationPreference !== undefined) safeData.communicationPreference = profileData.communicationPreference;
+  if (profileData.dateOfBirth !== undefined) safeData.dateOfBirth = profileData.dateOfBirth;
+
+  safeData.updatedAt = serverTimestamp();
+
+  // Use setDoc with merge to ensure doc exists and updates seamlessly
+  await setDoc(userRef, safeData, { merge: true });
+  return safeData;
+}
+
+/**
+ * Upload user profile picture to Firebase Storage
+ */
+export async function uploadUserProfilePhoto(userId, file) {
+  if (!userId) throw new Error('User ID required');
+  if (!file) throw new Error('No image file provided');
+  if (file.size > 5 * 1024 * 1024) throw new Error('Image exceeds 5MB size limit');
+
+  const timestamp = Date.now();
+  const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const storagePath = `profile-photos/${userId}/avatar_${timestamp}.${fileExt}`;
+  const fileRef = ref(storage, storagePath);
+
+  const snapshot = await uploadBytes(fileRef, file);
+  const downloadUrl = await getDownloadURL(snapshot.ref);
+
+  return {
+    success: true,
+    url: downloadUrl,
+    path: storagePath,
+  };
+}
+
+/**
+ * Delete or deactivate the authenticated user's profile document
+ */
+export async function deleteUserProfileDoc(uid) {
+  if (!uid) throw new Error('User ID is required');
+  const userRef = doc(db, 'users', uid);
+  try {
+    await deleteDoc(userRef);
+  } catch (err) {
+    console.warn('[Firestore] Hard delete of user doc failed, soft deleting:', err);
+    await updateDoc(userRef, {
+      status: 'deactivated',
+      deletedAt: serverTimestamp(),
+    });
+  }
+}
+
+/**
+ * Listen to consultation requests submitted by this user
+ */
+export function subscribeUserConsultations(userId, callback) {
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+  const q = query(collection(db, 'consultations'), where('userId', '==', userId));
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      list.sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+        return timeB - timeA;
+      });
+      callback(list);
+    },
+    (err) => {
+      console.warn('[Firestore] Error subscribing to user consultations:', err);
+      callback([]);
+    }
+  );
+}
+
+/**
+ * Listen to articles authored by this user
+ */
+export function subscribeUserArticles(userId, callback) {
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+  const q = query(collection(db, 'articles'), where('authorId', '==', userId));
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      list.sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+        return timeB - timeA;
+      });
+      callback(list);
+    },
+    (err) => {
+      console.warn('[Firestore] Error subscribing to user articles:', err);
+      callback([]);
+    }
+  );
+}
+
+/**
+ * Listen to articles bookmarked by this user
+ */
+export function subscribeUserBookmarks(userId, callback) {
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+  const q = query(collection(db, 'articles'), where('bookmarks', 'array-contains', userId));
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      list.sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+        return timeB - timeA;
+      });
+      callback(list);
+    },
+    (err) => {
+      console.warn('[Firestore] Error subscribing to user bookmarks:', err);
+      callback([]);
+    }
+  );
+}
+
+/**
  * Get all registered clients (for Admin Panel)
  */
 export function subscribeAllClients(callback) {

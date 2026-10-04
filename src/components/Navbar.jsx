@@ -4,10 +4,14 @@ import { motion } from 'framer-motion';
 import { 
   ChevronRight, 
   Menu, 
-  X
+  X,
+  User,
+  LayoutDashboard
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import LanguageSelector from './LanguageSelector';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Home' },
@@ -28,8 +32,20 @@ export default function Navbar({
   onNavigateToDashboard,
   onNavigateToAdmin
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const navItems = [
+    { id: 'home', label: t('nav.home') },
+    { id: 'services', label: t('nav.services') },
+    { id: 'about', label: t('nav.about') },
+    { id: 'client-stories', label: t('nav.clientStories') },
+    { id: 'articles', label: t('nav.articles') },
+    { id: 'how-it-works', label: t('nav.howItWorks') },
+    { id: 'faq', label: t('nav.faq') },
+    { id: 'contact', label: t('nav.contact') },
+  ];
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -227,7 +243,7 @@ export default function Navbar({
           {/* CENTER: NAV LINKS WITH SMOOTH BLUE HOVER & ACTIVE POLISH */}
           {/* ======================================================== */}
           <div className="hidden md:flex items-center gap-0.5 lg:gap-1.5 xl:gap-2 text-[13px] lg:text-[13.5px] xl:text-[14px]">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const isActive = activeSection === item.id;
               return (
                 <a
@@ -264,9 +280,13 @@ export default function Navbar({
           </div>
 
           {/* ======================================================== */}
-          {/* RIGHT: ACTION BUTTON / USER PROFILE */}
+          {/* RIGHT: ACTION BUTTON / USER PROFILE / LANGUAGE SELECTOR */}
           {/* ======================================================== */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Desktop Language Selector */}
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
             
             {/* Firebase / Google Auth User State with Dropdown */}
             {user ? (
@@ -320,12 +340,30 @@ export default function Navbar({
                       type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
+                        navigate('/profile');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-[#0B2A5B] bg-gradient-to-r from-blue-50 to-sky-50/70 hover:from-blue-100 hover:to-sky-100 border border-[#168CFF]/20 hover:border-[#168CFF]/40 transition-all flex items-center justify-between cursor-pointer mb-1"
+                    >
+                      <span className="flex items-center gap-2">
+                        <User className="w-3.5 h-3.5 text-[#168CFF]" />
+                        <span>{t('nav.myProfile')}</span>
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-[#168CFF]" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
                         if (onNavigateToDashboard) onNavigateToDashboard();
                         else navigate('/dashboard');
                       }}
                       className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-neutral-700 hover:text-[#0B2A5B] hover:bg-neutral-50 transition-colors flex items-center justify-between cursor-pointer"
                     >
-                      <span>Client Dashboard</span>
+                      <span className="flex items-center gap-2">
+                        <LayoutDashboard className="w-3.5 h-3.5 text-neutral-400" />
+                        <span>{t('nav.clientDashboard')}</span>
+                      </span>
                       <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                     </button>
 
@@ -342,7 +380,7 @@ export default function Navbar({
                       >
                         <span className="flex items-center gap-1.5">
                           <span>🛡️</span>
-                          <span>Admin Console</span>
+                          <span>{t('nav.adminConsole')}</span>
                         </span>
                         <ChevronRight className="w-3.5 h-3.5 text-amber-600" />
                       </button>
@@ -360,9 +398,9 @@ export default function Navbar({
                           }
                           navigate('/');
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-[#168CFF] hover:bg-blue-50 transition-colors cursor-pointer"
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       >
-                        Sign Out
+                        {t('nav.signOut')}
                       </button>
                     </div>
                   </div>
@@ -374,7 +412,7 @@ export default function Navbar({
                 onClick={() => onOpenSignIn?.()}
                 className="group relative text-[12px] sm:text-[13.5px] font-semibold text-white bg-gradient-to-r from-[#168CFF] to-[#078BE8] hover:from-[#0E7BE6] hover:to-[#0275D8] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full border border-sky-400/40 hover:border-sky-300 transition-all duration-250 ease-out cursor-pointer whitespace-nowrap shadow-xs hover:shadow-[0_0_18px_rgba(22,140,255,0.4),0_4px_12px_rgba(6,45,120,0.16)] hover:-translate-y-[1.5px] active:scale-[0.98] min-h-[40px] sm:min-h-[44px] flex items-center justify-center gap-1.5 shrink-0"
               >
-                <span>Sign In</span>
+                <span>{t('nav.signIn')}</span>
                 <ChevronRight className="w-3.5 h-3.5 text-white/90 transition-transform duration-250 ease-out group-hover:translate-x-0.5" />
               </button>
             )}
@@ -394,8 +432,14 @@ export default function Navbar({
           {/* MOBILE RESPONSIVE DRAWER */}
           {/* ======================================================== */}
           {menuOpen && (
-            <div className="absolute top-full left-0 right-0 bg-white border-b border-neutral-200/90 shadow-xl px-4 py-4 flex flex-col gap-1.5 md:hidden animate-in fade-in slide-in-from-top-2 duration-150">
-              {NAV_ITEMS.map((item) => {
+            <div className="absolute top-full left-0 right-0 bg-white border-b border-neutral-200/90 shadow-xl px-4 py-4 flex flex-col gap-1.5 md:hidden animate-in fade-in slide-in-from-top-2 duration-150 max-h-[85vh] overflow-y-auto">
+              {/* Mobile Language Selector at top of drawer */}
+              <div className="pb-2.5 mb-1 border-b border-neutral-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-neutral-600">{t('common.language')}</span>
+                <LanguageSelector isMobile={true} />
+              </div>
+
+              {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
                   <a
@@ -421,13 +465,31 @@ export default function Navbar({
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
+                        navigate('/profile');
+                      }}
+                      className="p-3 rounded-xl bg-gradient-to-r from-blue-50 to-sky-50 font-semibold text-[13px] text-[#0B2A5B] border border-[#168CFF]/30 flex items-center justify-between cursor-pointer min-h-[44px]"
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <User className="w-4 h-4 text-[#168CFF] shrink-0" />
+                        <span>{t('nav.myProfile')} ({userProfile?.name || user.displayName || user.email})</span>
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-[#168CFF] shrink-0" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
                         if (onNavigateToDashboard) onNavigateToDashboard();
                         else navigate('/dashboard');
                       }}
-                      className="p-3 rounded-xl bg-blue-50 font-semibold text-[13px] text-[#0B2A5B] flex items-center justify-between cursor-pointer min-h-[44px]"
+                      className="p-3 rounded-xl bg-neutral-50 hover:bg-neutral-100 font-medium text-[13px] text-neutral-800 flex items-center justify-between cursor-pointer min-h-[44px]"
                     >
-                      <span className="truncate">Client Portal ({user.displayName || user.email})</span>
-                      <ChevronRight className="w-4 h-4 text-[#168CFF]" />
+                      <span className="flex items-center gap-2 truncate">
+                        <LayoutDashboard className="w-4 h-4 text-neutral-500 shrink-0" />
+                        <span>{t('nav.clientDashboard')}</span>
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0" />
                     </button>
 
                     {isAdmin && (
@@ -440,10 +502,26 @@ export default function Navbar({
                         }}
                         className="p-3 rounded-xl bg-amber-50 font-semibold text-[13px] text-amber-800 border border-amber-200 flex items-center justify-between cursor-pointer min-h-[44px]"
                       >
-                        <span className="truncate">🛡️ Admin Console</span>
+                        <span className="truncate">🛡️ {t('nav.adminConsole')}</span>
                         <ChevronRight className="w-4 h-4 text-amber-600" />
                       </button>
                     )}
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setMenuOpen(false);
+                        try {
+                          await signOut(auth);
+                        } catch (err) {
+                          console.error('Sign out error:', err);
+                        }
+                        navigate('/');
+                      }}
+                      className="p-2.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 text-center transition-colors cursor-pointer"
+                    >
+                      {t('nav.signOut')}
+                    </button>
                   </>
                 ) : (
                   <button
@@ -454,7 +532,7 @@ export default function Navbar({
                     }}
                     className="p-3 rounded-xl bg-[#168CFF] text-white font-semibold text-[14px] text-center hover:bg-[#0673d6] cursor-pointer shadow-xs transition-colors min-h-[44px] flex items-center justify-center"
                   >
-                    Sign In to Client Portal
+                    {t('nav.signIn')}
                   </button>
                 )}
               </div>

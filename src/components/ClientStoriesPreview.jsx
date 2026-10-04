@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   ArrowRight, 
   Sparkles 
@@ -16,6 +17,7 @@ export const FEATURED_CASE_STUDIES = [
 ];
 
 export default function ClientStoriesPreview({ onOpenConsult: _onOpenConsult }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const delays = [0, 1.2, 2.4];
 
@@ -42,25 +44,15 @@ export default function ClientStoriesPreview({ onOpenConsult: _onOpenConsult }) 
         {/* 1. Section Badge & Headline */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#0B2A5B]/5 border border-[#168CFF]/20 text-[#0646A8] text-[11.5px] sm:text-xs font-semibold tracking-wide uppercase mb-3.5 shadow-2xs">
           <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-          <span>Real Client Stories</span>
+          <span>{t('clientStories.badge', 'Real Client Stories')}</span>
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] leading-[1.2] font-semibold text-[#0B2A5B] tracking-tight">
-          Real People,{' '}
-          <span 
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif", 
-              fontStyle: 'italic', 
-              fontWeight: 600
-            }}
-            className="text-[#0646A8] text-3xl sm:text-4xl md:text-5xl"
-          >
-            Real Results
-          </span>
+          {t('clientStories.title', 'Real People, Real Results')}
         </h2>
 
         <p className="mt-2.5 text-sm sm:text-base text-neutral-600 max-w-xl leading-relaxed mx-auto">
-          Read unfiltered feedback from borrowers and business owners across India who resolved their loan and legal challenges with LegalBharosa.
+          {t('clientStories.subtitle', 'Read unfiltered feedback from borrowers and business owners across India who resolved their loan and legal challenges with LegalBharosa.')}
         </p>
 
         {/* 2. Three Featured Real Case Story Cards with Staggered Scroll Animation */}
@@ -93,12 +85,12 @@ export default function ClientStoriesPreview({ onOpenConsult: _onOpenConsult }) 
             onClick={() => navigate('/client-stories')}
             className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-[14px] font-semibold transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer min-h-[44px] group"
           >
-            <span>Explore Client Stories</span>
+            <span>{t('clientStories.viewAllStories', 'Explore Client Stories')}</span>
             <ArrowRight className="w-4 h-4 text-[#F4B400] group-hover:translate-x-1 transition-transform" />
           </button>
           
           <p className="mt-3 text-[11px] text-neutral-500 max-w-md">
-            Individual outcomes vary depending on lender guidelines, documentation, and case-specific facts.
+            {t('clientStories.confidentialNotice', 'Individual outcomes vary depending on lender guidelines, documentation, and case-specific facts.')}
           </p>
         </motion.div>
 

@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, Scale } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import BookingForm from './BookingForm';
 
 export default function ConsultationModal({ 
   isOpen, 
   onClose, 
-  onSuccess,
+  onSuccess, 
   defaultTopic, 
   user = null 
 }) {
+  const { t } = useTranslation();
+
   // Close on Escape key press
   useEffect(() => {
     if (!isOpen) return;
@@ -68,7 +71,7 @@ export default function ConsultationModal({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close consultation modal"
+            aria-label={t('common.close', 'Close')}
             className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 rounded-full text-neutral-400 hover:text-[#0B2A5B] hover:bg-neutral-100 transition-colors cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
           >
             <X className="w-5 h-5" />
@@ -78,17 +81,17 @@ export default function ConsultationModal({
           <div className="mb-5 sm:mb-6 pr-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B2A5B]/10 border border-[#0B2A5B]/15 text-[#0B2A5B] text-xs font-semibold mb-2.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#168CFF]" />
-              <span>Free & Confidential Legal Intake</span>
+              <span>{t('booking.badge', 'Free & Confidential Legal Intake')}</span>
             </div>
 
             <h2 
               id="consultation-modal-title" 
               className="text-2xl sm:text-[26px] font-heading font-bold text-[#0B2A5B] tracking-tight leading-snug"
             >
-              Book a Free Consultation
+              {t('booking.modalTitle', 'Book a Free Consultation')}
             </h2>
             <p className="text-xs sm:text-sm text-neutral-600 mt-1 leading-relaxed">
-              Connect with Bar Council registered advocates for debt harassment protection, loan settlement, and legal notice review.
+              {t('booking.modalSubtitle', 'Connect with Bar Council registered advocates for debt harassment protection, loan settlement, and legal notice review.')}
             </p>
           </div>
 
@@ -105,10 +108,10 @@ export default function ConsultationModal({
           <div className="mt-4 pt-3.5 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500 font-medium">
             <span className="inline-flex items-center gap-1 text-[#0B2A5B]">
               <Scale className="w-3 h-3 text-[#F4B400]" />
-              <span>Bar Council Registered Panel</span>
+              <span>{t('booking.barCouncilRegistered', 'Bar Council Registered Panel')}</span>
             </span>
             <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold">
-              Fast WhatsApp Callback
+              {t('booking.fastWhatsAppCallback', 'Fast WhatsApp Callback')}
             </span>
           </div>
         </motion.div>
@@ -117,3 +120,4 @@ export default function ConsultationModal({
     </AnimatePresence>
   );
 }
+

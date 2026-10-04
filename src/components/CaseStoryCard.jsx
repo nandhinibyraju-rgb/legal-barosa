@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import CardBorderTrace from './CardBorderTrace';
 import { CATEGORY_THEMES } from '../data/reviewsData';
+import { useTranslation } from 'react-i18next';
 
 export default function CaseStoryCard({ 
   review, 
@@ -18,12 +19,13 @@ export default function CaseStoryCard({
   index = 0,
   showFullTextDefault = false 
 }) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(showFullTextDefault);
   const theme = CATEGORY_THEMES[review.category] || CATEGORY_THEMES.OTS;
   const cs = review.caseSummary || {
-    timeline: 'Not disclosed',
-    exposure: 'Not disclosed',
-    satisfaction: 'Satisfied',
+    timeline: t('clientStories.card.notDisclosed', 'Not disclosed'),
+    exposure: t('clientStories.card.notDisclosed', 'Not disclosed'),
+    satisfaction: t('clientStories.card.satisfied', 'Satisfied'),
     resolution: review.caseTopic,
   };
 
@@ -57,7 +59,7 @@ export default function CaseStoryCard({
 
           <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shrink-0">
             <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-            <span>Verified Review</span>
+            <span>{t('clientStories.card.verifiedReview', 'Verified Review')}</span>
           </span>
         </div>
 
@@ -74,10 +76,10 @@ export default function CaseStoryCard({
             <div className="flex flex-col min-w-0">
               <span className="text-[9.5px] font-mono uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-1">
                 <Clock className="w-3 h-3 text-[#078BE8] shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span>Timeline</span>
+                <span>{t('clientStories.card.timeline', 'Timeline')}</span>
               </span>
               <span className={`text-[12.5px] font-bold leading-tight mt-0.5 truncate ${
-                cs.timeline === 'Not disclosed' ? 'text-slate-400 font-normal italic text-[11.5px]' : 'text-[#0B2A5B]'
+                cs.timeline === 'Not disclosed' || cs.timeline === t('clientStories.card.notDisclosed', 'Not disclosed') ? 'text-slate-400 font-normal italic text-[11.5px]' : 'text-[#0B2A5B]'
               }`}>
                 {cs.timeline}
               </span>
@@ -87,10 +89,10 @@ export default function CaseStoryCard({
             <div className="flex flex-col min-w-0">
               <span className="text-[9.5px] font-mono uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-1">
                 <IndianRupee className="w-3 h-3 text-[#078BE8] shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span>Exposure</span>
+                <span>{t('clientStories.card.exposure', 'Exposure')}</span>
               </span>
               <span className={`text-[12.5px] font-bold leading-tight mt-0.5 truncate ${
-                cs.exposure === 'Not disclosed' ? 'text-slate-400 font-normal italic text-[11.5px]' : 'text-[#0B2A5B]'
+                cs.exposure === 'Not disclosed' || cs.exposure === t('clientStories.card.notDisclosed', 'Not disclosed') ? 'text-slate-400 font-normal italic text-[11.5px]' : 'text-[#0B2A5B]'
               }`}>
                 {cs.exposure}
               </span>
@@ -103,7 +105,7 @@ export default function CaseStoryCard({
             <div className="flex flex-col min-w-0">
               <span className="text-[9.5px] font-mono uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-1">
                 <Star className="w-3 h-3 text-[#F4B400] fill-[#F4B400] shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span>Satisfaction</span>
+                <span>{t('clientStories.card.satisfaction', 'Satisfaction')}</span>
               </span>
               <span className="text-[12.5px] font-bold text-[#0B2A5B] leading-tight mt-0.5 truncate">
                 {cs.satisfaction}
@@ -114,7 +116,7 @@ export default function CaseStoryCard({
             <div className="flex flex-col min-w-0">
               <span className="text-[9.5px] font-mono uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span>Resolution</span>
+                <span>{t('clientStories.card.resolution', 'Resolution')}</span>
               </span>
               <span 
                 className="text-[12.5px] font-bold text-[#0B2A5B] leading-tight mt-0.5 truncate" 
@@ -142,7 +144,7 @@ export default function CaseStoryCard({
               }}
               className="mt-1.5 inline-flex items-center gap-1 text-[11.5px] font-semibold text-[#078BE8] hover:text-[#0646A8] transition-colors cursor-pointer select-none"
             >
-              <span>{isExpanded ? 'Show Less' : 'Read Full Story'}</span>
+              <span>{isExpanded ? t('clientStories.card.showLess', 'Show Less') : t('clientStories.card.readFullStory', 'Read Full Story')}</span>
               {isExpanded ? (
                 <ChevronUp className="w-3 h-3" />
               ) : (
@@ -171,7 +173,7 @@ export default function CaseStoryCard({
 
         <span className="inline-flex items-center gap-1 text-[10.5px] text-emerald-700 font-medium shrink-0 ml-2">
           <FileCheck className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Original Review</span>
+          <span>{t('clientStories.card.originalReview', 'Original Review')}</span>
         </span>
       </div>
     </motion.div>

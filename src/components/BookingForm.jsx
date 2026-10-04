@@ -11,6 +11,7 @@ import {
   CheckCircle2, 
   ExternalLink 
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { submitConsultation, saveLead } from '../services/firestoreService';
 import TrustStrip from './TrustStrip';
 
@@ -31,6 +32,15 @@ export const CONSULTATION_SERVICES = [
   'NPA & Secured Loans',
   'Credit Recovery',
 ];
+
+const SERVICE_I18N_KEYS = {
+  'Harassment Protection': 'harassmentProtection',
+  'Loan Settlement': 'loanSettlement',
+  'Legal Notice Review': 'legalNoticeReview',
+  'Debt Management': 'debtManagement',
+  'NPA & Secured Loans': 'npaSecuredLoans',
+  'Credit Recovery': 'creditRecovery',
+};
 
 /**
  * Maps a topic string or slug to one of the 6 official services
@@ -63,6 +73,8 @@ export default function BookingForm({
   defaultTopic,
   user = null,
 }) {
+  const { t } = useTranslation();
+
   const resolveInitialService = () => {
     if (defaultService && CONSULTATION_SERVICES.includes(defaultService)) {
       return defaultService;
@@ -103,26 +115,26 @@ export default function BookingForm({
     // 1. Validate Full Name
     const trimmedName = formData.name.trim();
     if (!trimmedName) {
-      setValidationError('Please enter your full name.');
+      setValidationError(t('booking.validationName', 'Please enter your full name.'));
       return;
     }
 
     // 2. Validate Phone Number (10 digits)
     const cleanPhone = formData.phone.replace(/\D/g, '');
     if (cleanPhone.length !== 10) {
-      setValidationError('Please enter a valid 10-digit mobile number.');
+      setValidationError(t('booking.validationPhone', 'Please enter a valid 10-digit mobile number.'));
       return;
     }
 
     // 3. Validate Service selection
     if (!formData.service || !CONSULTATION_SERVICES.includes(formData.service)) {
-      setValidationError('Please select which service you are interested in.');
+      setValidationError(t('booking.validationService', 'Please select which service you are interested in.'));
       return;
     }
 
     // 4. Validate Mandatory Terms & Conditions and Privacy Policy Acknowledgement
     if (!agreedToTerms) {
-      setValidationError('Please acknowledge the Terms & Conditions and Privacy Policy to continue.');
+      setValidationError(t('booking.validationTerms', 'Please acknowledge the Terms & Conditions and Privacy Policy to continue.'));
       return;
     }
 
@@ -192,7 +204,7 @@ export default function BookingForm({
     });
     setAgreedToTerms(false);
 
-    const confirmationText = 'Almost done! Please tap Send in WhatsApp to complete your request.';
+    const confirmationText = t('booking.confirmationAlmostDone', 'Almost done! Please tap Send in WhatsApp to complete your request.');
     setSubmittedConfirmation(confirmationText);
 
     // 9. If in popup mode, trigger success callback (which closes modal & shows toast)
@@ -217,13 +229,13 @@ export default function BookingForm({
 
           <div className="max-w-md">
             <span className="inline-block text-[11px] font-bold tracking-wider uppercase text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full mb-2">
-              WhatsApp Request Ready
+              {t('booking.confirmationReady', 'WhatsApp Request Ready')}
             </span>
             <h3 className="text-xl sm:text-2xl font-bold text-emerald-950 leading-snug">
               {submittedConfirmation}
             </h3>
             <p className="text-xs sm:text-sm text-emerald-800 mt-2 leading-relaxed">
-              We have pre-filled your details in WhatsApp chat with our advocates. Just hit the <strong className="text-emerald-950">Send</strong> button in WhatsApp to submit your request.
+              {t('booking.confirmationInstructions', 'We have pre-filled your details in WhatsApp chat with our advocates. Just hit the Send button in WhatsApp to submit your request.')}
             </p>
           </div>
 
@@ -235,7 +247,7 @@ export default function BookingForm({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-semibold transition-colors shadow-sm"
               >
-                <span>Re-open WhatsApp</span>
+                <span>{t('booking.reopenWhatsApp', 'Re-open WhatsApp')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
@@ -245,7 +257,7 @@ export default function BookingForm({
               onClick={() => setSubmittedConfirmation('')}
               className="text-xs font-semibold text-emerald-800 hover:text-emerald-950 underline cursor-pointer py-1"
             >
-              Submit another request
+              {t('booking.submitAnother', 'Submit another request')}
             </button>
           </div>
         </div>
@@ -266,7 +278,7 @@ export default function BookingForm({
               htmlFor="booking-name" 
               className={`block text-xs sm:text-[13px] font-semibold mb-1.5 ${isModal ? 'text-slate-800' : 'text-neutral-800'}`}
             >
-              Full Name <span className="text-[#168CFF]">*</span>
+              {t('booking.fullName', 'Full Name')} <span className="text-[#168CFF]">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
@@ -277,7 +289,7 @@ export default function BookingForm({
                 name="name"
                 type="text"
                 required
-                placeholder="e.g. Vikram Sharma"
+                placeholder={t('booking.fullNamePlaceholder', 'e.g. Vikram Sharma')}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className={`w-full pl-10 pr-3.5 py-3 rounded-xl border text-[16px] sm:text-sm text-neutral-900 transition-all min-h-[44px] ${
@@ -295,7 +307,7 @@ export default function BookingForm({
               htmlFor="booking-phone" 
               className={`block text-xs sm:text-[13px] font-semibold mb-1.5 ${isModal ? 'text-slate-800' : 'text-neutral-800'}`}
             >
-              Phone Number <span className="text-[#168CFF]">*</span>
+              {t('booking.phone', 'Phone Number')} <span className="text-[#168CFF]">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
@@ -307,7 +319,7 @@ export default function BookingForm({
                 type="tel"
                 required
                 maxLength={10}
-                placeholder="10-digit mobile number (e.g. 9876543210)"
+                placeholder={t('booking.phonePlaceholder', '10-digit mobile number (e.g. 9876543210)')}
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
                 className={`w-full pl-10 pr-3.5 py-3 rounded-xl border text-[16px] sm:text-sm text-neutral-900 transition-all min-h-[44px] ${
@@ -325,7 +337,7 @@ export default function BookingForm({
               htmlFor="booking-service" 
               className={`block text-xs sm:text-[13px] font-semibold mb-1.5 ${isModal ? 'text-slate-800' : 'text-neutral-800'}`}
             >
-              Which service are you interested in? <span className="text-[#168CFF]">*</span>
+              {t('booking.serviceLabel', 'Which service are you interested in?')} <span className="text-[#168CFF]">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
@@ -345,7 +357,7 @@ export default function BookingForm({
               >
                 {CONSULTATION_SERVICES.map((srv) => (
                   <option key={srv} value={srv}>
-                    {srv}
+                    {t(`services.items.${SERVICE_I18N_KEYS[srv]}.title`, srv)}
                   </option>
                 ))}
               </select>
@@ -361,14 +373,14 @@ export default function BookingForm({
               htmlFor="booking-message" 
               className={`block text-xs sm:text-[13px] font-semibold mb-1.5 ${isModal ? 'text-slate-800' : 'text-neutral-800'}`}
             >
-              Message / Details <span className="text-neutral-400 font-normal text-xs">(Optional)</span>
+              {t('booking.messageLabel', 'Message / Details')} <span className="text-neutral-400 font-normal text-xs">{t('booking.optional', '(Optional)')}</span>
             </label>
             <div className="relative">
               <textarea
                 id="booking-message"
                 name="message"
                 rows={isModal ? 3 : 4}
-                placeholder="Briefly describe your loan details, lender name, legal notices received, or harassment issues..."
+                placeholder={t('booking.messagePlaceholder', 'Briefly describe your loan details, lender name, legal notices received, or harassment issues...')}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 className={`w-full p-3.5 rounded-xl border text-[16px] sm:text-sm text-neutral-900 transition-all resize-y ${
@@ -404,7 +416,7 @@ export default function BookingForm({
                 }`}
               />
               <span className={`text-xs sm:text-[12.5px] leading-snug ${isModal ? 'text-slate-600' : 'text-neutral-600'}`}>
-                I acknowledge that I have read and agree to the{' '}
+                {t('booking.termsAgreementPrefix', 'I acknowledge that I have read and agree to the')}{' '}
                 <a
                   href="#terms"
                   onClick={(e) => {
@@ -412,9 +424,9 @@ export default function BookingForm({
                   }}
                   className="text-[#0B2A5B] font-semibold underline hover:text-[#168CFF] transition-colors"
                 >
-                  Terms &amp; Conditions
+                  {t('booking.termsAndConditions', 'Terms & Conditions')}
                 </a>{' '}
-                and{' '}
+                {t('booking.and', 'and')}{' '}
                 <a
                   href="#privacy"
                   onClick={(e) => {
@@ -422,7 +434,7 @@ export default function BookingForm({
                   }}
                   className="text-[#0B2A5B] font-semibold underline hover:text-[#168CFF] transition-colors"
                 >
-                  Privacy Policy
+                  {t('booking.privacyPolicy', 'Privacy Policy')}
                 </a>
                 .
               </span>
@@ -439,7 +451,7 @@ export default function BookingForm({
             type="submit"
             className="mt-2 w-full inline-flex items-center justify-center gap-2.5 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-xl py-3.5 px-6 text-sm font-semibold transition-all shadow-md cursor-pointer hover:shadow-lg active:scale-[0.99] group min-h-[44px]"
           >
-            <span>Submit via WhatsApp</span>
+            <span>{t('booking.submitViaWhatsApp', 'Submit via WhatsApp')}</span>
             <ArrowRight className="w-4 h-4 text-[#F4B400] group-hover:translate-x-1 transition-transform" />
           </button>
 
@@ -449,7 +461,7 @@ export default function BookingForm({
           {/* Trust / Confidentiality Note */}
           <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-500 pt-1 text-center">
             <Lock className="w-3.5 h-3.5 text-[#168CFF] shrink-0" />
-            <span>Advocate-Client Privilege • Free & Confidential Consultation</span>
+            <span>{t('booking.privilegeNotice', 'Advocate-Client Privilege • Free & Confidential Consultation')}</span>
           </div>
 
         </form>
@@ -457,3 +469,4 @@ export default function BookingForm({
     </div>
   );
 }
+

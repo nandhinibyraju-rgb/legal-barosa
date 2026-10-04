@@ -13,6 +13,7 @@ import CardBorderTrace from '../components/CardBorderTrace';
 import TrustStrip from '../components/TrustStrip';
 import BookingForm, { CONSULTATION_SERVICES, mapTopicToService } from '../components/BookingForm';
 import DarkPageHeader from '../components/DarkPageHeader';
+import { useTranslation } from 'react-i18next';
 
 export default function BookConsultationPage({
   user,
@@ -20,6 +21,7 @@ export default function BookConsultationPage({
   onOpenConsult,
   onOpenSignIn: _onOpenSignIn,
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,8 +50,11 @@ export default function BookConsultationPage({
       {/* ======================================================== */}
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
       {/* ======================================================== */}
+      {/* ======================================================== */}
+      {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
+      {/* ======================================================== */}
       <DarkPageHeader
-        breadcrumbText="Consultation / Free Evaluation"
+        breadcrumbText={t('consultationPage.breadcrumb', 'Consultation / Free Evaluation')}
         maxWidth="max-w-4xl"
       >
         <motion.div 
@@ -60,30 +65,30 @@ export default function BookConsultationPage({
         >
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <span className="w-2 h-2 rounded-full bg-[#168CFF] shadow-[0_0_6px_rgba(22,140,255,0.6)]" />
-            <span>Direct Legal Consultation Desk</span>
+            <span>{t('consultationPage.deskBadge', 'Direct Legal Consultation Desk')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.12] font-heading">
-            Book a Free Consultation
+            {t('consultationPage.heroTitle', 'Book a Free Consultation')}
           </h1>
 
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed font-normal">
-            Share your situation confidentially. Our advocate and financial counselling team will review your case and reach out within 24 hours.
+            {t('consultationPage.heroSubtitle', 'Share your situation confidentially. Our advocate and financial counselling team will review your case and reach out within 24 hours.')}
           </p>
 
           {/* Quick Trust Highlights */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-              100% Confidential
+              {t('consultationPage.badgeConfidential', '100% Confidential')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
-              Bar Council Advocates
+              {t('consultationPage.badgeAdvocates', 'Bar Council Advocates')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Clock className="w-3.5 h-3.5 text-[#38BDF8]" />
-              24-Hour Callback
+              {t('consultationPage.badgeCallback', '24-Hour Callback')}
             </span>
           </div>
 
@@ -108,10 +113,10 @@ export default function BookConsultationPage({
               <div className="relative z-10">
                 <div className="mb-6">
                   <h2 className="text-xl sm:text-2xl font-bold text-[#0B2A5B] tracking-tight">
-                    Case Intake Form
+                    {t('consultationPage.intakeFormTitle', 'Case Intake Form')}
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-500 mt-1">
-                    All communications are strictly protected under advocate-client privilege.
+                    {t('consultationPage.intakeFormSubtitle', 'All communications are strictly protected under advocate-client privilege.')}
                   </p>
                 </div>
 
@@ -134,7 +139,7 @@ export default function BookConsultationPage({
                     <Clock className="w-4 h-4" />
                   </div>
                   <h3 className="font-bold text-[#0B2A5B] text-base">
-                    What Happens Next?
+                    {t('consultationPage.whatHappensNext', 'What Happens Next?')}
                   </h3>
                 </div>
 
@@ -144,8 +149,8 @@ export default function BookConsultationPage({
                       1
                     </span>
                     <div>
-                      <p className="font-semibold text-[#0B2A5B]">Instant WhatsApp Handshake</p>
-                      <p className="text-neutral-600 mt-0.5">Submit sends your pre-formatted details directly to our advocate intake desk via WhatsApp.</p>
+                      <p className="font-semibold text-[#0B2A5B]">{t('consultationPage.step1Title', 'Instant WhatsApp Handshake')}</p>
+                      <p className="text-neutral-600 mt-0.5">{t('consultationPage.step1Desc', 'Submit sends your pre-formatted details directly to our advocate intake desk via WhatsApp.')}</p>
                     </div>
                   </div>
 
@@ -154,8 +159,8 @@ export default function BookConsultationPage({
                       2
                     </span>
                     <div>
-                      <p className="font-semibold text-[#0B2A5B]">Confidential Legal Review</p>
-                      <p className="text-neutral-600 mt-0.5">A designated panel advocate evaluates your situation against RBI guidelines and statutory rights.</p>
+                      <p className="font-semibold text-[#0B2A5B]">{t('consultationPage.step2Title', 'Confidential Legal Review')}</p>
+                      <p className="text-neutral-600 mt-0.5">{t('consultationPage.step2Desc', 'A designated panel advocate evaluates your situation against RBI guidelines and statutory rights.')}</p>
                     </div>
                   </div>
 
@@ -164,8 +169,8 @@ export default function BookConsultationPage({
                       3
                     </span>
                     <div>
-                      <p className="font-semibold text-[#0B2A5B]">Actionable Defense Plan</p>
-                      <p className="text-neutral-600 mt-0.5">We provide immediate anti-harassment measures, formal dispute notices, or settlement roadmap.</p>
+                      <p className="font-semibold text-[#0B2A5B]">{t('consultationPage.step3Title', 'Actionable Defense Plan')}</p>
+                      <p className="text-neutral-600 mt-0.5">{t('consultationPage.step3Desc', 'We provide immediate anti-harassment measures, formal dispute notices, or settlement roadmap.')}</p>
                     </div>
                   </div>
                 </div>
@@ -176,11 +181,11 @@ export default function BookConsultationPage({
                 <div className="flex items-center gap-2.5 mb-3">
                   <ShieldCheck className="w-5 h-5 text-[#168CFF]" />
                   <h4 className="font-bold text-[#0B2A5B] text-sm">
-                    Borrower Rights Protection
+                    {t('consultationPage.rightsTitle', 'Borrower Rights Protection')}
                   </h4>
                 </div>
                 <p className="text-xs text-neutral-600 leading-relaxed">
-                  You are legally protected under RBI's Fair Practices Code and statutory provisions. Lenders and recovery agents cannot harass, defame, or intimidate you.
+                  {t('consultationPage.rightsDesc', "You are legally protected under RBI's Fair Practices Code and statutory provisions. Lenders and recovery agents cannot harass, defame, or intimidate you.")}
                 </p>
 
                 <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500 font-mono">
@@ -188,7 +193,7 @@ export default function BookConsultationPage({
                     <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
                     <span>WhatsApp: +91 73864 44186</span>
                   </span>
-                  <span className="text-[#168CFF] font-semibold">Verified</span>
+                  <span className="text-[#168CFF] font-semibold">{t('common.verified', 'Verified')}</span>
                 </div>
               </div>
 

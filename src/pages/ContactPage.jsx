@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   Phone, 
   Mail, 
@@ -38,15 +39,17 @@ export default function ContactPage({
   onOpenSignIn: _onOpenSignIn
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [contactSettings, setContactSettings] = useState(DEFAULT_CONTACT_SETTINGS);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.title = `${t('contact.title', 'Contact LegalBharosa')} | LegalBharosa`;
     const unsub = subscribeSetting('contact', (data) => {
       setContactSettings(data);
     }, DEFAULT_CONTACT_SETTINGS);
     return () => unsub();
-  }, []);
+  }, [t]);
 
   const phone = contactSettings?.phone || DEFAULT_PHONE;
   const email = contactSettings?.email || DEFAULT_EMAIL;
@@ -57,7 +60,7 @@ export default function ContactPage({
     <div className="min-h-screen w-full bg-[#F8FAFC] font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col overflow-x-hidden">
       {/* 1. HERO HEADER */}
       <DarkPageHeader
-        breadcrumbText="Support / Contact Us"
+        breadcrumbText={`${t('nav.home', 'Home')} / ${t('nav.contact', 'Contact Us')}`}
         maxWidth="max-w-4xl"
       >
         <motion.div 
@@ -68,29 +71,29 @@ export default function ContactPage({
         >
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <span className="w-2 h-2 rounded-full bg-[#25D366] shadow-[0_0_6px_rgba(37,211,102,0.6)]" />
-            <span>Direct Advocate & Corporate Support Desk</span>
+            <span>{t('contact.badge', 'Direct Advocate & Corporate Support Desk')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.12] font-heading">
-            Contact LegalBharosa
+            {t('contact.title', 'Contact LegalBharosa')}
           </h1>
 
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed font-normal">
-            Have questions regarding recovery agent harassment, loan settlement, or legal notices? Connect directly with our team.
+            {t('contact.subtitle', 'Have questions regarding recovery agent harassment, loan settlement, or legal notices? Connect directly with our team.')}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-              100% Confidential
+              {t('common.confidentialGuaranteed', '100% Confidential')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
-              Bar Council Advocates
+              {t('common.barCouncilAdvocates', 'Bar Council Advocates')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
               <Clock className="w-3.5 h-3.5 text-[#38BDF8]" />
-              Quick Response
+              {t('contact.quickResponse', 'Quick Response')}
             </span>
           </div>
         </motion.div>
@@ -107,13 +110,13 @@ export default function ContactPage({
                 <Phone className="w-5 h-5" />
               </div>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-1">
-                Phone Support
+                {t('contact.phoneTitle', 'Phone Support')}
               </span>
               <h3 className="text-base font-bold text-[#0B2A5B] mb-1">
-                Direct Call Desk
+                {t('contact.phoneTitle', 'Direct Call Desk')}
               </h3>
               <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                Speak directly with our legal coordination desk during working hours.
+                {t('contact.phoneDesc', 'Speak directly with our legal coordination desk during working hours.')}
               </p>
             </div>
             <a
@@ -133,13 +136,13 @@ export default function ContactPage({
                 <Mail className="w-5 h-5" />
               </div>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-1">
-                Official Email
+                {t('contact.emailTitle', 'Official Email')}
               </span>
               <h3 className="text-base font-bold text-[#0B2A5B] mb-1">
-                Document Submission
+                {t('contact.emailTitle', 'Document Submission')}
               </h3>
               <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                Email notices, recovery correspondence, and detailed case inquiries.
+                {t('contact.emailDesc', 'Email notices, recovery correspondence, and detailed case inquiries.')}
               </p>
             </div>
             <a
@@ -159,13 +162,13 @@ export default function ContactPage({
                 <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
               </div>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-1">
-                Instant Chat
+                {t('contact.whatsappTitle', 'Instant Chat')}
               </span>
               <h3 className="text-base font-bold text-[#0B2A5B] mb-1">
-                WhatsApp Desk
+                {t('contact.whatsappTitle', 'WhatsApp Desk')}
               </h3>
               <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                Fast advocate evaluation and instant guidance directly on WhatsApp.
+                {t('contact.whatsappDesc', 'Fast advocate evaluation and instant guidance directly on WhatsApp.')}
               </p>
             </div>
             <a
@@ -174,7 +177,7 @@ export default function ContactPage({
               rel="noopener noreferrer"
               className="inline-flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-[#25D366] text-emerald-800 hover:text-white font-semibold text-xs transition-colors border border-emerald-200/80"
             >
-              <span>Chat on WhatsApp</span>
+              <span>{t('contact.whatsappChat', 'Chat on WhatsApp')}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -187,13 +190,13 @@ export default function ContactPage({
                 <MapPin className="w-5 h-5" />
               </div>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-1">
-                Physical Office
+                {t('contact.addressTitle', 'Physical Office')}
               </span>
               <h3 className="text-base font-bold text-[#0B2A5B] mb-1">
-                Company Location
+                {t('footer.companyLocation', 'Company Location')}
               </h3>
               <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                Consultation and representative desk based in Hyderabad, India.
+                {t('contact.locationDesc', 'Consultation and representative desk based in Hyderabad, India.')}
               </p>
             </div>
             <a
@@ -202,7 +205,7 @@ export default function ContactPage({
               rel="noopener noreferrer"
               className="inline-flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-amber-50 hover:bg-[#D97706] text-amber-900 hover:text-white font-semibold text-xs transition-colors border border-amber-200/80"
             >
-              <span>View on Google Maps</span>
+              <span>{t('footer.viewOnGoogleMaps', 'View on Google Maps')}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -223,10 +226,10 @@ export default function ContactPage({
                   </div>
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-[#0B2A5B]">
-                      Company Location
+                      {t('footer.companyLocation', 'Company Location')}
                     </h2>
                     <p className="text-xs text-slate-500">
-                      LegalBharosa Office & Consultation Headquarters
+                      {t('contact.hqSub', 'LegalBharosa Office & Consultation Headquarters')}
                     </p>
                   </div>
                 </div>
@@ -237,7 +240,7 @@ export default function ContactPage({
                   rel="noopener noreferrer"
                   className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-[#062D78] hover:bg-[#062D78] hover:text-white text-xs font-semibold transition-colors"
                 >
-                  <span>View on Google Maps</span>
+                  <span>{t('footer.viewOnGoogleMaps', 'View on Google Maps')}</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -271,7 +274,7 @@ export default function ContactPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-[#062D78] hover:underline font-semibold"
                 >
-                  <span>Open in Google Maps App</span>
+                  <span>{t('contact.openInMapsApp', 'Open in Google Maps App')}</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -282,18 +285,18 @@ export default function ContactPage({
               <div className="flex items-center gap-2.5 mb-3">
                 <ShieldCheck className="w-5 h-5 text-[#38BDF8]" />
                 <h3 className="font-bold text-base">
-                  Borrower Protection & Privacy Guarantee
+                  {t('contact.privacyGuaranteeTitle', 'Borrower Protection & Privacy Guarantee')}
                 </h3>
               </div>
               <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed mb-4">
-                All inquiries submitted to LegalBharosa are strictly confidential under advocate-client privilege. We do not disclose borrower information to lenders, recovery agents, or employers.
+                {t('contact.privacyGuaranteeDesc', 'All inquiries submitted to LegalBharosa are strictly confidential under advocate-client privilege. We do not disclose borrower information to lenders, recovery agents, or employers.')}
               </p>
               <div className="flex flex-wrap items-center gap-3 text-xs text-blue-200">
                 <span className="flex items-center gap-1">
-                  ✓ Bar Council Registered Advocates
+                  ✓ {t('common.barCouncilAdvocates', 'Bar Council Registered Advocates')}
                 </span>
                 <span className="flex items-center gap-1">
-                  ✓ RBI Fair Practices Enforcement
+                  ✓ {t('common.rbiCompliant', 'RBI Fair Practices Enforcement')}
                 </span>
               </div>
             </div>
@@ -306,13 +309,13 @@ export default function ContactPage({
               <div className="mb-6">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#062D78] text-xs font-semibold mb-2">
                   <MessageCircle className="w-3.5 h-3.5 text-[#168CFF]" />
-                  <span>Direct Case Review</span>
+                  <span>{t('contact.directCaseReview', 'Direct Case Review')}</span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#0B2A5B] tracking-tight">
-                  Send Your Inquiry
+                  {t('contact.sendInquiry', 'Send Your Inquiry')}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
-                  Provide your details below to receive a personalized legal strategy from an NPA and debt recovery advocate.
+                  {t('contact.inquiryDesc', 'Provide your details below to receive a personalized legal strategy from an NPA and debt recovery advocate.')}
                 </p>
               </div>
 

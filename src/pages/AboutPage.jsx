@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   ShieldCheck, 
   Scale, 
@@ -29,11 +30,13 @@ export default function AboutPage({
   onOpenSignIn,
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const timelineScrollRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, []);
+    document.title = `${t('about.title', 'About Us')} | LegalBharosa`;
+  }, [t]);
 
   // Horizontal Timeline Scroll Controls
   const scrollTimeline = (direction) => {
@@ -166,11 +169,11 @@ export default function AboutPage({
             className="inline-flex items-center gap-2 text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md shadow-xs transition-colors cursor-pointer group"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform text-[#38BDF8]" />
-            <span>Back to Home</span>
+            <span>{t('common.back', 'Back to Home')}</span>
           </button>
 
           <span className="text-[11px] font-mono text-slate-300 uppercase tracking-wider hidden sm:inline">
-            Company / About LegalBharosa
+            {t('nav.about', 'About LegalBharosa')}
           </span>
         </div>
 
@@ -186,34 +189,34 @@ export default function AboutPage({
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0A2660]/85 backdrop-blur-md border border-[#168CFF]/35 shadow-2xs text-xs font-semibold text-[#BAE6FD] mb-4">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>Dedicated Legal & Financial Counseling</span>
+              <span>{t('about.badge', 'Dedicated Legal & Financial Counseling')}</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.18] mb-5 font-heading break-words">
-              Our Mission: Ethical Defense & Legal Relief for Indian Borrowers
+              {t('about.title', 'Our Mission: Ethical Defense & Legal Relief for Indian Borrowers')}
             </h1>
 
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-3 font-normal">
-              LegalBharosa was founded to give individuals and small business owners facing EMI stress, recovery harassment, and legal notices a single, trustworthy place to turn to. We combine qualified advocate legal defense with structured financial restructuring — so no one has to navigate debt or legal intimidation alone.
+              {t('about.subtitle', 'LegalBharosa was founded to give individuals and small business owners facing EMI stress, recovery harassment, and legal notices a single, trustworthy place to turn to. We combine qualified advocate legal defense with structured financial restructuring — so no one has to navigate debt or legal intimidation alone.')}
             </p>
 
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-6 font-normal">
-              Borrowers often face unfair stigma, coercive calls outside permissible hours, and confusing court summons. We believe that temporary financial difficulty is a challenge to be solved legally and strategically — never an excuse for intimidation or humiliation.
+              {t('about.missionDesc', 'Borrowers often face unfair stigma, coercive calls outside permissible hours, and confusing court summons. We believe that temporary financial difficulty is a challenge to be solved legally and strategically — never an excuse for intimidation or humiliation.')}
             </p>
 
             {/* Trust Badges Row */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-6 text-xs font-semibold text-slate-200">
               <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
-                <span>BCI Enrolled Panel</span>
+                <span>{t('common.barCouncilVerified', 'BCI Enrolled Panel')}</span>
               </div>
               <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
-                <span>RBI Compliance</span>
+                <span>{t('common.rbiCompliant', 'RBI Compliance')}</span>
               </div>
               <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
-                <span>100% Client Privilege</span>
+                <span>{t('common.confidentialGuaranteed', '100% Client Privilege')}</span>
               </div>
             </div>
 
@@ -221,10 +224,10 @@ export default function AboutPage({
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                onClick={() => navigate('/book-consultation')}
+                onClick={() => onOpenConsult ? onOpenConsult('About Hero') : navigate('/book-consultation')}
                 className="inline-flex items-center gap-2.5 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px] border border-[#168CFF]/40"
               >
-                <span>Book a Free Consultation</span>
+                <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
                 <span className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                   <ChevronRight className="w-3.5 h-3.5 text-[#F4B400]" />
                 </span>
@@ -442,13 +445,13 @@ export default function AboutPage({
           <div className="text-center mb-8 sm:mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#168CFF]/20 text-xs font-mono uppercase tracking-widest text-[#123E8A] mb-3 shadow-2xs mx-auto">
               <span className="w-1.5 h-1.5 rounded-full bg-[#168CFF] animate-pulse" />
-              Our Foundational Pillars
+              {t('about.pillarsTitle', 'Our Foundational Pillars')}
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#0B2A5B] tracking-tight">
-              Ethical Defense & Borrower Protection
+              {t('about.visionTitle', 'Ethical Defense & Borrower Protection')}
             </h2>
             <p className="text-xs sm:text-sm text-neutral-600 mt-2 max-w-lg mx-auto">
-              How we protect your legal rights, peace of mind, and financial future.
+              {t('about.visionDesc', 'How we protect your legal rights, peace of mind, and financial future.')}
             </p>
           </div>
 
@@ -689,10 +692,10 @@ export default function AboutPage({
 
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('About Bottom') : navigate('/book-consultation')}
               className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-7 py-3 text-sm font-semibold transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98]"
             >
-              <span>Book a Free Consultation</span>
+              <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
               <ArrowRight className="w-4 h-4 text-[#F4B400]" />
             </button>
           </div>

@@ -23,8 +23,10 @@ import {
   Scale
 } from 'lucide-react';
 import { subscribeSetting, DEFAULT_HOMEPAGE_SETTINGS } from '../services/firestoreService';
+import { useTranslation } from 'react-i18next';
 
 export default function VideoSection({ onOpenConsult }) {
+  const { t } = useTranslation();
   const [homepageSettings, setHomepageSettings] = useState(DEFAULT_HOMEPAGE_SETTINGS);
 
   useEffect(() => {
@@ -331,14 +333,14 @@ export default function VideoSection({ onOpenConsult }) {
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-[#168CFF]/25 text-[#0B2A5B] text-xs font-semibold uppercase tracking-wider mb-3 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#00D2FF] animate-ping" />
             <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-            <span>{homepageSettings?.videoSectionBadge || 'See LegalBharosa in Action'}</span>
+            <span>{t('videoSection.badge', homepageSettings?.videoSectionBadge || 'See LegalBharosa in Action')}</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0B2A5B] font-heading uppercase">
-            {homepageSettings?.videoSectionTitle || 'Real Defense. Genuine Relief.'}
+            {t('videoSection.title', homepageSettings?.videoSectionTitle || 'Real Defense. Genuine Relief.')}
           </h2>
           <p className="mt-2.5 text-neutral-600 text-sm sm:text-base max-w-2xl mx-auto">
-            {homepageSettings?.videoSectionSubtitle || 'Understand your rights as a borrower, navigate loan notices and recovery communications responsibly, and connect with qualified legal assistance for structured dispute resolution.'}
+            {t('videoSection.subtitle', homepageSettings?.videoSectionSubtitle || 'Understand your rights as a borrower, navigate loan notices and recovery communications responsibly, and connect with qualified legal assistance for structured dispute resolution.')}
           </p>
         </div>
 
@@ -657,15 +659,19 @@ export default function VideoSection({ onOpenConsult }) {
               {(homepageSettings?.guidanceCards || DEFAULT_HOMEPAGE_SETTINGS.guidanceCards).map((card, idx) => {
                 const CardIcon = idx === 0 ? FileText : idx === 1 ? Compass : idx === 2 ? Scale : BookOpen;
                 const iconColor = idx % 2 === 0 ? '#168CFF' : '#00D2FF';
+                const cardKey = idx === 0 ? 'situation' : idx === 1 ? 'options' : idx === 2 ? 'rights' : 'nextstep';
+                const localizedTitle = t(`videoSection.cards.${cardKey}Title`, card.title);
+                const localizedDesc = t(`videoSection.cards.${cardKey}Desc`, card.description);
+
                 return (
                   <div key={card.id || idx} className="flex items-start gap-3 p-2.5 sm:p-3 rounded-xl bg-white border border-neutral-200/80 shadow-2xs hover:border-[#168CFF]/30 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-0.5 border border-[#168CFF]/20">
                       <CardIcon className="w-4 h-4" style={{ color: iconColor }} />
                     </div>
                     <div>
-                      <h4 className="text-xs sm:text-sm font-semibold text-[#0B2A5B]">{card.title}</h4>
+                      <h4 className="text-xs sm:text-sm font-semibold text-[#0B2A5B]">{localizedTitle}</h4>
                       <p className="text-[11px] sm:text-xs text-neutral-500 leading-relaxed mt-0.5">
-                        {card.description}
+                        {localizedDesc}
                       </p>
                     </div>
                   </div>
@@ -680,7 +686,7 @@ export default function VideoSection({ onOpenConsult }) {
                 onClick={() => onOpenConsult?.('General Legal Consultation')}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-xl bg-[#0B2A5B] hover:bg-[#071B38] text-white text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
               >
-                <span>Request Case Review</span>
+                <span>{t('videoSection.ctaButton', 'Request Case Review')}</span>
                 <ArrowRight className="w-4 h-4 text-[#F4B400]" />
               </button>
 
@@ -691,19 +697,19 @@ export default function VideoSection({ onOpenConsult }) {
                 className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300/60 text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
               >
                 <PhoneCall className="w-4 h-4 text-emerald-600" />
-                <span>Quick WhatsApp Guidance</span>
+                <span>{t('contact.whatsappChat', 'Quick WhatsApp Guidance')}</span>
               </a>
             </div>
 
             {/* Social Trust Metrics */}
             <div className="mt-4 pt-3.5 border-t border-neutral-200/60 flex items-center justify-between text-[11px] sm:text-xs text-neutral-500">
               <span className="flex items-center gap-1 font-medium text-neutral-700">
-                <span className="text-[#0B2A5B] font-bold">Client Feedback</span> Welcome
+                <span className="text-[#0B2A5B] font-bold">{t('common.feedbackTitle', 'Client Feedback')}</span>
               </span>
               <span>•</span>
-              <span className="font-medium text-neutral-700">100% Confidential</span>
+              <span className="font-medium text-neutral-700">{t('common.confidentialGuaranteed', '100% Confidential')}</span>
               <span>•</span>
-              <span className="font-medium text-neutral-700">Professional Legal Guidance</span>
+              <span className="font-medium text-neutral-700">{t('common.barCouncilAdvocates', 'Professional Legal Guidance')}</span>
             </div>
 
           </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, 
   Mail, 
@@ -25,6 +26,7 @@ import {
   subscribeCaseMessages, 
   sendMessage 
 } from '../services/firestoreService';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardPage({ 
   user, 
@@ -36,6 +38,8 @@ export default function DashboardPage({
   onOpenConsult,
   onOpenSignIn 
 }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [cases, setCases] = useState([]);
   const [loadingCases, setLoadingCases] = useState(true);
   const [selectedCaseId, setSelectedCaseId] = useState(null);
@@ -213,7 +217,7 @@ export default function DashboardPage({
             className="flex items-center gap-1.5 text-xs font-manrope font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 hover:border-white/20"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Home</span>
+            <span className="hidden sm:inline">{t('nav.home', 'Home')}</span>
           </button>
 
           <div 
@@ -229,7 +233,7 @@ export default function DashboardPage({
               Legal<span className="text-[#078BE8]">Bharosa</span>
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0646A8]/40 border border-[#078BE8]/40 text-[#12B9F2]">
-              CLIENT PORTAL
+              {t('nav.clientPortal', 'CLIENT PORTAL')}
             </span>
           </div>
         </div>
@@ -245,11 +249,16 @@ export default function DashboardPage({
               title="Open Admin Management Panel"
             >
               <Shield className="w-3.5 h-3.5 text-amber-400" />
-              <span>Admin Panel</span>
+              <span>{t('nav.adminConsole', 'Admin Panel')}</span>
             </button>
           )}
 
-          <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10">
+          <button
+            type="button"
+            onClick={() => navigate('/profile')}
+            className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-[#12B9F2]/50 transition-all cursor-pointer group"
+            title="View & Edit My Profile"
+          >
             {photoURL ? (
               <img
                 src={photoURL}
@@ -262,10 +271,13 @@ export default function DashboardPage({
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
-            <span className="font-manrope font-medium text-xs text-slate-200 max-w-[130px] truncate">
+            <span className="font-manrope font-medium text-xs text-slate-200 max-w-[130px] truncate group-hover:text-white transition-colors">
               {displayName}
             </span>
-          </div>
+            <span className="text-[10px] text-[#12B9F2] font-semibold bg-[#12B9F2]/10 px-1.5 py-0.5 rounded-md">
+              {t('nav.myProfile', 'Profile')}
+            </span>
+          </button>
 
           <button
             type="button"
@@ -273,7 +285,7 @@ export default function DashboardPage({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-manrope font-semibold text-slate-300 hover:text-rose-300 hover:bg-rose-500/10 border border-white/10 hover:border-rose-500/30 transition-all cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Sign Out</span>
+            <span className="hidden sm:inline">{t('nav.signOut', 'Sign Out')}</span>
           </button>
         </div>
       </header>

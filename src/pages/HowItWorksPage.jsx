@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { 
   PhoneCall, 
   FileSearch, 
@@ -24,6 +25,7 @@ import DarkPageHeader from '../components/DarkPageHeader';
 export const PROCESS_STEPS = [
   {
     step: 1,
+    key: 'step1',
     title: 'Reach out / Book a free consultation',
     subtitle: 'Step 1: First Contact & Assessment',
     description: 'Connect with our advisory desk via our secure online booking or phone. Tell us about your loan accounts, collection pressure, or notices received with zero upfront obligation.',
@@ -34,6 +36,7 @@ export const PROCESS_STEPS = [
   },
   {
     step: 2,
+    key: 'step2',
     title: 'Case/document review by our team',
     subtitle: 'Step 2: Legal Audit & Viability Analysis',
     description: 'Our legal analysts examine your loan agreements, repayment history, recovery communications, and statutory notices to identify lender violations and define settlement leverage.',
@@ -44,6 +47,7 @@ export const PROCESS_STEPS = [
   },
   {
     step: 3,
+    key: 'step3',
     title: 'Advocate assigned to your case',
     subtitle: 'Step 3: Dedicated Panel Representation',
     description: 'A dedicated Bar Council of India-registered advocate specializing in debt recovery law, SARFAESI defense, or Section 138 is assigned directly to handle your matter.',
@@ -54,6 +58,7 @@ export const PROCESS_STEPS = [
   },
   {
     step: 4,
+    key: 'step4',
     title: 'Legal action taken',
     subtitle: 'Step 4: Notice Response, Negotiation & Defense',
     description: 'We issue formal statutory replies to court summons or bank notices, file formal complaints against unlawful harassment under the RBI Fair Practices Code, and lead OTS negotiations.',
@@ -64,6 +69,7 @@ export const PROCESS_STEPS = [
   },
   {
     step: 5,
+    key: 'step5',
     title: 'Ongoing support until resolution',
     subtitle: 'Step 5: Active Representation & Monitoring',
     description: 'Our team stands between you and aggressive recovery agents. We provide ongoing counsel, review bank counter-proposals, and keep you informed at every milestone.',
@@ -74,6 +80,7 @@ export const PROCESS_STEPS = [
   },
   {
     step: 6,
+    key: 'step6',
     title: 'Case closed / resolution confirmed',
     subtitle: 'Step 6: Official Waivers & Peace of Mind',
     description: 'Receive the official lender-issued One-Time Settlement (OTS) sanction letter and the final No Dues Certificate (NDC). Your financial freedom is legally secured.',
@@ -91,10 +98,12 @@ export default function HowItWorksPage({
   onOpenSignIn,
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, []);
+    document.title = `${t('howItWorks.title', 'How LegalBharosa Works')} | LegalBharosa`;
+  }, [t]);
 
   return (
     <div className="min-h-screen w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
@@ -103,7 +112,7 @@ export default function HowItWorksPage({
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
       {/* ======================================================== */}
       <DarkPageHeader
-        breadcrumbText="LegalBharosa / Client Journey Roadmap"
+        breadcrumbText={`${t('nav.home', 'Home')} / ${t('nav.howItWorks', 'How It Works')}`}
         maxWidth="max-w-5xl"
       >
         <motion.div 
@@ -114,24 +123,24 @@ export default function HowItWorksPage({
         >
           <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
             <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-            <span>Transparent 6-Stage Resolution Process</span>
+            <span>{t('howItWorks.badge', 'Transparent 6-Stage Resolution Process')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.18] max-w-3xl font-heading uppercase break-words px-2">
-            HOW LEGALBHAROSA WORKS
+            {t('howItWorks.title', 'HOW LEGALBHAROSA WORKS')}
           </h1>
 
           <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-            From your initial consultation to statutory notice replies and official No Dues Certificates — a structured, advocate-backed client journey.
+            {t('howItWorks.subtitle', 'From your initial consultation to statutory notice replies and official No Dues Certificates — a structured, advocate-backed client journey.')}
           </p>
 
           <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('How It Works Hero') : navigate('/book-consultation')}
               className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full pl-6 sm:pl-7 pr-2 py-2.5 sm:py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px] border border-[#168CFF]/40"
             >
-              <span>Book a Free Consultation</span>
+              <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
               <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                 <ChevronRight className="w-4 h-4 text-[#F4B400]" />
               </span>
@@ -142,7 +151,7 @@ export default function HowItWorksPage({
               onClick={() => navigate('/services')}
               className="text-xs sm:text-sm font-semibold text-white hover:text-white px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 transition-all cursor-pointer min-h-[44px] flex items-center justify-center backdrop-blur-md"
             >
-              View All Services →
+              {t('common.exploreServices', 'View All Services')} →
             </button>
           </div>
 
@@ -219,12 +228,12 @@ export default function HowItWorksPage({
 
                           {/* Step Title */}
                           <h3 className="text-lg sm:text-xl font-bold text-[#0B2A5B] tracking-tight mb-2 group-hover:text-[#168CFF] transition-colors">
-                            {item.title}
+                            {t(`howItWorks.steps.${item.key}.title`, item.title)}
                           </h3>
 
                           {/* Description */}
                           <p className="text-xs sm:text-[13.5px] text-neutral-600 leading-relaxed mb-4">
-                            {item.description}
+                            {t(`howItWorks.steps.${item.key}.desc`, item.description)}
                           </p>
 
                           {/* Key Highlights Row */}
@@ -257,7 +266,7 @@ export default function HowItWorksPage({
                           Phase 0{item.step} of 06
                         </span>
                         <p className="text-xs text-neutral-500">
-                          {item.subtitle}
+                          {t(`howItWorks.steps.${item.key}.title`, item.subtitle)}
                         </p>
                       </div>
                     </div>
@@ -294,20 +303,20 @@ export default function HowItWorksPage({
               </div>
               <div>
                 <div className="text-[14px] sm:text-[15px] font-bold text-[#0B2A5B]">
-                  Statutory Protection & RBI Fair Practices Compliance
+                  {t('common.rbiCompliant', 'Statutory Protection & RBI Fair Practices Compliance')}
                 </div>
                 <div className="text-xs text-neutral-500">
-                  Every step is backed by Bar Council enrolled advocates defending your legal rights and dignity.
+                  {t('common.barCouncilAdvocates', 'Every step is backed by Bar Council enrolled advocates defending your legal rights and dignity.')}
                 </div>
               </div>
             </div>
 
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('How It Works Mid') : navigate('/book-consultation')}
               className="relative z-10 inline-flex items-center gap-2 bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-xs sm:text-[13px] font-medium px-5 py-2.5 rounded-full transition-colors shrink-0 cursor-pointer shadow-xs active:scale-[0.98]"
             >
-              <span>Start Your Journey</span>
+              <span>{t('howItWorks.ctaButton', 'Start Your Journey')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#F4B400]" />
             </button>
           </div>
@@ -327,23 +336,23 @@ export default function HowItWorksPage({
           <div className="relative z-10 max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white rounded-full px-3.5 py-1 shadow-2xs border border-[#168CFF]/20 text-xs font-semibold text-[#0B2A5B] mb-3">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>Free, Confidential Initial Review</span>
+              <span>{t('common.confidentialGuaranteed', 'Free, Confidential Initial Review')}</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0B2A5B] mb-3">
-              Ready to Take the First Step?
+              {t('howItWorks.ctaTitle', 'Ready to Take the First Step?')}
             </h2>
 
             <p className="text-xs sm:text-sm md:text-base text-neutral-600 mb-6 leading-relaxed">
-              Book a consultation now. Our advocates will review your documents and establish immediate protection against recovery pressure.
+              {t('howItWorks.ctaSubtitle', 'Book a consultation now. Our advocates will review your documents and establish immediate protection against recovery pressure.')}
             </p>
 
             <button
               type="button"
-              onClick={() => navigate('/book-consultation')}
+              onClick={() => onOpenConsult ? onOpenConsult('How It Works Bottom') : navigate('/book-consultation')}
               className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-7 py-3 text-sm font-semibold transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px]"
             >
-              <span>Book a Free Consultation</span>
+              <span>{t('common.getFreeConsultation', 'Book a Free Consultation')}</span>
               <ArrowRight className="w-4 h-4 text-[#F4B400]" />
             </button>
 
