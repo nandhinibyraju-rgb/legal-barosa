@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import Footer from '../components/Footer';
 import CardBorderTrace from '../components/CardBorderTrace';
+import { DarkPageHeaderAtmosphere } from '../components/DarkPageHeader';
 
 export default function AboutPage({
   user,
@@ -118,13 +119,13 @@ export default function AboutPage({
       year: '2022',
       title: 'RBI Fair Practice Enforcement',
       tag: 'Statutory Protocols',
-      desc: 'Formalized rapid legal escalation frameworks under RBI guidelines, halting illegal collection calls and workplace visits for over 1,500 distressed families.',
+      desc: 'Formalized rapid legal escalation frameworks under RBI guidelines to challenge illegal collection calls, intimidation, and unauthorized workplace visits.',
     },
     {
       year: '2023',
-      title: 'Pan-India Advocate Network',
+      title: 'Qualified Advocate Network',
       tag: 'National Reach',
-      desc: 'Expanded verified panel coverage across 28 states and union territories, establishing structured One-Time Settlement (OTS) negotiation desks with major banks and NBFCs.',
+      desc: 'Expanded verified panel coverage across major legal jurisdictions, establishing structured One-Time Settlement (OTS) negotiation desks with banks and NBFCs.',
     },
     {
       year: '2024',
@@ -134,9 +135,9 @@ export default function AboutPage({
     },
     {
       year: '2025',
-      title: '15,000+ Cases Milestone',
-      tag: 'Proven Impact',
-      desc: 'Surpassed 15,000 borrower disputes resolved with verified 4.9/5 satisfaction ratings and official lender No Dues Certificates issued in all closed matters.',
+      title: 'Borrower Rights & Resolution Milestone',
+      tag: 'Dedicated Impact',
+      desc: 'Strengthened borrower dispute advisory frameworks with structured legal guidance and official lender settlement documentation.',
     },
     {
       year: '2026',
@@ -147,39 +148,28 @@ export default function AboutPage({
   ];
 
   return (
-    <div className="w-full bg-[#ededed] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-4 sm:gap-6 overflow-x-hidden">
+    <div className="w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-4 sm:gap-6 overflow-x-hidden">
       
       {/* ======================================================== */}
       {/* 1. HERO SECTION: TEXT LEFT, PROFESSIONAL ILLUSTRATION RIGHT */}
       {/* ======================================================== */}
-      <section className="relative w-full rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-50/70 via-white to-amber-50/25 border border-neutral-200/90 shadow-sm p-6 sm:p-10 lg:p-12 overflow-hidden">
+      <section className="relative w-full rounded-2xl sm:rounded-3xl bg-[#02091A] border border-white/10 shadow-[0_12px_36px_rgba(2,9,26,0.28)] p-6 sm:p-10 lg:p-12 overflow-hidden">
         
-        {/* Subtle Organic Ambient Blob Shapes */}
-        <div 
-          aria-hidden="true" 
-          className="absolute -top-32 -left-32 w-[420px] h-[420px] bg-[#168CFF]/10 rounded-full blur-3xl pointer-events-none" 
-        />
-        <div 
-          aria-hidden="true" 
-          className="absolute -bottom-32 -right-32 w-[420px] h-[420px] bg-[#F4B400]/10 rounded-full blur-3xl pointer-events-none" 
-        />
-        <div 
-          aria-hidden="true" 
-          className="absolute top-1/2 left-1/3 -translate-y-1/2 w-64 h-64 bg-blue-100/30 rounded-full blur-2xl pointer-events-none" 
-        />
+        {/* Deep navy gradient + subtle white star/dot particles */}
+        <DarkPageHeaderAtmosphere />
 
         {/* Breadcrumb Navigation Pill */}
         <div className="relative z-10 max-w-6xl mx-auto w-full mb-6 sm:mb-8 flex items-center justify-between">
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] bg-white/90 hover:bg-white px-3.5 py-1.5 rounded-full border border-neutral-200/80 shadow-xs transition-colors cursor-pointer group"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md shadow-xs transition-colors cursor-pointer group"
           >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform text-[#38BDF8]" />
             <span>Back to Home</span>
           </button>
 
-          <span className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider hidden sm:inline">
+          <span className="text-[11px] font-mono text-slate-300 uppercase tracking-wider hidden sm:inline">
             Company / About LegalBharosa
           </span>
         </div>
@@ -194,35 +184,35 @@ export default function AboutPage({
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="lg:col-span-7 text-left"
           >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#168CFF]/25 shadow-2xs text-xs font-semibold text-[#0B2A5B] mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0A2660]/85 backdrop-blur-md border border-[#168CFF]/35 shadow-2xs text-xs font-semibold text-[#BAE6FD] mb-4">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
               <span>Dedicated Legal & Financial Counseling</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#0B2A5B] tracking-tight leading-[1.15] mb-5 font-inter break-words">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.18] mb-5 font-heading break-words">
               Our Mission: Ethical Defense & Legal Relief for Indian Borrowers
             </h1>
 
-            <p className="text-sm sm:text-base text-neutral-700 leading-relaxed mb-3">
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-3 font-normal">
               LegalBharosa was founded to give individuals and small business owners facing EMI stress, recovery harassment, and legal notices a single, trustworthy place to turn to. We combine qualified advocate legal defense with structured financial restructuring — so no one has to navigate debt or legal intimidation alone.
             </p>
 
-            <p className="text-sm sm:text-base text-neutral-700 leading-relaxed mb-6">
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-6 font-normal">
               Borrowers often face unfair stigma, coercive calls outside permissible hours, and confusing court summons. We believe that temporary financial difficulty is a challenge to be solved legally and strategically — never an excuse for intimidation or humiliation.
             </p>
 
             {/* Trust Badges Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-6 text-xs font-semibold text-[#0B2A5B]">
-              <div className="p-2.5 bg-white/90 rounded-xl border border-neutral-200/90 flex items-center gap-2 shadow-2xs">
-                <CheckCircle2 className="w-4 h-4 text-[#168CFF] shrink-0" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-6 text-xs font-semibold text-slate-200">
+              <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
                 <span>BCI Enrolled Panel</span>
               </div>
-              <div className="p-2.5 bg-white/90 rounded-xl border border-neutral-200/90 flex items-center gap-2 shadow-2xs">
-                <CheckCircle2 className="w-4 h-4 text-[#168CFF] shrink-0" />
+              <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
                 <span>RBI Compliance</span>
               </div>
-              <div className="p-2.5 bg-white/90 rounded-xl border border-neutral-200/90 flex items-center gap-2 shadow-2xs">
-                <CheckCircle2 className="w-4 h-4 text-[#168CFF] shrink-0" />
+              <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 flex items-center gap-2 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
                 <span>100% Client Privilege</span>
               </div>
             </div>
@@ -232,7 +222,7 @@ export default function AboutPage({
               <button
                 type="button"
                 onClick={() => navigate('/book-consultation')}
-                className="inline-flex items-center gap-2.5 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px]"
+                className="inline-flex items-center gap-2.5 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full px-6 py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px] border border-[#168CFF]/40"
               >
                 <span>Book a Free Consultation</span>
                 <span className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center shrink-0">
@@ -246,7 +236,7 @@ export default function AboutPage({
                   const el = document.getElementById('company-journey');
                   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className="text-xs sm:text-sm font-semibold text-[#0B2A5B] hover:text-[#168CFF] px-4 py-2.5 rounded-full bg-white/80 hover:bg-white border border-neutral-200/90 transition-all cursor-pointer shadow-2xs min-h-[44px] flex items-center justify-center"
+                className="text-xs sm:text-sm font-semibold text-white hover:text-white px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 transition-all cursor-pointer shadow-2xs min-h-[44px] flex items-center justify-center backdrop-blur-md"
               >
                 Explore Company Journey ↓
               </button>
@@ -294,19 +284,19 @@ export default function AboutPage({
                   Advocate-Led Resolution Team
                 </h3>
                 <p className="text-xs text-neutral-500 text-center max-w-xs mt-1">
-                  Over 500+ empanelled advocates across 28 states protecting borrower dignity.
+                  Empanelled advocates and legal advisors dedicated to protecting borrower dignity.
                 </p>
               </div>
 
               {/* Bottom Metrics Pill Strip */}
               <div className="w-full grid grid-cols-2 gap-2 pt-3 border-t border-neutral-200/70 text-center">
                 <div className="p-2 rounded-xl bg-white border border-neutral-200/80 shadow-2xs">
-                  <span className="block text-sm font-bold text-[#0B2A5B]">15,000+</span>
-                  <span className="text-[10px] text-neutral-500">Cases Handled</span>
+                  <span className="block text-sm font-bold text-[#0B2A5B]">Clear Guidance</span>
+                  <span className="text-[10px] text-neutral-500">Legal Advisory</span>
                 </div>
                 <div className="p-2 rounded-xl bg-white border border-neutral-200/80 shadow-2xs">
-                  <span className="block text-sm font-bold text-[#0B2A5B]">4.9 / 5.0</span>
-                  <span className="text-[10px] text-neutral-500">Verified Rating</span>
+                  <span className="block text-sm font-bold text-[#0B2A5B]">100% Confidential</span>
+                  <span className="text-[10px] text-neutral-500">Privileged Enquiries</span>
                 </div>
               </div>
 
@@ -524,7 +514,7 @@ export default function AboutPage({
                   Bar Council Registered Advocates & Legal Specialists
                 </div>
                 <div className="text-xs text-neutral-500">
-                  Operating under Indian legal standards with verified pan-India advocate desk representation.
+                  Operating under Indian legal standards with qualified legal advocate representation.
                 </div>
               </div>
             </div>
@@ -686,7 +676,7 @@ export default function AboutPage({
           <div className="relative z-10 max-w-2xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white rounded-full px-3.5 py-1 shadow-2xs border border-[#168CFF]/20 text-xs font-semibold text-[#0B2A5B] mb-3">
               <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>Pan-India Advocate Network</span>
+              <span>Qualified Advocate Network</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0B2A5B] mb-3">

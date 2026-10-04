@@ -140,7 +140,7 @@ export default function HowWeHelp({ onOpenConsult }) {
         {/* 1. SECTION TITLE: WHAT WE PROVIDE ONLY */}
         {/* ======================================================== */}
         <div className="text-center mb-10 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0B2A5B] font-inter uppercase">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0B2A5B] font-heading uppercase">
             WHAT WE PROVIDE
           </h2>
         </div>

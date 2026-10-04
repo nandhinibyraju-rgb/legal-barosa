@@ -24,8 +24,13 @@ const PROBLEMS = [
     iconBg: 'bg-blue-50 border-[#078BE8]/25',
     glowColor: 'rgba(7, 139, 232, 0.24)',
     borderGlow: 'rgba(7, 139, 232, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'We enforce strict RBI Fair Practices regulations to immediately halt unauthorized agent visits, aggressive recovery calls, and unlawful third-party threats.',
+    reassurance: 'Practical Guidance',
+    explanation: 'Understand your rights under the RBI Fair Practices Code. Document recovery communications, verify agent authorization, and learn lawful steps to address persistent harassment.',
+    nextSteps: {
+      gather: 'Dates, times, caller phone numbers, call recordings, and recovery agency names.',
+      review: 'Permitted calling hours (8 AM - 7 PM) and RBI guidelines prohibiting intimidation or third-party disclosure.',
+      advice: 'If recovery agents make abusive threats, visit unannounced, or contact employers and relatives.',
+    },
     serviceName: 'Harassment Protection',
     serviceLink: '/services/harassment-protection',
   },
@@ -38,8 +43,13 @@ const PROBLEMS = [
     iconBg: 'bg-amber-50 border-amber-400/30',
     glowColor: 'rgba(245, 158, 11, 0.24)',
     borderGlow: 'rgba(245, 158, 11, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'Qualified High Court advocates scrutinize your legal notice for compliance flaws and draft a strong, legally protective formal reply on your behalf.',
+    reassurance: 'Careful Notice Assessment',
+    explanation: 'Receiving a legal notice requires timely attention. Review the statutory response deadline, verify the loan details cited, and prepare appropriate documentation before drafting a formal legal reply.',
+    nextSteps: {
+      gather: 'Complete notice copy, postal envelope with date stamp, and all loan account statements.',
+      review: 'Demand amounts, calculation of interest/penalties, and the specific laws cited (e.g., Section 138, SARFAESI).',
+      advice: 'Before the stipulated deadline expires, engage a qualified advocate to review procedural validity and draft a formal reply.',
+    },
     serviceName: 'Legal Notice Review',
     serviceLink: '/services/legal-notice-review',
   },
@@ -52,8 +62,13 @@ const PROBLEMS = [
     iconBg: 'bg-blue-50/80 border-[#0B2A5B]/20',
     glowColor: 'rgba(11, 42, 91, 0.22)',
     borderGlow: 'rgba(11, 42, 91, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'We negotiate structured debt reduction, one-time loan settlement waivers up to 50%, and manageable repayment terms directly with your lenders.',
+    reassurance: 'Explore Repayment Options',
+    explanation: 'If facing difficulty with loan EMIs, understand possible relief options such as restructuring, tenure extension, or formal One-Time Settlement (OTS) discussions where eligible.',
+    nextSteps: {
+      gather: 'Current repayment breakdown, income statements, and medical or financial hardship documentation.',
+      review: 'Loan agreement terms, interest calculations, and the lender’s distressed asset policies.',
+      advice: 'When loans reach NPA status or lenders initiate recovery proceedings without entertaining informal discussions.',
+    },
     serviceName: 'Loan Settlement',
     serviceLink: '/services/loan-settlement',
   },
@@ -66,8 +81,13 @@ const PROBLEMS = [
     iconBg: 'bg-blue-50 border-[#0646A8]/25',
     glowColor: 'rgba(6, 70, 168, 0.24)',
     borderGlow: 'rgba(6, 70, 168, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'Senior land and civil advocates represent your property rights, obtain urgent stay orders, and defend against aggressive SARFAESI bank recovery actions.',
+    reassurance: 'Property & Asset Guidance',
+    explanation: 'For secured loan defaults or property disputes, understand the formal legal process under SARFAESI and civil law to protect your rights and explore resolution avenues.',
+    nextSteps: {
+      gather: 'Title deeds, loan sanction letters, mortgage documents, and any Section 13(2) or 13(4) notices.',
+      review: 'Statutory 60-day response windows, procedural compliance by the bank, and valuation accuracy.',
+      advice: 'Immediately upon receiving possession or auction notices to evaluate DRT representation and stay options.',
+    },
     serviceName: 'Secured Loan & Property',
     serviceLink: '/services/npa-secured-loans',
   },
@@ -80,8 +100,13 @@ const PROBLEMS = [
     iconBg: 'bg-amber-50 border-amber-500/30',
     glowColor: 'rgba(217, 119, 6, 0.24)',
     borderGlow: 'rgba(217, 119, 6, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'Confidential advisory and advocate backing for unlawful workplace pressure, wrongful termination, statutory dues recovery, and dispute resolution.',
+    reassurance: 'Confidential Guidance',
+    explanation: 'When debt collection reaches your workplace or you face employment disputes, understand employee protections and appropriate escalation steps.',
+    nextSteps: {
+      gather: 'Records of any calls to HR or colleagues, email trails, and relevant company policies.',
+      review: 'RBI rules strictly barring lenders from contacting employers or colleagues regarding private debts.',
+      advice: 'If workplace harassment threatens your employment standing or violates statutory protections.',
+    },
     serviceName: 'Advocate Legal Advisory',
     serviceLink: '/services/harassment-protection',
   },
@@ -94,8 +119,13 @@ const PROBLEMS = [
     iconBg: 'bg-cyan-50 border-cyan-400/30',
     glowColor: 'rgba(6, 182, 212, 0.24)',
     borderGlow: 'rgba(6, 182, 212, 0.45)',
-    reassurance: 'Yes, we handle this.',
-    explanation: 'We dispute erroneous default marks with credit bureaus, obtain official No Dues Certificates (NDCs), and establish a proven score recovery plan.',
+    reassurance: 'Credit Profile Guidance',
+    explanation: 'Rebuilding damaged credit requires identifying reporting discrepancies and obtaining official closure documents from lenders before approaching credit bureaus.',
+    nextSteps: {
+      gather: 'Recent CIR reports from CIBIL, Experian, or CRIF, and loan closure or settlement payment receipts.',
+      review: 'Reporting status tags such as "Written Off" or "Settled", outstanding amounts, and date discrepancies.',
+      advice: 'When lenders fail to report closed loans to credit bureaus or persist in showing false delinquent records.',
+    },
     serviceName: 'Credit Score Recovery',
     serviceLink: '/services/credit-recovery',
   },
@@ -170,7 +200,7 @@ function DiagnosticCard({
           ? 'transform 0.12s ease-out, box-shadow 0.25s ease-out'
           : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className={`group relative p-5 sm:p-6 rounded-2xl bg-white/95 backdrop-blur-md border border-neutral-200/85 cursor-pointer select-none flex flex-col justify-between min-h-[148px] sm:min-h-[158px] overflow-hidden ${
+      className={`group relative p-4 sm:p-4.5 rounded-2xl bg-white/95 backdrop-blur-md border border-neutral-200/85 cursor-pointer select-none flex flex-col justify-between min-h-[132px] sm:min-h-[142px] overflow-hidden ${
         isCurrentlyAnimating ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -399,7 +429,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
     <section 
       id="sound-like-you"
       aria-label="Does This Sound Like You Section"
-      className="relative w-full py-12 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-visible z-10"
+      className="relative w-full py-8 sm:py-10 px-4 sm:px-6 lg:px-8 overflow-visible z-10"
     >
       {/* 
         ========================================================================
@@ -456,7 +486,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
-          className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 px-2"
+          className="text-center max-w-3xl mx-auto mb-5 sm:mb-6 px-2"
         >
           {/* Top Pill Diagnostic Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50/90 border border-[#078BE8]/25 text-xs font-semibold uppercase tracking-wider text-[#0646A8] mb-3 shadow-2xs">
@@ -467,7 +497,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] leading-[1.2] font-bold text-[#0B2A5B] tracking-tight">
             Does This Sound Like{' '}
             <span 
-              style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic', fontWeight: 400 }} 
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontWeight: 600 }} 
               className="text-[#0646A8]"
             >
               You?
@@ -549,7 +579,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.65, delay: 0.15, ease: [0.25, 1, 0.5, 1] }}
-          className="mt-10 sm:mt-12 text-center flex flex-col items-center justify-center gap-4 px-4"
+          className="mt-5 sm:mt-6 text-center flex flex-col items-center justify-center gap-4 px-4"
         >
           {/* Celebratory Congratulatory Box when all 6 explored */}
           {isAllExplored ? (
@@ -586,7 +616,7 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
           ) : (
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5">
               <p className="text-[14.5px] sm:text-[15.5px] text-slate-700 font-medium tracking-tight">
-                Whatever you're facing, we've helped thousands through it.
+                Whatever you're facing, explore structured guidance to find your next step.
               </p>
               <button
                 type="button"
@@ -660,8 +690,8 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
               animate={{
                 x: 0,
                 y: 0,
-                width: typeof window !== 'undefined' ? Math.min(460, window.innerWidth - 32) : 460,
-                height: typeof window !== 'undefined' && window.innerWidth < 640 ? 385 : 340,
+                width: typeof window !== 'undefined' ? Math.min(480, window.innerWidth - 32) : 480,
+                height: typeof window !== 'undefined' && window.innerWidth < 640 ? 440 : 400,
                 rotateY: 180,
               }}
               exit={{
@@ -778,19 +808,36 @@ export default function DoesThisSoundLikeYou({ onOpenConsult }) {
                   </button>
                 </div>
 
-                {/* Middle: Problem Context + Solution Explanation (Smooth fade-in) */}
+                {/* Middle: Problem Context + Solution Explanation + Structured Next Steps */}
                 <motion.div 
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.42, duration: 0.4, ease: 'easeOut' }}
-                  className="my-auto py-1"
+                  className="my-auto py-1 space-y-2 overflow-y-auto pr-1"
                 >
                   <span className="text-[11.5px] font-bold uppercase tracking-wider text-[#0646A8] flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                     <span>{selectedCard.data.problem}</span>
                   </span>
-                  <p className="text-[14px] sm:text-[15px] text-slate-700 font-normal leading-relaxed mt-2 sm:mt-2.5">
+                  
+                  <p className="text-[13px] sm:text-[13.5px] text-slate-700 font-normal leading-relaxed">
                     {selectedCard.data.explanation}
+                  </p>
+
+                  {/* Practical Guidance Next Steps Box */}
+                  <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-2.5 sm:p-3 text-left space-y-1.5 text-[11px] sm:text-[11.5px]">
+                    <div className="font-semibold text-[#0B2A5B] text-xs">
+                      Practical Next Steps:
+                    </div>
+                    <div className="text-slate-600 space-y-1">
+                      <p><span className="font-medium text-slate-800">• Information to gather:</span> {selectedCard.data.nextSteps?.gather}</p>
+                      <p><span className="font-medium text-slate-800">• What to review:</span> {selectedCard.data.nextSteps?.review}</p>
+                      <p><span className="font-medium text-slate-800">• When to seek advice:</span> {selectedCard.data.nextSteps?.advice}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] text-slate-400 italic">
+                    Educational guidance only. Does not constitute formal legal counsel or guaranteed outcomes.
                   </p>
                 </motion.div>
 

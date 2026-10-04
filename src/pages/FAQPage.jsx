@@ -15,6 +15,7 @@ import {
 import Footer from '../components/Footer';
 import TrustStrip from '../components/TrustStrip';
 import CardBorderTrace from '../components/CardBorderTrace';
+import DarkPageHeader from '../components/DarkPageHeader';
 
 export const FAQ_ITEMS = [
   {
@@ -44,13 +45,13 @@ export const FAQ_ITEMS = [
   {
     id: 'coverage',
     question: "Can you help if I'm outside a major city?",
-    answer: 'Yes, we provide Pan-India coverage. Most consultations and case handling can be done remotely via phone, WhatsApp, or video call.',
-    tag: 'Pan-India Coverage'
+    answer: 'Yes, we support borrowers across India through remote consultations via phone, WhatsApp, or video call, and can advise on legal options applicable to your jurisdiction.',
+    tag: 'Remote Consultation'
   },
   {
     id: 'harassment',
     question: 'What if recovery agents are calling my family or workplace?',
-    answer: "This is illegal under RBI's Fair Practices Code. Let us know immediately — we can intervene directly and formally to stop this.",
+    answer: "Calling family or employers violates the RBI's Fair Practices Code. We can help you understand your legal remedies and assist in issuing formal legal notices where appropriate.",
     tag: 'RBI Compliance'
   },
   {
@@ -90,83 +91,54 @@ export default function FAQPage({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#EDEDED] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
       
       {/* ======================================================== */}
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline)   */}
       {/* ======================================================== */}
-      <header className="relative w-full overflow-hidden bg-[#d9d9d9] rounded-2xl sm:rounded-3xl flex flex-col justify-between pb-8 sm:pb-12 shadow-sm border border-neutral-200/60">
-        
-        {/* Sky Clean Background image with smooth skeleton state */}
-        <img
-          src="/assets/hero-sky-clean.jpg"
-          alt="Clean sky background for legal help and support"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="eager"
-        />
-
-        {/* Soft overlay for contrast */}
-        <div className="absolute inset-0 bg-white/20 pointer-events-none" />
-
-        {/* Foreground Content */}
-        <div className="relative z-10 flex flex-col w-full h-full">
-          {/* Breadcrumb Navigation Pill */}
-          <div className="max-w-5xl mx-auto w-full px-4 pt-6 sm:pt-8 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] bg-white/80 hover:bg-white px-3 py-1.5 rounded-full border border-neutral-200/80 shadow-xs transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168CFF]"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back to Home</span>
-            </button>
-
-            <span className="text-[11px] font-mono text-neutral-600 uppercase tracking-wider hidden sm:inline">
-              Help Center / FAQ
-            </span>
+      <DarkPageHeader
+        breadcrumbText="Help Center / FAQ"
+        maxWidth="max-w-4xl"
+      >
+        <motion.div 
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="flex flex-col items-center px-4 pt-5 sm:pt-7 text-center select-none max-w-4xl mx-auto w-full"
+        >
+          {/* Category Tag Badge */}
+          <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
+            <span>Help Center & Answers</span>
           </div>
 
-          {/* Intro Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col items-center px-4 pt-4 sm:pt-6 text-center select-none max-w-3xl mx-auto w-full"
-          >
-            {/* Category Tag Badge */}
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/20 text-[12.5px] font-semibold text-[#0B2A5B] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>Help Center & Answers</span>
-            </div>
+          {/* Page Heading */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading break-words px-2 max-w-3xl">
+            Frequently Asked Questions
+          </h1>
 
-            {/* Page Heading */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B2A5B] tracking-tight leading-[1.15] font-inter">
-              Frequently Asked Questions
-            </h1>
+          {/* Subheading */}
+          <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+            Everything you need to know about how LegalBharosa can help.
+          </p>
 
-            {/* Subheading */}
-            <p className="mt-3 sm:mt-4 text-neutral-700 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
-              Everything you need to know about how LegalBharosa can help.
-            </p>
-
-            {/* Quick Trust Highlights */}
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-[#0B2A5B]">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-neutral-200/80 shadow-2xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#168CFF]" />
-                100% Confidential
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-neutral-200/80 shadow-2xs">
-                <Scale className="w-3.5 h-3.5 text-[#b45309]" />
-                Bar Council Advocates
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-neutral-200/80 shadow-2xs">
-                <Lock className="w-3.5 h-3.5 text-[#0646A8]" />
-                RBI Compliant
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </header>
+          {/* Quick Trust Highlights */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
+              100% Confidential
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
+              Bar Council Advocates
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <Lock className="w-3.5 h-3.5 text-[#38BDF8]" />
+              RBI Compliant
+            </span>
+          </div>
+        </motion.div>
+      </DarkPageHeader>
 
       {/* ======================================================== */}
       {/* 2. MAIN ACCORDION SECTION (Responsive, Touch-Friendly)   */}

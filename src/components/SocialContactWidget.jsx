@@ -81,7 +81,7 @@ export default function SocialContactWidget({ onOpenConsult }) {
     const message = q
       ? `Hello LegalBharosa, I have a quick question: ${q}`
       : 'Hello LegalBharosa, I have a quick question regarding legal consultation.';
-    const whatsappUrl = `https://wa.me/918790760524?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/917386444186?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setQuickQuestion('');
     setMenuOpen(false);
@@ -168,7 +168,7 @@ export default function SocialContactWidget({ onOpenConsult }) {
             <div className="flex items-center justify-between gap-2.5 pt-0.5">
               {/* 1. WhatsApp */}
               <a
-                href="https://wa.me/918790760524"
+                href="https://wa.me/917386444186"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Chat on WhatsApp"
@@ -227,11 +227,11 @@ export default function SocialContactWidget({ onOpenConsult }) {
 
             {/* Quick Helpline Direct Action */}
             <a
-              href="tel:+918790760524"
+              href="tel:7386444186"
               className="mt-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-white/[0.05] hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-300 hover:text-white transition-all hover:scale-[1.02]"
             >
               <Phone className="w-3.5 h-3.5 text-[#12B9F2]" />
-              <span>Call: +91 8790760524</span>
+              <span>Call: 7386444186</span>
             </a>
           </div>
         </div>
@@ -277,7 +277,7 @@ export default function SocialContactWidget({ onOpenConsult }) {
         </div>
 
         <a
-          href="https://wa.me/918790760524"
+          href="https://wa.me/917386444186"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"

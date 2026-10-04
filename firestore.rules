@@ -70,7 +70,62 @@ service cloud.firestore {
         request.resource.data.senderId == request.auth.uid &&
         get(/databases/$(database)/documents/cases/$(request.resource.data.caseId)).data.userId == request.auth.uid
       );
-      allow update, delete: if isAdmin();
+    }
+
+    // 5. articles collection (Community & Knowledge platform)
+    // - Anyone can read published articles; admins can read all
+    // - Authors or admins can create, update, or delete
+    match /articles/{articleId} {
+      allow read: if resource.data.status == 'published' || 
+                     (isAuthenticated() && resource.data.authorId == request.auth.uid) || 
+                     isAdmin();
+      allow create: if isAuthenticated() && (request.resource.data.authorId == request.auth.uid || isAdmin());
+      allow update: if (isAuthenticated() && resource.data.authorId == request.auth.uid) || 
+                       isAdmin() ||
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['views', 'likes', 'bookmarks', 'commentsCount']);
+      allow delete: if (isAuthenticated() && resource.data.authorId == request.auth.uid) || isAdmin();
+    }
+
+    // 6. articleComments collection (Comments on articles)
+    // - Anyone can read comments
+    // - Authenticated users can post comments
+    // - Comment author or admin can delete
+    match /articleComments/{commentId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if (isAuthenticated() && resource.data.authorId == request.auth.uid) || isAdmin();
+    }
+
+    // 7. reports collection (Community moderation safety)
+    // - Public create (anyone can report inappropriate content)
+    // - Admin-only read, update, delete
+    match /reports/{reportId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 8. settings collection (Website Content: homepage, contact, booking)
+    // - Public read for website rendering
+    // - Admin-only write (create, update, delete)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 9. services collection (Dynamic Legal Services Directory)
+    // - Anyone can read published services; admins can read all (including drafts)
+    // - Admin-only write (create, update, delete)
+    match /services/{serviceId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // 10. clientStories collection (Verified Real Client Case Studies & Testimonials)
+    // - Anyone can read published stories; admins can read all
+    // - Admin-only write (create, update, delete)
+    match /clientStories/{storyId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
     }
   }
 }

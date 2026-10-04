@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import HeroFullBleedBackground from './components/HeroFullBleedBackground';
 import StatsBar from './components/StatsBar';
 import DoesThisSoundLikeYou from './components/DoesThisSoundLikeYou';
+import VideoSection from './components/VideoSection';
 import HowItWorks from './components/HowItWorks';
-import ClientSuccessStories from './components/ClientSuccessStories';
 import ClientStoriesPreview from './components/ClientStoriesPreview';
+import OurServicesResolutionSection from './components/OurServicesResolutionSection';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -16,15 +18,20 @@ import ServicePage from './pages/ServicePage';
 import BookConsultationPage from './pages/BookConsultationPage';
 import FAQPage from './pages/FAQPage';
 import ClientStoriesPage from './pages/ClientStoriesPage';
+import ArticlesPage from './pages/ArticlesPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
+import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
 import ReviewsSlideoutWidget from './components/ReviewsSlideoutWidget';
 import ConsultationModal from './components/ConsultationModal';
 import SignInModal from './components/SignInModal';
+import AutoConsultationPopup from './components/AutoConsultationPopup';
+import FloatingContactWidget from './components/FloatingContactWidget';
 import CustomCursor from './components/CustomCursor';
 import Card3DTiltManager from './components/Card3DTiltManager';
 import { auth } from './firebase';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
-import { syncUserProfile, subscribeUserProfile } from './services/firestoreService';
+import { syncUserProfile, subscribeUserProfile, subscribeSetting, DEFAULT_BOOKING_SETTINGS } from './services/firestoreService';
 import { MessageCircle, X } from 'lucide-react';
 
 // Homepage Component with Hero, How It Works, Stories, and Footer (Services moved to dedicated /services page; Reviews removed)
@@ -48,28 +55,40 @@ function HomePage({
   }, [openLoginOnMount, user, navigate, onOpenSignIn]);
 
   return (
-    <div className="min-h-screen w-full bg-[#FFFFFF] font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-6 sm:gap-10 overflow-x-hidden">
-      {/* 1. ONE-SCREEN HERO SECTION (Home Section: id="home") - Pure White #FFFFFF */}
+    <div className="min-h-screen w-full bg-[#FFFFFF] font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col overflow-x-hidden">
+      {/* 1. ONE-SCREEN HERO SECTION (Home Section: id="home") - Full-Bleed Dark Navy Background */}
       <section 
         id="home" 
-        className="relative w-full bg-[#FFFFFF] flex flex-col items-center justify-center scroll-mt-24 pt-0 sm:pt-1 pb-0 overflow-visible"
+        className="relative w-full flex flex-col items-center justify-center scroll-mt-24 pt-4 sm:pt-6 pb-6 sm:pb-8 overflow-hidden select-none"
+        style={{
+          background: 'linear-gradient(135deg, #0a1535 0%, #0f1f4a 25%, #14295f 50%, #0f1f4a 75%, #0a1535 100%)',
+        }}
       >
+        {/* Full-bleed background system: Base Gradient, Aurora Waves, Central Glow, Light Streaks, Particle Stars */}
+        <HeroFullBleedBackground />
+
         <div className="relative z-10 flex flex-col items-center w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          {/* Hero Content (Staggered Headline -> Large Illustration + Atmospheric Glow + Badges + CTA + Stats) */}
+          {/* Hero Content (Staggered Headline -> Large Illustration + Contained Glow + Badges + CTA + Stats) */}
           <Hero onOpenConsult={onOpenConsult} />
         </div>
       </section>
 
-      {/* 2. SECTION: DOES THIS SOUND LIKE YOU? (Problem Diagnostic with Flip & Jump-To-Center) */}
+      {/* 2. SECTION: REAL DEFENSE. GENUINE RELIEF. (Custom Video Player & Guided Overview) */}
+      <VideoSection onOpenConsult={onOpenConsult} />
+
+      {/* 3. SECTION: DOES THIS SOUND LIKE YOU? (Problem Diagnostic with Flip & Jump-To-Center) */}
       <DoesThisSoundLikeYou onOpenConsult={onOpenConsult} />
 
-      {/* 3. SECTION: CLIENT STORIES PREVIEW ('Real People, Real Results') */}
+      {/* 4. SECTION: CLIENT STORIES PREVIEW ('Real People, Real Results') */}
       <ClientStoriesPreview onOpenConsult={onOpenConsult} />
 
-      {/* 4. SECTION: HOW IT WORKS */}
+      {/* 5. NEW SECTION: OUR SERVICES — One Place. Multiple Paths to Resolution. */}
+      <OurServicesResolutionSection onOpenConsult={onOpenConsult} />
+
+      {/* 6. SECTION: HOW IT WORKS */}
       <HowItWorks onOpenConsult={onOpenConsult} />
 
-      {/* 5. FOOTER */}
+      {/* 7. FOOTER */}
       <Footer
         onOpenConsult={onOpenConsult}
         onNavigateHome={() => {
@@ -95,27 +114,100 @@ export default function App() {
   const [authError, setAuthError] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const autoOpenTimerRef = useRef(null);
-  const hasOpenedFormRef = useRef(false);
+  // Automatic 10-second booking popup & Floating Contact Widget state
+  const [autoPopupOpen, setAutoPopupOpen] = useState(false);
+  const [contactLauncherVisible, setContactLauncherVisible] = useState(() => {
+    try {
+      return sessionStorage.getItem('lb_auto_popup_dismissed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [contactPanelOpen, setContactPanelOpen] = useState(false);
 
-  // 20-second automatic consultation booking form trigger on every fresh page visit
+  const autoPopupTimerRef = useRef(null);
+  const isPopupDismissedRef = useRef(false);
+  const consultModalOpenRef = useRef(consultModalOpen);
+  const signInModalOpenRef = useRef(signInModalOpen);
+  const contactPanelOpenRef = useRef(contactPanelOpen);
+
   useEffect(() => {
-    autoOpenTimerRef.current = setTimeout(() => {
+    consultModalOpenRef.current = consultModalOpen;
+  }, [consultModalOpen]);
+
+  useEffect(() => {
+    signInModalOpenRef.current = signInModalOpen;
+  }, [signInModalOpen]);
+
+  useEffect(() => {
+    contactPanelOpenRef.current = contactPanelOpen;
+  }, [contactPanelOpen]);
+
+  // Dynamic Booking Settings from Firestore
+  const [bookingSettings, setBookingSettings] = useState(DEFAULT_BOOKING_SETTINGS);
+
+  useEffect(() => {
+    const unsub = subscribeSetting('booking', (data) => {
+      setBookingSettings(data);
+    }, DEFAULT_BOOKING_SETTINGS);
+    return () => unsub();
+  }, []);
+
+  // Automatic consultation booking popup trigger on website open
+  useEffect(() => {
+    // If disabled by administrator, do not trigger popup
+    if (bookingSettings?.autoPopupEnabled === false) return;
+
+    // If visitor previously dismissed or completed popup in this session, reveal launcher and do not run timer
+    let alreadyDismissed = false;
+    try {
+      alreadyDismissed = sessionStorage.getItem('lb_auto_popup_dismissed') === 'true';
+    } catch {}
+
+    if (alreadyDismissed) {
+      isPopupDismissedRef.current = true;
+      setContactLauncherVisible(true);
+      return;
+    }
+
+    const delayMs = Math.max(2000, (Number(bookingSettings?.autoPopupDelaySeconds) || 10) * 1000);
+
+    autoPopupTimerRef.current = setTimeout(() => {
       const currentPath = window.location.pathname.toLowerCase();
       const isBookingPage = currentPath === '/book-consultation';
-      if (!hasOpenedFormRef.current && !consultModalOpen && !isBookingPage) {
-        hasOpenedFormRef.current = true;
+      const isPortal = currentPath.startsWith('/dashboard') || currentPath.startsWith('/admin');
+
+      // Do not interrupt an already-open modal, active form submission, expanded contact panel, or special pages
+      if (
+        !isPopupDismissedRef.current && 
+        !consultModalOpenRef.current && 
+        !signInModalOpenRef.current && 
+        !contactPanelOpenRef.current &&
+        !isBookingPage && 
+        !isPortal
+      ) {
         setConsultTopic('General Legal Consultation');
         setConsultModalOpen(true);
+        isPopupDismissedRef.current = true;
+        try {
+          sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+        } catch {}
+      } else if (consultModalOpenRef.current || signInModalOpenRef.current) {
+        // If modal already open, mark handled
+        isPopupDismissedRef.current = true;
+        try {
+          sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+        } catch {}
+        setContactLauncherVisible(true);
       }
-    }, 20000);
+    }, delayMs);
 
     return () => {
-      if (autoOpenTimerRef.current) {
-        clearTimeout(autoOpenTimerRef.current);
+      if (autoPopupTimerRef.current) {
+        clearTimeout(autoPopupTimerRef.current);
       }
     };
-  }, []);
+  }, [bookingSettings?.autoPopupEnabled, bookingSettings?.autoPopupDelaySeconds]);
 
   // Auto-dismiss WhatsApp confirmation toast after 8 seconds
   useEffect(() => {
@@ -156,21 +248,37 @@ export default function App() {
       });
 
     let unsubscribeProfile = null;
+    let profileSafetyTimer = null;
+
     const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       console.log('[Auth] onAuthStateChanged user:', currentUser ? currentUser.email : 'null');
       setUser(currentUser);
-      setAuthLoading(false);
 
       if (currentUser) {
+        // Await profile lookup from Firestore to prevent race conditions on protected /admin routes
+        let initialProfileResolved = false;
+
+        profileSafetyTimer = setTimeout(() => {
+          if (!initialProfileResolved) {
+            initialProfileResolved = true;
+            setAuthLoading(false);
+          }
+        }, 1800);
+
+        unsubscribeProfile = subscribeUserProfile(currentUser.uid, (profile) => {
+          setUserProfile(profile);
+          if (!initialProfileResolved) {
+            initialProfileResolved = true;
+            if (profileSafetyTimer) clearTimeout(profileSafetyTimer);
+            setAuthLoading(false);
+          }
+        });
+
         try {
           await syncUserProfile(currentUser);
         } catch (err) {
           console.warn('[Auth] Auth state profile sync:', err);
         }
-
-        unsubscribeProfile = subscribeUserProfile(currentUser.uid, (profile) => {
-          setUserProfile(profile);
-        });
 
         const pendingRedirect = sessionStorage.getItem('pendingAuthRedirect');
         const currentPath = window.location.pathname.toLowerCase();
@@ -185,7 +293,12 @@ export default function App() {
           unsubscribeProfile();
           unsubscribeProfile = null;
         }
+        if (profileSafetyTimer) {
+          clearTimeout(profileSafetyTimer);
+          profileSafetyTimer = null;
+        }
         setUserProfile(null);
+        setAuthLoading(false);
       }
     });
 
@@ -195,23 +308,53 @@ export default function App() {
     };
   }, [navigate]);
 
+  const handleDismissAutoPopup = () => {
+    setAutoPopupOpen(false);
+    isPopupDismissedRef.current = true;
+    try {
+      sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+    } catch {}
+    setContactLauncherVisible(true);
+  };
+
+  const handleToggleContactPanel = () => {
+    if (autoPopupOpen) return;
+    setContactPanelOpen((prev) => !prev);
+  };
+
   const handleOpenConsult = (topic) => {
-    // If visitor manually opens the form before the 20-second timer finishes, cancel the automatic timer
-    if (autoOpenTimerRef.current) {
-      clearTimeout(autoOpenTimerRef.current);
-      autoOpenTimerRef.current = null;
+    // If visitor manually opens the form, cancel auto timer & close auto popup/panel
+    if (autoPopupTimerRef.current) {
+      clearTimeout(autoPopupTimerRef.current);
+      autoPopupTimerRef.current = null;
     }
-    hasOpenedFormRef.current = true;
+    setAutoPopupOpen(false);
+    setContactPanelOpen(false);
+    isPopupDismissedRef.current = true;
+    try {
+      sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+    } catch {}
+    setContactLauncherVisible(true);
     setConsultTopic(topic || 'General Legal Consultation');
     setConsultModalOpen(true);
   };
 
   const handleCloseConsult = () => {
     setConsultModalOpen(false);
+    isPopupDismissedRef.current = true;
+    try {
+      sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+    } catch {}
+    setContactLauncherVisible(true);
   };
 
   const handleConsultSuccess = (confirmationMsg) => {
     setConsultModalOpen(false);
+    isPopupDismissedRef.current = true;
+    try {
+      sessionStorage.setItem('lb_auto_popup_dismissed', 'true');
+    } catch {}
+    setContactLauncherVisible(true);
     setWhatsappToast(confirmationMsg || 'Almost done! Please tap Send in WhatsApp to complete your request.');
   };
 
@@ -357,6 +500,30 @@ export default function App() {
           } 
         />
         <Route path="/stories" element={<Navigate to="/client-stories" replace />} />
+        
+        {/* Community & Knowledge Articles Routes */}
+        <Route 
+          path="/articles" 
+          element={
+            <ArticlesPage
+              user={user}
+              userProfile={userProfile}
+              onOpenConsult={handleOpenConsult}
+              onOpenSignIn={() => setSignInModalOpen(true)}
+            />
+          } 
+        />
+        <Route 
+          path="/articles/:id" 
+          element={
+            <ArticleDetailPage
+              user={user}
+              userProfile={userProfile}
+              onOpenConsult={handleOpenConsult}
+              onOpenSignIn={() => setSignInModalOpen(true)}
+            />
+          } 
+        />
 
         {/* 6. Client Dashboard (Authenticated) */}
         <Route 
@@ -489,6 +656,20 @@ export default function App() {
           } 
         />
 
+        {/* 9. Dedicated Contact Page */}
+        <Route 
+          path="/contact" 
+          element={
+            <ContactPage
+              user={user}
+              userProfile={userProfile}
+              onOpenConsult={handleOpenConsult}
+              onOpenSignIn={() => setSignInModalOpen(true)}
+            />
+          } 
+        />
+        <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
+
         {/* Catch-all redirect to Home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -516,7 +697,20 @@ export default function App() {
         </div>
       )}
 
+      {/* 10-Second Automatic Case Review Booking Popup */}
+      <AutoConsultationPopup
+        isOpen={autoPopupOpen}
+        onClose={handleDismissAutoPopup}
+      />
 
+      {/* Floating WhatsApp Contact Launcher & Polished Contact Panel */}
+      <FloatingContactWidget
+        isVisible={contactLauncherVisible && !isPortalRoute}
+        isOpen={contactPanelOpen}
+        onToggle={handleToggleContactPanel}
+        onClose={() => setContactPanelOpen(false)}
+        isAutoPopupOpen={autoPopupOpen}
+      />
 
       {/* Global Interactive Consultation & Sign In Modals */}
       <ConsultationModal

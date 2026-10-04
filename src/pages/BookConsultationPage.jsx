@@ -12,6 +12,7 @@ import Footer from '../components/Footer';
 import CardBorderTrace from '../components/CardBorderTrace';
 import TrustStrip from '../components/TrustStrip';
 import BookingForm, { CONSULTATION_SERVICES, mapTopicToService } from '../components/BookingForm';
+import DarkPageHeader from '../components/DarkPageHeader';
 
 export default function BookConsultationPage({
   user,
@@ -42,85 +43,56 @@ export default function BookConsultationPage({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#ededed] p-3 sm:p-4 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#F8FAFC] p-3 sm:p-4 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
       
       {/* ======================================================== */}
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
       {/* ======================================================== */}
-      <div className="relative w-full overflow-hidden bg-[#d9d9d9] rounded-2xl sm:rounded-3xl flex flex-col justify-between pb-8 sm:pb-12 shadow-sm border border-neutral-200/60">
-        
-        {/* Seamless sky and clouds background */}
-        <img
-          src="/assets/hero-sky-clean.jpg"
-          alt="Clear sky background"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="eager"
-        />
+      <DarkPageHeader
+        breadcrumbText="Consultation / Free Evaluation"
+        maxWidth="max-w-4xl"
+      >
+        <motion.div 
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="flex flex-col items-center px-4 pt-5 sm:pt-7 text-center select-none max-w-3xl mx-auto w-full"
+        >
+          <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
+            <span className="w-2 h-2 rounded-full bg-[#168CFF] shadow-[0_0_6px_rgba(22,140,255,0.6)]" />
+            <span>Direct Legal Consultation Desk</span>
+          </div>
 
-        {/* Soft overlay */}
-        <div className="absolute inset-0 bg-white/15 pointer-events-none" />
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.12] font-heading">
+            Book a Free Consultation
+          </h1>
 
-        {/* Foreground Content Wrapper */}
-        <div className="relative z-10 flex flex-col w-full h-full">
-          {/* Breadcrumb Pill */}
-          <div className="max-w-5xl mx-auto w-full px-4 pt-6 sm:pt-8 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] bg-white/80 hover:bg-white px-3 py-1.5 rounded-full border border-neutral-200/80 shadow-xs transition-colors cursor-pointer group"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back to Home</span>
-            </button>
+          <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed font-normal">
+            Share your situation confidentially. Our advocate and financial counselling team will review your case and reach out within 24 hours.
+          </p>
 
-            <span className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider hidden sm:inline">
-              Consultation / Free Evaluation
+          {/* Quick Trust Highlights */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
+              100% Confidential
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
+              Bar Council Advocates
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <Clock className="w-3.5 h-3.5 text-[#38BDF8]" />
+              24-Hour Callback
             </span>
           </div>
 
-          {/* Headline & Subtitle */}
-          <motion.div 
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col items-center px-4 pt-4 sm:pt-6 text-center select-none max-w-3xl mx-auto w-full"
-          >
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/20 text-[12.5px] font-semibold text-[#0B2A5B] mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#168CFF] shadow-[0_0_6px_rgba(22,140,255,0.6)]" />
-              <span>Direct Legal Consultation Desk</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B2A5B] tracking-tight leading-[1.12] font-inter">
-              Book a Free Consultation
-            </h1>
-
-            <p className="mt-3 sm:mt-4 text-neutral-700 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed">
-              Share your situation confidentially. Our advocate and financial counselling team will review your case and reach out within 24 hours.
-            </p>
-
-            {/* Quick Trust Highlights */}
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-[#0B2A5B]">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-neutral-200/80 shadow-2xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#168CFF]" />
-                100% Confidential
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-neutral-200/80 shadow-2xs">
-                <Scale className="w-3.5 h-3.5 text-[#F4B400]" />
-                Bar Council Advocates
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-neutral-200/80 shadow-2xs">
-                <Clock className="w-3.5 h-3.5 text-[#168CFF]" />
-                24-Hour Callback
-              </span>
-            </div>
-
-            {/* Repeat trust strip near hero CTA */}
-            <div className="mt-3.5">
-              <TrustStrip centered={true} />
-            </div>
-          </motion.div>
-        </div>
-      </div>
+          {/* Repeat trust strip near hero CTA */}
+          <div className="mt-4">
+            <TrustStrip variant="dark" centered={true} />
+          </div>
+        </motion.div>
+      </DarkPageHeader>
 
       {/* ======================================================== */}
       {/* 2. MAIN CONSULTATION FORM & TRUST SIDEBAR SECTION */}
@@ -214,7 +186,7 @@ export default function BookConsultationPage({
                 <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500 font-mono">
                   <span className="flex items-center gap-1.5 text-neutral-700 font-medium">
                     <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-                    <span>WhatsApp: +91 87907 60524</span>
+                    <span>WhatsApp: +91 73864 44186</span>
                   </span>
                   <span className="text-[#168CFF] font-semibold">Verified</span>
                 </div>

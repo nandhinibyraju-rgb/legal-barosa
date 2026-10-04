@@ -1,27 +1,25 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  ArrowLeft, 
   ArrowRight, 
   ShieldCheck, 
   Scale, 
-  Clock, 
   CheckCircle2, 
   Sparkles,
   Search,
   Filter,
-  Layers,
-  FileCheck
+  Layers
 } from 'lucide-react';
 import Footer from '../components/Footer';
 import TrustStrip from '../components/TrustStrip';
-import CardBorderTrace from '../components/CardBorderTrace';
+import DarkPageHeader from '../components/DarkPageHeader';
+import CaseStoryCard from '../components/CaseStoryCard';
 import { 
   CLIENT_REVIEWS, 
-  REVIEW_CATEGORIES, 
-  CATEGORY_THEMES 
+  REVIEW_CATEGORIES 
 } from '../data/reviewsData';
+import { subscribePublishedClientStories } from '../services/firestoreService';
 
 export default function ClientStoriesPage({
   user: _user,
@@ -32,106 +30,98 @@ export default function ClientStoriesPage({
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [liveStories, setLiveStories] = useState([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.title = 'Client Stories & Real Results | 40 Verified Case Studies | LegalBharosa';
+    document.title = 'Client Stories & Real Results | Verified Case Studies | LegalBharosa';
+    const unsub = subscribePublishedClientStories((list) => {
+      setLiveStories(list || []);
+    });
+    return () => unsub();
   }, []);
 
-  // Category counts
-  const categoryCounts = useMemo(() => {
-    const counts = { All: CLIENT_REVIEWS.length };
-    REVIEW_CATEGORIES.forEach((cat) => {
-      if (cat !== 'All') {
-        counts[cat] = CLIENT_REVIEWS.filter((r) => r.category === cat).length;
-      }
-    });
-    return counts;
-  }, []);
+  // Combined reviews (live Firestore published stories + base verified reviews)
+  const allReviews = useMemo(() => {
+    if (liveStories.length > 0) {
+      const mappedLive = liveStories.map((s) => ({
+        id: s.id,
+        clientName: s.clientName,
+        city: s.city || '',
+        caseTopic: s.caseTopic,
+        category: s.category || 'OTS',
+        reviewText: s.reviewText,
+        caseSummary: s.caseSummary || { exposure: '', resolution: '', timeline: '' },
+      }));
+      return [...mappedLive, ...CLIENT_REVIEWS];
+    }
+    return CLIENT_REVIEWS;
+  }, [liveStories]);
 
   // Filtered reviews
   const filteredReviews = useMemo(() => {
-    return CLIENT_REVIEWS.filter((review) => {
+    return allReviews.filter((review) => {
       const matchesCategory = selectedCategory === 'All' || review.category === selectedCategory;
       if (!matchesCategory) return false;
 
       if (!searchQuery.trim()) return true;
       const query = searchQuery.toLowerCase();
+      const cs = review.caseSummary;
       return (
         review.clientName.toLowerCase().includes(query) ||
         review.caseTopic.toLowerCase().includes(query) ||
         review.reviewText.toLowerCase().includes(query) ||
-        review.category.toLowerCase().includes(query)
+        review.category.toLowerCase().includes(query) ||
+        (cs?.exposure && cs.exposure.toLowerCase().includes(query)) ||
+        (cs?.resolution && cs.resolution.toLowerCase().includes(query)) ||
+        (cs?.timeline && cs.timeline.toLowerCase().includes(query))
       );
     });
   }, [selectedCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen w-full bg-[#EDEDED] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
       
       {/* 1. TOP HERO HEADER */}
-      <header className="relative w-full overflow-hidden bg-[#d9d9d9] rounded-2xl sm:rounded-3xl flex flex-col justify-between pb-8 sm:pb-12 shadow-sm border border-neutral-200/60">
-        <img
-          src="/assets/hero-sky-clean.jpg"
-          alt="Clean sky background for client stories and success"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="eager"
-        />
-
-        <div className="absolute inset-0 bg-white/20 pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col w-full h-full">
-          <div className="max-w-6xl mx-auto w-full px-4 pt-6 sm:pt-8 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] bg-white/80 hover:bg-white px-3 py-1.5 rounded-full border border-neutral-200/80 shadow-xs transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168CFF]"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back to Home</span>
-            </button>
-
-            <span className="text-[11px] font-mono text-neutral-600 uppercase tracking-wider hidden sm:inline">
-              Verified Case Studies / 40 Client Results
-            </span>
+      <DarkPageHeader
+        breadcrumbText="Verified Case Studies"
+        maxWidth="max-w-5xl"
+      >
+        <motion.div 
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="flex flex-col items-center px-4 pt-5 sm:pt-7 text-center select-none max-w-4xl mx-auto w-full"
+        >
+          <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
+            <span>Real Client Case Studies</span>
           </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col items-center px-4 pt-4 sm:pt-6 text-center select-none max-w-4xl mx-auto w-full"
-          >
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/20 text-[12.5px] font-semibold text-[#0B2A5B] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>40 Real Client Case Studies</span>
-            </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-bold text-white tracking-tight leading-[1.18] font-heading">
+            Real People. Real Results.
+          </h1>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B2A5B] tracking-tight leading-[1.15] font-inter">
-              Real People. Real Results.
-            </h1>
+          <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+            Read factual case summaries documenting how borrowers and business promoters resolved debt, defended statutory rights, stayed auctions, and reached structured settlements.
+          </p>
 
-            <p className="mt-3 sm:mt-4 text-neutral-700 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
-              Read factual case summaries documenting how borrowers and business promoters resolved debt, defended statutory rights, stayed auctions, and reached structured settlements.
-            </p>
-
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-[#0B2A5B]">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-neutral-200/80 shadow-2xs">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                40 Documented Outcomes
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-neutral-200/80 shadow-2xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#168CFF]" />
-                OTS &bull; SARFAESI &bull; DRT &bull; ARC
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-neutral-200/80 shadow-2xs">
-                <Scale className="w-3.5 h-3.5 text-[#b45309]" />
-                Strict RBI Fair Practice Compliance
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </header>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              Documented Outcomes
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
+              OTS &bull; SARFAESI &bull; DRT &bull; ARC
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 shadow-2xs">
+              <Scale className="w-3.5 h-3.5 text-[#FBBF24]" />
+              Strict RBI Fair Practice Compliance
+            </span>
+          </div>
+        </motion.div>
+      </DarkPageHeader>
 
       {/* 2. FILTER TABS & SEARCH BAR */}
       <div className="max-w-6xl mx-auto w-full px-2 sm:px-4 mt-2">
@@ -146,33 +136,26 @@ export default function ClientStoriesPage({
 
               {REVIEW_CATEGORIES.map((category) => {
                 const isActive = selectedCategory === category;
-                const count = categoryCounts[category] || 0;
-                const theme = CATEGORY_THEMES[category];
 
                 return (
                   <button
                     key={category}
                     type="button"
                     onClick={() => setSelectedCategory(category)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    className={`inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                       isActive
                         ? 'bg-[#0B2A5B] text-white shadow-xs'
                         : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200/80 hover:text-neutral-900'
                     }`}
                   >
                     <span>{category}</span>
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-neutral-200 text-neutral-600'
-                    }`}>
-                      {count}
-                    </span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Bottom row: Search input & summary count */}
+          {/* Bottom row: Search input & summary */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-neutral-100">
             <div className="relative flex-1 max-w-md">
               <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -180,7 +163,7 @@ export default function ClientStoriesPage({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search case studies (e.g. Shiva, ₹4.2 Cr, auction, stay, OTS)..."
+                placeholder="Search case stories (e.g. Shiva, ₹4.2 Cr, auction, stay, OTS)..."
                 className="w-full pl-9 pr-4 py-2 rounded-xl bg-neutral-50 border border-neutral-200 text-xs sm:text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#168CFF]/30 focus:border-[#168CFF] transition-all"
               />
               {searchQuery && (
@@ -195,7 +178,11 @@ export default function ClientStoriesPage({
             </div>
 
             <div className="text-xs text-neutral-500 font-medium self-center">
-              Showing <span className="font-bold text-[#0B2A5B]">{filteredReviews.length}</span> of {CLIENT_REVIEWS.length} case studies
+              {selectedCategory !== 'All' || searchQuery.trim() ? (
+                <>Showing <span className="font-bold text-[#0B2A5B]">{filteredReviews.length}</span> matching stories</>
+              ) : (
+                <span className="text-neutral-500">Verified Client Case Stories</span>
+              )}
             </div>
           </div>
         </div>
@@ -224,75 +211,15 @@ export default function ClientStoriesPage({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-              {filteredReviews.map((review, index) => {
-                const theme = CATEGORY_THEMES[review.category] || CATEGORY_THEMES.OTS;
-
-                return (
-                  <motion.div
-                    key={review.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ 
-                      duration: 0.65, 
-                      delay: (index % 3) * 0.1,
-                      ease: [0.25, 1, 0.5, 1] 
-                    }}
-                    className={`group relative rounded-2xl bg-white border border-neutral-200/90 p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-[0_4px_18px_rgba(0,0,0,0.03)] ${theme.hoverShadow} ${theme.hoverBorder} select-none text-left overflow-hidden`}
-                  >
-                    {/* Travelling Border Accent on hover */}
-                    <CardBorderTrace delay={(index % 4) * 0.8} borderRadius={16} />
-
-                    {/* TOP: Category Tag & Verified Badge */}
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${theme.badgeClass}`}>
-                          <span>{review.category}</span>
-                        </span>
-
-                        <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          <span>Verified Review</span>
-                        </span>
-                      </div>
-
-                      {/* CASE TOPIC HEADLINE */}
-                      <h2 className="text-[15.5px] sm:text-[16.5px] font-bold text-[#0B2A5B] tracking-tight leading-snug group-hover:text-[#0646A8] transition-colors mb-3">
-                        {review.caseTopic}
-                      </h2>
-
-                      {/* REAL CLIENT REVIEW TEXT (Verbatim from PDF) */}
-                      <div className="my-3">
-                        <p className="text-[13px] sm:text-[13.5px] text-neutral-700 leading-relaxed font-normal">
-                          "{review.reviewText}"
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* CARD FOOTER: Client Name & Verified Badge */}
-                    <div className="mt-5 pt-3.5 border-t border-neutral-100 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-[#0B2A5B]/10 border border-[#0B2A5B]/20 flex items-center justify-center font-bold text-[#0B2A5B] text-xs">
-                          {review.clientName.charAt(0)}
-                        </div>
-                        <div>
-                          <span className="font-bold text-[#0B2A5B] text-[13px] block">
-                            {review.clientName}
-                          </span>
-                          <span className="text-[10.5px] text-neutral-500 font-medium block">
-                            {review.caseTopic}
-                          </span>
-                        </div>
-                      </div>
-
-                      <span className="inline-flex items-center gap-1 text-[10.5px] text-emerald-700 font-medium">
-                        <FileCheck className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Original Review</span>
-                      </span>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {filteredReviews.map((review, index) => (
+                <CaseStoryCard
+                  key={review.id}
+                  review={review}
+                  delay={(index % 4) * 0.8}
+                  index={index}
+                  showFullTextDefault={false}
+                />
+              ))}
             </div>
           )}
 

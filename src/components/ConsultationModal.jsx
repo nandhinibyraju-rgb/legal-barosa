@@ -83,7 +83,7 @@ export default function ConsultationModal({
 
             <h2 
               id="consultation-modal-title" 
-              className="text-2xl sm:text-[26px] font-bold text-[#0B2A5B] tracking-tight leading-snug"
+              className="text-2xl sm:text-[26px] font-heading font-bold text-[#0B2A5B] tracking-tight leading-snug"
             >
               Book a Free Consultation
             </h2>

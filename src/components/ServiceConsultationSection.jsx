@@ -15,7 +15,12 @@ import { submitConsultation, saveLead } from '../services/firestoreService';
 import ServiceGraphic from './ServiceGraphic';
 import TrustStrip from './TrustStrip';
 
-export default function ServiceConsultationSection({ service, user }) {
+export default function ServiceConsultationSection({ 
+  service, 
+  user,
+  title,
+  subtitle
+}) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
@@ -108,11 +113,11 @@ export default function ServiceConsultationSection({ service, user }) {
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0B2A5B] tracking-tight mb-3">
-              Book a Free Consultation
+              {title || 'Book a Free Consultation'}
             </h2>
 
             <p className="text-sm sm:text-base text-neutral-600 leading-relaxed mb-6">
-              Connect with our legal advisors to evaluate your {service.title.toLowerCase()} matter. No spam, 100% confidential under advocate-client privilege.
+              {subtitle || `Connect with our legal advisors to evaluate your ${(service.title || 'legal').toLowerCase()} matter. No spam, 100% confidential under advocate-client privilege.`}
             </p>
 
             {submitted ? (

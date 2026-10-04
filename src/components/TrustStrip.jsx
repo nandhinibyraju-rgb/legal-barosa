@@ -7,7 +7,7 @@ import { ShieldCheck, Scale, CheckCircle2 } from 'lucide-react';
  * Features:
  * - Bar Council Verified
  * - RBI Compliant
- * - 15,000+ Cases Resolved
+ * - Structured Dispute Advisory
  * Accessible, responsive, and unobtrusive single line.
  */
 export default function TrustStrip({ 
@@ -24,7 +24,7 @@ export default function TrustStrip({
       } ${
         isDark ? 'text-slate-300/90' : 'text-slate-600'
       } ${className}`}
-      aria-label="Trust indicators: Bar Council Verified, RBI Compliant, 15,000+ Cases Resolved"
+      aria-label="Trust indicators: Bar Council Verified, RBI Compliant, Structured Dispute Advisory"
     >
       <span className="inline-flex items-center gap-1.5 shrink-0">
         <Scale className={`w-3.5 h-3.5 ${isDark ? 'text-[#F4B400]' : 'text-[#D99B00]'} shrink-0`} aria-hidden="true" />
@@ -42,7 +42,7 @@ export default function TrustStrip({
 
       <span className="inline-flex items-center gap-1.5 shrink-0">
         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
-        <span className="font-semibold">15,000+ Cases Resolved</span>
+        <span className="font-semibold">Structured Dispute Advisory</span>
       </span>
     </div>
   );

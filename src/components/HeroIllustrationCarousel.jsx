@@ -4,8 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import AnimatedIllustration from './AnimatedIllustration';
 import TrustStrip from './TrustStrip';
 import { defaultBadgeIcons } from './HeroIssueBadges';
-import { studentStressSvg } from '../assets/illustrations/studentStressSvg';
-import { feelingLostSvg } from '../assets/illustrations/feelingLostSvg';
+import { secondStressSvg } from '../assets/illustrations/secondStressSvg';
+import { secondBlamingSvg } from '../assets/illustrations/secondBlamingSvg';
 import { manipulationDebtSvg } from '../assets/illustrations/manipulationDebtSvg';
 import { questionsSvg } from '../assets/illustrations/questionsSvg';
 import { groupChatSvg } from '../assets/illustrations/groupChatSvg';
@@ -31,9 +31,10 @@ export const HERO_SLIDES = [
       { text: '&', isAccent: true },
       { text: 'harassment?', isAccent: true },
     ],
-    accentClass: 'text-[#0646A8]',
+    accentClass: 'text-[#93C5FD]',
+    offsetClass: 'translate-y-4 sm:translate-y-5 md:translate-y-6',
     description: 'Shield your family with certified advocate-backed defense against unlawful lender tactics.',
-    svgContent: studentStressSvg,
+    svgContent: secondStressSvg,
     alt: 'Stressed person overwhelmed by debt paperwork and recovery harassment',
     badges: [
       {
@@ -70,9 +71,10 @@ export const HERO_SLIDES = [
       { text: 'blamed', isAccent: true },
       { text: 'unfairly?', isAccent: true },
     ],
-    accentClass: 'text-[#0646A8]',
+    accentClass: 'text-[#FBBF24]',
+    offsetClass: 'translate-y-7 sm:translate-y-9 md:translate-y-11',
     description: 'Verified High Court advocates defend your land title, stay orders, and personal reputation.',
-    svgContent: feelingLostSvg,
+    svgContent: secondBlamingSvg,
     alt: 'Person feeling lost and unfairly blamed during property and civil legal disputes',
     badges: [
       {
@@ -113,7 +115,8 @@ export const HERO_SLIDES = [
       { text: 'of', isAccent: true },
       { text: 'debt?', isAccent: true },
     ],
-    accentClass: 'text-[#0646A8]',
+    accentClass: 'text-[#93C5FD]',
+    offsetClass: 'translate-y-6 sm:translate-y-8 md:translate-y-9',
     description: 'Break free from compounding interest, multiple loans, and aggressive recovery pressure.',
     svgContent: manipulationDebtSvg,
     alt: 'Person feeling trapped like a puppet in compounding debt and EMI pressure',
@@ -152,7 +155,8 @@ export const HERO_SLIDES = [
       { text: 'actual', isAccent: true },
       { text: 'solution?', isAccent: true },
     ],
-    accentClass: 'text-[#0646A8]',
+    accentClass: 'text-[#93C5FD]',
+    offsetClass: 'translate-y-5 sm:translate-y-7 md:translate-y-8',
     description: 'Connect directly with verified advocates for transparent, confidential legal roadmaps.',
     svgContent: questionsSvg,
     alt: 'Person surrounded by questions seeking verified legal advocate advice',
@@ -166,8 +170,8 @@ export const HERO_SLIDES = [
       },
       {
         id: 'verified-counsel',
-        title: '500+ Verified Advocates',
-        subtitle: 'Pan-India HC Network',
+        title: 'Verified Legal Counsel',
+        subtitle: 'Qualified Advocate Support',
         icon: defaultBadgeIcons.shield,
         posDesktop: 'top-[22%] right-1 sm:right-4 lg:right-6 xl:right-8',
       },
@@ -193,7 +197,8 @@ export const HERO_SLIDES = [
       { text: 'only', isAccent: true },
       { text: 'solution', isAccent: true },
     ],
-    accentClass: 'text-[#0646A8]',
+    accentClass: 'text-[#FBBF24]',
+    offsetClass: 'translate-y-5 sm:translate-y-7 md:translate-y-8',
     description: 'Certified legal resolution backed by dedicated advocates handling your case end-to-end.',
     svgContent: groupChatSvg,
     alt: 'LegalBharosa verified advocate team providing safe and confidential legal resolution via smartphone',
@@ -207,8 +212,8 @@ export const HERO_SLIDES = [
       },
       {
         id: 'pan-india-track',
-        title: 'Pan-India Coverage',
-        subtitle: '15,000+ Cases Resolved',
+        title: 'Structured Guidance',
+        subtitle: 'Ethical Dispute Advisory',
         icon: defaultBadgeIcons.harassment,
         posDesktop: 'top-[22%] right-1 sm:right-4 lg:right-6 xl:right-8',
       },
@@ -221,31 +226,6 @@ export const HERO_SLIDES = [
       },
     ],
   },
-];
-
-// Minimalist 4-point Sparkle SVG
-function SparkleStar({ className = '', style = {} }) {
-  return (
-    <svg 
-      viewBox="0 0 24 24" 
-      fill="currentColor" 
-      className={className} 
-      style={style}
-      aria-hidden="true"
-    >
-      <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
-    </svg>
-  );
-}
-
-// 6 Tasteful, subtle drifting sparkles/motes around the illustration
-const FLOATING_PARTICLES = [
-  { id: 'p1', top: '15%', left: '22%', size: 12, color: 'text-[#12B9F2]', isStar: true, duration: 4.8, delay: 0 },
-  { id: 'p2', top: '22%', right: '20%', size: 10, color: 'text-[#F4B400]', isStar: true, duration: 5.4, delay: 0.7 },
-  { id: 'p3', top: '46%', left: '17%', size: 5, color: 'bg-[#12B9F2]', isStar: false, duration: 4.2, delay: 1.3 },
-  { id: 'p4', bottom: '24%', right: '21%', size: 11, color: 'text-[#F4B400]', isStar: true, duration: 5.6, delay: 0.9 },
-  { id: 'p5', bottom: '18%', left: '24%', size: 5, color: 'bg-[#168CFF]', isStar: false, duration: 4.6, delay: 1.6 },
-  { id: 'p6', top: '35%', right: '16%', size: 6, color: 'bg-[#12B9F2]', isStar: false, duration: 5.0, delay: 0.4 },
 ];
 
 // Framer Motion variants for word-by-word staggered entrance
@@ -362,15 +342,15 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
             className="relative w-full flex flex-col items-center justify-center overflow-visible"
           >
             {/* 1. PRIMARY HERO HEADLINE (CLEAR BREATHING SPACE TO AVOID ANY OVERLAP) */}
-            <div className="w-full flex flex-col items-center justify-center mb-5 sm:mb-7 z-20">
+            <div className="w-full flex flex-col items-center justify-center mb-3 sm:mb-4 md:mb-5 z-20">
               {/* Category Pill */}
               <motion.div 
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.02 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50/90 border border-[#078BE8]/25 text-[#0646A8] text-[10px] sm:text-[10.5px] font-semibold tracking-wider uppercase mb-1 shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0E2656]/90 border border-[#38BDF8]/40 text-[#BAE6FD] text-[10px] sm:text-[10.5px] font-semibold tracking-wider uppercase mb-1.5 shadow-[0_2px_12px_rgba(14,38,86,0.6)]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#078BE8] shadow-[0_0_6px_#078BE8] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_8px_#38BDF8] animate-pulse" />
                 <span>{currentSlide.category}</span>
               </motion.div>
 
@@ -381,11 +361,11 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
                 animate="visible"
                 exit="exit"
                 style={{
-                  fontSize: 'clamp(22px, 3.4vw, 36px)',
-                  lineHeight: 1.15,
-                  letterSpacing: '-0.025em',
+                  fontSize: 'clamp(24px, 3.5vw, 38px)',
+                  lineHeight: 1.18,
+                  letterSpacing: '-0.02em',
                 }}
-                className="font-inter font-bold text-[#0B2A5B] tracking-tight text-center max-w-4xl px-2 sm:px-4 break-words"
+                className="font-heading font-bold text-white tracking-tight text-center max-w-4xl px-2 sm:px-4 break-words"
               >
                 {currentSlide.headlineTokens.map((token, idx) => (
                   <motion.span
@@ -393,16 +373,16 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
                     variants={wordVariants}
                     className={`inline-block mr-[0.22em] last:mr-0 ${
                       token.isAccent
-                        ? `${currentSlide.accentClass || 'text-[#0646A8]'} font-normal`
-                        : 'text-[#0B2A5B] font-bold'
+                        ? `${currentSlide.accentClass || 'text-[#93C5FD]'} font-normal drop-shadow-[0_0_14px_rgba(147,197,253,0.5)]`
+                        : 'text-white sm:text-[#F8FAFC] font-bold'
                     }`}
                     style={
                       token.isAccent
                         ? {
-                            fontFamily: "'Instrument Serif', Georgia, serif",
+                            fontFamily: "'Playfair Display', Georgia, serif",
                             fontStyle: 'italic',
-                            fontWeight: 400,
-                            fontSize: '1.08em',
+                            fontWeight: 600,
+                            fontSize: '1.05em',
                           }
                         : undefined
                     }
@@ -413,51 +393,23 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
               </motion.h1>
             </div>
 
-            {/* 2. LARGE ANIMATED ILLUSTRATION + CENTRED DEEP-BLUE GLOW + FLOATING BADGES */}
-            <div className="relative w-full h-[230px] xs:h-[250px] sm:h-[290px] md:h-[330px] lg:h-[360px] xl:h-[380px] flex items-center justify-center overflow-visible">
-              
-              {/* Soft radial glow container positioned behind hero illustration (at least 150% of illustration width and height) */}
-              <motion.div 
-                aria-hidden="true" 
-                style={{
-                  x: glowX,
-                  y: glowY,
-                }}
-                className="absolute inset-0 m-auto w-[550px] xs:w-[650px] sm:w-[750px] md:w-[850px] lg:w-[950px] xl:w-[1050px] h-[380px] xs:h-[420px] sm:h-[480px] md:h-[540px] lg:h-[580px] xl:h-[620px] pointer-events-none z-0 select-none overflow-visible flex items-center justify-center"
-              >
-                <div 
-                  style={{
-                    background: `radial-gradient(
-  ellipse 60% 55% at center,
-  rgba(30, 58, 138, 0.55) 0%,
-  rgba(30, 58, 138, 0.35) 25%,
-  rgba(30, 58, 138, 0.15) 50%,
-  rgba(30, 58, 138, 0.05) 70%,
-  transparent 85%
-)`,
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    inset: 0,
-                    zIndex: 0,
-                    pointerEvents: 'none',
-                  }}
-                />
-              </motion.div>
+            {/* 2. LARGE ANIMATED ILLUSTRATION + CONTAINED SOFT GLOW + FLOATING BADGES */}
+            <div className="relative w-full h-[220px] xs:h-[240px] sm:h-[270px] md:h-[300px] lg:h-[330px] xl:h-[345px] flex items-center justify-center overflow-visible">
 
-              {/* Illustration Wrapper with Parallax & Exact Current Scale */}
+              {/* Illustration Wrapper with Parallax, Soft Drop-Shadow & Clear Breathing Room */}
               <motion.div 
                 style={{
                   x: illustrationX,
                   y: illustrationY,
                   rotate: illustrationRotate,
+                  filter: 'drop-shadow(0 20px 40px rgba(30, 58, 138, 0.15))',
                 }}
-                className="relative z-10 w-full h-full flex items-center justify-center pointer-events-none"
+                className={`relative z-10 w-full h-full flex items-center justify-center pointer-events-none transition-transform duration-300 ${currentSlide.offsetClass || ''}`}
               >
                 <AnimatedIllustration
                   svgContent={currentSlide.svgContent}
                   alt={currentSlide.alt}
-                  className="w-full h-full flex items-center justify-center transform scale-105 sm:scale-115 md:scale-120 lg:scale-125 origin-center transition-transform"
+                  className="w-full h-full flex items-center justify-center transform scale-95 sm:scale-100 md:scale-105 lg:scale-108 origin-bottom transition-transform"
                 />
               </motion.div>
 
@@ -584,11 +536,11 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
               {isActive ? (
                 <motion.span
                   layoutId="heroCarouselActiveDot"
-                  className="w-7 h-2 rounded-full bg-[#062D78] shadow-[0_0_10px_rgba(6,45,120,0.5),0_0_4px_rgba(22,140,255,0.4)]"
+                  className="w-7 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_10px_rgba(56,189,248,0.7),0_0_4px_rgba(255,255,255,0.6)]"
                   transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                 />
               ) : (
-                <span className="w-2 h-2 rounded-full bg-slate-300 group-hover:bg-[#078BE8]/60 transition-colors duration-200" />
+                <span className="w-2 h-2 rounded-full bg-slate-500/50 group-hover:bg-[#38BDF8]/70 transition-colors duration-200" />
               )}
             </button>
           );
@@ -600,14 +552,14 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
         <button
           type="button"
           onClick={() => onOpenConsult?.('Hero Consultation')}
-          className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#062D78] hover:bg-[#0646A8] text-white text-[13.5px] font-semibold shadow-[0_4px_16px_rgba(6,45,120,0.18)] hover:shadow-[0_6px_22px_rgba(6,45,120,0.28)] transition-all hover:scale-105 active:scale-95 cursor-pointer min-h-[40px]"
+          className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#0A2660] hover:bg-[#0D3280] text-white text-[14px] font-semibold shadow-[0_4px_20px_rgba(6,45,120,0.5)] hover:shadow-[0_6px_24px_rgba(56,189,248,0.4)] border border-[#168CFF]/40 transition-all hover:scale-105 active:scale-95 cursor-pointer min-h-[42px]"
         >
           <span>Book a Free Consultation</span>
           <ArrowRight className="w-4 h-4 text-amber-400" />
         </button>
 
         {/* Subtle trust strip directly beneath Hero CTA */}
-        <TrustStrip className="mt-0.5" />
+        <TrustStrip className="mt-1" variant="dark" />
       </div>
     </div>
   );

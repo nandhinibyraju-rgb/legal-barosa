@@ -12,8 +12,8 @@ function WhatsAppIcon({ className = "w-4 h-4" }) {
 }
 
 // Configured contact numbers
-const WHATSAPP_NUMBER = '918790760524';
-const PHONE_NUMBER = '+918790760524';
+const WHATSAPP_NUMBER = '917386444186';
+const PHONE_NUMBER = '7386444186';
 const WHATSAPP_DEFAULT_MESSAGE = 'Hello LegalBharosa, I would like to get a free expert review of my case.';
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MESSAGE)}`;
 const CALL_URL = `tel:${PHONE_NUMBER}`;
@@ -48,17 +48,24 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
     };
   }, [isOpen, onClose]);
 
+  const handleActionClick = () => {
+    // Dismiss popup when user engages with call or WhatsApp
+    setTimeout(() => {
+      onClose?.();
+    }, 150);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           key="compact-auto-consultation-card"
           ref={cardRef}
-          initial={{ opacity: 0, x: 40, y: 30, scale: 0.94 }}
+          initial={{ opacity: 0, x: 30, y: 20, scale: 0.94 }}
           animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 40, y: 30, scale: 0.94, transition: { duration: 0.25, ease: 'easeIn' } }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-20 right-3 sm:bottom-24 sm:right-6 w-[calc(100vw-28px)] sm:w-[340px] max-w-[360px] z-[1001] rounded-2xl bg-white border border-slate-200/90 shadow-[0_16px_40px_rgba(6,45,120,0.22),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden font-inter select-none"
+          exit={{ opacity: 0, x: 30, y: 20, scale: 0.94, transition: { duration: 0.2, ease: 'easeIn' } }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 w-[calc(100vw-24px)] sm:w-[340px] max-w-[360px] z-[1001] rounded-2xl bg-white border border-slate-200/90 shadow-[0_16px_40px_rgba(6,45,120,0.22),0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden font-inter select-none"
           role="dialog"
           aria-modal="false"
           aria-labelledby="auto-popup-heading"
@@ -91,7 +98,7 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
 
             {/* Short 1-2 line Supporting Text */}
             <p className="text-[11.5px] sm:text-[12px] text-blue-100/90 mt-1 leading-relaxed pr-4">
-              A quick confidential call could change your resolution path.
+              One 15-minute call could change your resolution path. Strictly confidential.
             </p>
           </div>
 
@@ -102,7 +109,7 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
               {/* Icon + Short Label */}
               <div className="flex items-center gap-1.5 text-[10.5px] font-bold text-[#062D78] tracking-wider uppercase mb-1">
                 <Scale className="w-3 h-3 text-[#062D78] shrink-0" />
-                <span>FREE CASE REVIEW</span>
+                <span>FREE NPA CASE REVIEW</span>
               </div>
 
               {/* Short Bold Sub-Headline */}
@@ -123,7 +130,8 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1da851] text-white font-semibold text-xs py-2 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
+                onClick={handleActionClick}
+                className="bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1da851] text-white font-semibold text-xs py-2.5 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5 shrink-0 text-white" />
                 <span className="truncate">WhatsApp Expert</span>
@@ -132,7 +140,8 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
               {/* RIGHT: Dark Call Now button */}
               <a
                 href={CALL_URL}
-                className="bg-[#062D78] hover:bg-[#093994] active:bg-[#052361] text-white font-semibold text-xs py-2 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
+                onClick={handleActionClick}
+                className="bg-[#062D78] hover:bg-[#093994] active:bg-[#052361] text-white font-semibold text-xs py-2.5 px-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150 hover:shadow-md cursor-pointer no-underline text-center"
               >
                 <Phone className="w-3 h-3 fill-current shrink-0 text-white" />
                 <span className="truncate">Call Now</span>
@@ -141,8 +150,8 @@ export default function AutoConsultationPopup({ isOpen, onClose }) {
 
             {/* SMALL TRUST LINE AT BOTTOM */}
             <div className="flex items-center justify-center gap-1.5 text-[10.5px] text-slate-500 font-medium mt-2.5 pt-0.5 text-center">
-              <span className="text-[#F4B400] tracking-wider text-[11px]">★★★★★</span>
-              <span>Trusted by clients across India</span>
+              <ShieldCheck className="w-3 h-3 text-[#168CFF]" />
+              <span>100% Confidential • Professional Case Intake</span>
             </div>
           </div>
         </motion.div>

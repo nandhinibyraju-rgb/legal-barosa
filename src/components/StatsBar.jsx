@@ -5,38 +5,38 @@ import CardBorderTrace from './CardBorderTrace';
 export default function StatsBar({ onOpenConsult }) {
   const stats = [
     {
-      id: 'cases',
+      id: 'guidance',
       icon: ShieldCheck,
       iconColor: 'text-[#168CFF]',
       iconBg: 'bg-blue-50/80 border border-[#168CFF]/20',
-      title: '15,000+ Cases',
-      subtitle: 'Successfully Handled',
-      action: () => onOpenConsult?.('15,000+ Cases'),
+      title: 'Clear Guidance',
+      subtitle: 'Understand your situation and possible next steps.',
+      action: () => onOpenConsult?.('Clear Guidance'),
     },
     {
-      id: 'reviews',
+      id: 'feedback',
       icon: Star,
       iconColor: 'text-[#F4B400] fill-[#F4B400]',
       iconBg: 'bg-amber-50/80 border border-[#F4B400]/25',
-      title: '4.9 / 5.0 Rating',
-      subtitle: 'Verified Client Trust',
+      title: 'Client Feedback',
+      subtitle: 'Learn about our client-first service and feedback.',
       action: () => {
         const el = document.getElementById('client-stories');
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          onOpenConsult?.('Client Satisfaction');
+          onOpenConsult?.('Client Feedback');
         }
       },
     },
     {
-      id: 'network',
+      id: 'enquiries',
       icon: Scale,
       iconColor: 'text-[#123E8A]',
       iconBg: 'bg-blue-50/80 border border-[#123E8A]/20',
-      title: 'Pan-India Coverage',
-      subtitle: '500+ Verified Advocates',
-      action: () => onOpenConsult?.('Advocates Network'),
+      title: 'Confidential Enquiries',
+      subtitle: 'Discuss your concerns through the available contact channels.',
+      action: () => onOpenConsult?.('Confidential Enquiries'),
     },
   ];
 

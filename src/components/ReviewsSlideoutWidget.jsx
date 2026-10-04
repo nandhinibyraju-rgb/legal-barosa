@@ -66,7 +66,7 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
     const message = q
       ? `Hello LegalBharosa, I have a quick question: ${q}`
       : 'Hello LegalBharosa, I need legal guidance regarding my loan/case.';
-    const whatsappUrl = `https://wa.me/918790760524?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/917386444186?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setQuickQuestion('');
     setIsOpen(false);
@@ -153,7 +153,7 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
 
                 {/* WhatsApp Button */}
                 <a
-                  href="https://wa.me/918790760524?text=Hello%20LegalBharosa%2C%20I%20need%20urgent%20legal%20guidance%20with%20my%20loan%2Fcase."
+                  href="https://wa.me/917386444186?text=Hello%20LegalBharosa%2C%20I%20need%20urgent%20legal%20guidance%20with%20my%20loan%2Fcase."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full p-3.5 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white flex items-center justify-between shadow-md hover:shadow-lg transition-all group cursor-pointer"
@@ -174,7 +174,7 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
 
                 {/* Direct Phone Call Button */}
                 <a
-                  href="tel:+918790760524"
+                  href="tel:7386444186"
                   className="w-full p-3.5 rounded-2xl bg-blue-50/80 hover:bg-blue-100/80 border border-[#168CFF]/25 text-[#0B2A5B] flex items-center justify-between shadow-2xs hover:shadow-xs transition-all group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
                     </div>
                     <div className="text-left">
                       <div className="text-[13px] font-bold leading-tight flex items-center gap-2">
-                        <span>Call Us: +91 8790760524</span>
+                        <span>Call Us: 7386444186</span>
                       </div>
                       <div className="text-[11px] text-neutral-500 font-medium leading-tight mt-0.5">
                         Available Mon – Sat, 10:00 AM – 7:00 PM IST
@@ -231,7 +231,7 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
                 </span>
                 <div className="grid grid-cols-4 gap-2">
                   <a
-                    href="https://wa.me/918790760524"
+                    href="https://wa.me/917386444186"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-xl bg-neutral-50 hover:bg-emerald-50 border border-neutral-200/80 hover:border-emerald-200 text-neutral-700 hover:text-emerald-700 flex flex-col items-center gap-1 text-[10.5px] font-medium transition-colors"

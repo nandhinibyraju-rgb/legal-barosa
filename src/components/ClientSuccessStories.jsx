@@ -41,9 +41,9 @@ export default function ClientSuccessStories({ onOpenConsult }) {
           Real People.{' '}
           <span 
             style={{
-              fontFamily: "'Instrument Serif', serif", 
+              fontFamily: "'Playfair Display', Georgia, serif", 
               fontStyle: 'italic', 
-              fontWeight: 400
+              fontWeight: 600
             }}
             className="text-[#123E8A] text-3xl sm:text-4xl md:text-5xl"
           >

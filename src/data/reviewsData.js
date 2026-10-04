@@ -66,6 +66,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'OTS Settlement',
     category: 'OTS',
     reviewText: 'I was under tremendous pressure after my business account remained classified as doubtful for a long time. The outstanding exposure was around ₹4.2 Cr, and I honestly felt there was no practical way forward. Legal Bharosa studied the financial situation and helped structure a realistic settlement proposal. They also guided us through the discussions and payment planning instead of making unrealistic promises. After around 5 months, the OTS was settled at approximately 58% of the principal. Getting the NOC and seeing the credit status updated was a huge relief for me. The entire journey was stressful, but having professional guidance made a big difference.',
+    caseSummary: {
+      timeline: '5 Months',
+      exposure: '₹4.2 Cr',
+      satisfaction: 'Very Satisfied',
+      resolution: 'OTS Settlement (58%)',
+    },
   },
   {
     id: 2,
@@ -73,6 +79,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'SARFAESI / DRT Assistance',
     category: 'SARFAESI',
     reviewText: 'We were facing a very serious situation involving a commercial property and SARFAESI proceedings. The possibility of physical possession and auction created enormous pressure on our family and business. Legal Bharosa helped us understand the DRT process and the issues surrounding the auction procedure and valuation. The application and documentation were handled in a structured manner. Within about 9 weeks, interim relief/status quo was obtained regarding the auction. That gave us breathing space to discuss restructuring with the lender. For us, the biggest relief was getting time to find a workable solution instead of losing the property immediately.',
+    caseSummary: {
+      timeline: '9 Weeks',
+      exposure: 'Not disclosed',
+      satisfaction: 'Very Satisfied',
+      resolution: 'SARFAESI Stay / Relief',
+    },
   },
   {
     id: 3,
@@ -80,6 +92,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'ARC Settlement',
     category: 'ARC',
     reviewText: 'Our logistics business had reached a difficult stage after the loan was transferred to an ARC. The situation was confusing because the lender had changed and we were unsure whom to approach. Legal Bharosa helped us understand the ARC settlement process and prepared a direct settlement proposal. They also worked around a quick-cash structure and helped coordinate the refinancing requirement. The settlement was eventually closed at around 64% of the outstanding amount. The CIBIL update was another important part of completing the process. I appreciated the practical approach and continuous communication throughout the case.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'ARC Settlement (64%)',
+    },
   },
   {
     id: 4,
@@ -87,6 +105,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'DRT-OA Matter',
     category: 'DRT',
     reviewText: 'We were facing recovery proceedings involving a ₹3.1 Cr business account. There were serious differences regarding the account statement and the NPA classification. Initially, the situation looked like it could become a very long and expensive legal battle. Legal Bharosa helped us organise the documents, prepare the response and contest the proceedings properly. The matter continued for around 11 months and required patience from our side. Eventually, the bank agreed to a reduced settlement of around 52% after the interim developments. It was a long journey, but having someone systematically handle the process helped us stay calm.',
+    caseSummary: {
+      timeline: '11 Months',
+      exposure: '₹3.1 Cr',
+      satisfaction: 'Satisfied',
+      resolution: 'DRT Settlement (52%)',
+    },
   },
   {
     id: 5,
@@ -94,6 +118,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Business Restructuring',
     category: 'Restructuring',
     reviewText: 'Our auto-components business was fundamentally viable, but the industry downturn created a severe cash-flow problem. The ₹14 Cr facility had become extremely difficult to service under the existing repayment structure. Instead of immediately treating the account as a lost case, Legal Bharosa helped present the business viability properly. The restructuring proposal included a moratorium and extension of the repayment period. The entire process took around 6 months and involved discussions with the consortium. The account was ultimately preserved as Standard and operations were able to stabilise. For me, the biggest relief was getting a chance to continue the business rather than shutting it down.',
+    caseSummary: {
+      timeline: '6 Months',
+      exposure: '₹14 Cr',
+      satisfaction: 'Highly Satisfied',
+      resolution: 'Restructuring (Standard Preserved)',
+    },
   },
   {
     id: 6,
@@ -101,6 +131,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Distressed Project',
     category: 'Distressed',
     reviewText: 'Our commercial project had been stuck because of disputes involving two banks and an NBFC. With approximately ₹38 Cr involved, the pressure from different lenders was becoming overwhelming. Legal Bharosa helped coordinate an OTS strategy with the lenders and explored take-out funding. The process required several rounds of discussions and financial planning. After around 10 months, an OTS of approximately 63% of the principal was achieved across the lenders. Take-out finance helped the project move towards restarting operations. Seeing the project become active again after being stuck for so long was an emotional moment for our entire team.',
+    caseSummary: {
+      timeline: '10 Months',
+      exposure: '₹38 Cr',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Consortium OTS (63%)',
+    },
   },
   {
     id: 7,
@@ -108,6 +144,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Guarantor Settlement',
     category: 'OTS',
     reviewText: "I was personally involved as a guarantor for a business that had unfortunately failed. The recovery proceedings had started creating tremendous personal pressure for me and my family. The amount involved was around ₹2.6 Cr, and I was worried about how the situation would affect my future. Legal Bharosa helped explore a guarantor-specific settlement rather than treating my case exactly like the company's case. A structured payment arrangement was negotiated over the agreed period. The recovery proceedings were eventually withdrawn after the settlement process. The biggest relief for me was finally being able to see a clear path out of a situation I had been carrying for months.",
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: '₹2.6 Cr',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Guarantor Settlement',
+    },
   },
   {
     id: 8,
@@ -115,6 +157,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Promoter Buyout Funding',
     category: 'Distressed',
     reviewText: 'I was at risk of losing control of my own specialty-chemicals business because of mounting bank dues. The total exposure was around ₹22 Cr, and the pressure from the lenders was increasing every month. Legal Bharosa helped explore a mezzanine funding structure through private credit. The funding was planned alongside a staged settlement of the bank liabilities. It took approximately 7 months to put everything together properly. The bank dues were ultimately settled and I was able to retain control of the business. The experience taught me that even a distressed situation can have structured solutions if handled professionally.',
+    caseSummary: {
+      timeline: '7 Months',
+      exposure: '₹22 Cr',
+      satisfaction: 'Satisfied',
+      resolution: 'Promoter Buyout & Settlement',
+    },
   },
   {
     id: 9,
@@ -122,6 +170,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'ARC Settlement',
     category: 'ARC',
     reviewText: "Our company had already gone through significant financial stress when the loan was sold to an ARC. We were worried because we didn't know whether the ARC would consider a practical settlement. Legal Bharosa helped us prepare the financial proposal and negotiate around the available cash-flow position. They also helped coordinate a refinance option through an NBFC. The settlement was completed in about 4 months at approximately 64% of the outstanding amount. The credit-status update gave us additional closure after completing the settlement. I found their approach much more practical than simply telling us to arrange money immediately.",
+    caseSummary: {
+      timeline: '4 Months',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'ARC Settlement (64%)',
+    },
   },
   {
     id: 10,
@@ -129,6 +183,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'SARFAESI Property Matter',
     category: 'SARFAESI',
     reviewText: 'A commercial property connected to our business had reached the auction stage under SARFAESI proceedings. The situation became extremely stressful because physical possession was also a possibility. Legal Bharosa reviewed the documentation and helped identify issues relating to the valuation and procedure. They guided us through the DRT-SA process and preparation of the necessary material. Within roughly 9 weeks, interim status quo was obtained regarding the auction. That gave us valuable time to engage with the lender regarding restructuring. For our family and business, those additional weeks made an enormous difference.',
+    caseSummary: {
+      timeline: '9 Weeks',
+      exposure: 'Not disclosed',
+      satisfaction: 'Very Satisfied',
+      resolution: 'SARFAESI Status Quo',
+    },
   },
   {
     id: 11,
@@ -136,6 +196,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'OTS for Manufacturing Business',
     category: 'OTS',
     reviewText: 'Our manufacturing unit had been under financial pressure for a long time and the account had been classified as doubtful. The outstanding exposure was approximately ₹4.2 Cr, which was far beyond what we could comfortably manage. Legal Bharosa helped us build a financial justification instead of simply asking the bank for a discount. They also guided the settlement discussions and phased payment structure. The OTS was eventually completed at around 58% of the principal after approximately 5 months. Receiving the NOC was one of the biggest moments of relief for us. The experience showed me how important proper negotiation and documentation can be in a distressed account.',
+    caseSummary: {
+      timeline: '5 Months',
+      exposure: '₹4.2 Cr',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Manufacturing OTS (58%)',
+    },
   },
   {
     id: 12,
@@ -143,6 +209,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'DRT Defence',
     category: 'DRT',
     reviewText: 'Our trading business was facing a bank recovery proceeding involving approximately ₹3.1 Cr. We believed there were discrepancies in the account statement and issues with the NPA classification. Initially, I was worried that we would simply have to accept whatever the bank demanded. Legal Bharosa helped us prepare a detailed written response and counter-claim. The matter required multiple hearings and continued for around 11 months. Eventually, the bank agreed to a settlement of approximately 52% after the interim developments. It was not an overnight solution, but the structured approach gave us an opportunity to negotiate.',
+    caseSummary: {
+      timeline: '11 Months',
+      exposure: '₹3.1 Cr',
+      satisfaction: 'Satisfied',
+      resolution: 'DRT Settlement (52%)',
+    },
   },
   {
     id: 13,
@@ -150,6 +222,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Loan Restructuring',
     category: 'Restructuring',
     reviewText: 'Our auto-components business had been hit badly by a cyclical slowdown. The business itself had potential, but the existing ₹14 Cr repayment schedule was putting too much pressure on cash flow. Legal Bharosa helped us present the business viability and restructuring requirements properly. The proposal involved a moratorium and extension of the repayment tenor. The process took around 6 months and involved coordination with multiple lenders. The account was preserved as Standard and our operations gradually stabilised. For me, the important thing was finding a solution that allowed the business to survive.',
+    caseSummary: {
+      timeline: '6 Months',
+      exposure: '₹14 Cr',
+      satisfaction: 'Satisfied',
+      resolution: 'Loan Restructuring',
+    },
   },
   {
     id: 14,
@@ -157,6 +235,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Distressed Real Estate Project',
     category: 'Distressed',
     reviewText: 'Our project had been stalled for months because of lender-related disputes. With approximately ₹38 Cr exposure spread across banks and an NBFC, every delay was making the situation worse. Legal Bharosa helped us look at both OTS and take-out finance rather than depending on one solution. There were several rounds of negotiations and financial restructuring. After approximately 10 months, the OTS was worked out at around 63% of principal across lenders. The take-out arrangement helped us move towards restarting the project. Getting workers and project activity moving again was a huge relief after such a long period of uncertainty.',
+    caseSummary: {
+      timeline: '10 Months',
+      exposure: '₹38 Cr',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Multi-Lender OTS (63%)',
+    },
   },
   {
     id: 15,
@@ -164,6 +248,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Guarantor Recovery Matter',
     category: 'OTS',
     reviewText: 'I had signed as a personal guarantor for a business loan and later found myself facing recovery proceedings. The business had failed, but the liability had become a personal problem for me. I was extremely anxious about what would happen next and how long the matter would continue. Legal Bharosa helped examine the guarantor liability separately and worked towards a structured settlement. The settlement process took around 4 months, with payments planned according to the agreed structure. The recovery proceedings were subsequently withdrawn after completion of the settlement requirements. It was a difficult experience, but finally getting closure brought a lot of peace to my family.',
+    caseSummary: {
+      timeline: '4 Months',
+      exposure: 'Not disclosed',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Guarantor Relief & Closure',
+    },
   },
   {
     id: 16,
@@ -171,6 +261,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Mezzanine Funding',
     category: 'Distressed',
     reviewText: 'Our promoter group was under pressure because the business was facing significant bank liabilities. The biggest concern was losing control of a business we had built over many years. Legal Bharosa helped us explore private-credit funding instead of simply looking at traditional bank finance. A mezzanine structure was considered to support the promoter buyout and settlement of bank dues. The overall process took approximately 7 months because of the size and complexity involved. The bank dues were ultimately settled and promoter control was retained. The experience was stressful, but the structured funding approach gave us another route forward.',
+    caseSummary: {
+      timeline: '7 Months',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Mezzanine Funding & Buyout',
+    },
   },
   {
     id: 17,
@@ -178,6 +274,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Credit Settlement Support',
     category: 'OTS',
     reviewText: 'I had been struggling with loan repayments and the constant pressure from recovery communications was becoming difficult to handle. I approached Legal Bharosa because I wanted to understand whether settlement was actually possible. They first looked at the financial situation and explained the available options instead of making immediate promises. The discussions and documentation were handled in a systematic manner. The process helped me understand what was realistically possible with the lender. What I valued most was having someone explain the complicated financial terms in simple language. That clarity itself reduced a lot of my stress.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Credit Settlement Support',
+    },
   },
   {
     id: 18,
@@ -185,6 +287,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Credit Card / Loan Issues',
     category: 'Restructuring',
     reviewText: 'I had multiple repayment problems and was struggling to keep track of different dues. The continuous calls and payment pressure were affecting my peace of mind and daily routine. Legal Bharosa helped me understand the difference between settlement, restructuring and repayment options. They explained the documentation and communication process step by step. Instead of giving me unrealistic assurances, they explained what could and could not be negotiated. The guidance helped me approach the situation more calmly. For me, the biggest benefit was finally having a clear plan instead of dealing with everything in panic.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Restructuring & Repayment Plan',
+    },
   },
   {
     id: 19,
@@ -192,6 +300,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Recovery Agent Harassment',
     category: 'DRT',
     reviewText: 'The recovery calls had become extremely stressful for me and my family. I was already struggling financially, and repeated calls were making the situation emotionally difficult. Legal Bharosa explained the appropriate process for dealing with recovery-related communications. They also guided me on handling notices and keeping proper records of the communication. Their support helped me respond more systematically rather than reacting emotionally to every call. The situation gradually became more manageable once I understood the process. I am grateful for the clarity and support I received during that difficult period.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Harassment Defense & Notice Strategy',
+    },
   },
   {
     id: 20,
@@ -199,6 +313,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Legal Notice Assistance',
     category: 'DRT',
     reviewText: 'Receiving a legal notice related to a loan was frightening because I did not know what it meant or what I should do next. I initially thought the matter would immediately turn into a major legal battle. Legal Bharosa reviewed the situation and explained the significance of the notice in simple terms. They helped me understand the documents and the response process. The guidance helped me avoid making rushed decisions under pressure. I particularly appreciated the regular communication and practical explanations. Sometimes understanding what is actually happening is the first big step towards solving the problem.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Legal Notice Review & Guidance',
+    },
   },
   {
     id: 21,
@@ -206,6 +326,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'OTS Guidance',
     category: 'OTS',
     reviewText: 'My business had reached a point where the existing loan repayment structure was simply not sustainable. I was looking for an OTS option but had no idea how banks evaluate settlement proposals. Legal Bharosa helped organise my financial information and explain the negotiation process. They helped present the proposal based on the actual financial position rather than making unrealistic claims. The discussions took time, but I was kept informed about the progress. The experience helped me understand how important proper preparation is in a settlement. I would advise anyone in a similar situation to first understand their options properly.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'OTS Proposal Preparation',
+    },
   },
   {
     id: 22,
@@ -213,6 +339,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Settlement with Credit Closure',
     category: 'OTS',
     reviewText: 'My biggest concern was not only settling the loan but also understanding what would happen to my credit record afterwards. I had received different opinions from different people, which made the situation even more confusing. Legal Bharosa explained the distinction between settlement and full closure. They also explained what documentation should be collected after completing the agreed payment. That clarity helped me make an informed decision about my situation. The team was patient when answering even my basic questions. The support gave me much more confidence while dealing with the lender.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Settlement with Credit Closure',
+    },
   },
   {
     id: 23,
@@ -220,6 +352,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Moratorium / Repayment Pressure',
     category: 'Restructuring',
     reviewText: 'My business was facing a temporary cash-flow problem and the existing EMI burden had become difficult to manage. Closing the business was not what I wanted because the underlying operations were still viable. Legal Bharosa helped me understand whether a moratorium or restructuring approach could be explored. They reviewed the financial situation and explained the documentation required. The discussions focused on finding a repayment structure that matched the actual cash flow. Having someone look at the bigger picture made me feel less helpless. It was a difficult financial phase, but the structured approach gave us some breathing room.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Moratorium / Repayment Relief',
+    },
   },
   {
     id: 24,
@@ -227,6 +365,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'NBFC Take-Out Support',
     category: 'Distressed',
     reviewText: "Our company had a difficult loan account and we were exploring whether another lender could help us refinance. The problem was finding a structure that worked alongside the existing lender's settlement requirement. Legal Bharosa helped coordinate the settlement proposal with the potential NBFC funding structure. The process involved considerable documentation and financial discussions. They helped us understand the timing and sequencing of the transactions. This was particularly important because delays could have affected the entire arrangement. The experience showed me that distressed funding requires careful coordination rather than just finding a lender.",
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'NBFC Take-Out Coordination',
+    },
   },
   {
     id: 25,
@@ -234,6 +378,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Property-Backed Distress Case',
     category: 'SARFAESI',
     reviewText: 'Our industrial property was securing a loan that had become difficult to service. The property itself had significant value, but the immediate cash-flow situation was creating pressure. Legal Bharosa helped us examine the possibility of a structured settlement against the available asset position. They helped organise the financial information required for discussions with the lender. The process involved several rounds of negotiation and documentation. Instead of feeling that the property was immediately at risk, we had a structured plan to work through the situation. That practical guidance was extremely valuable during a stressful period.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Asset-Backed Settlement',
+    },
   },
   {
     id: 26,
@@ -241,6 +391,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Legal Notice & Loan Support',
     category: 'DRT',
     reviewText: 'When I received a legal notice connected with my loan, my first reaction was fear. I did not understand the terminology and was worried that I would make the wrong decision. Legal Bharosa patiently explained what the notice meant and what documents needed attention. They also helped me understand the available options rather than pushing me into one decision. The communication was much easier to understand than the formal legal language in the notice. I felt more confident after knowing exactly what the next steps were. The human support during that stressful period was what I appreciated most.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Legal Notice Defense & Advisory',
+    },
   },
   {
     id: 27,
@@ -248,6 +404,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'DRT Process Guidance',
     category: 'DRT',
     reviewText: 'The DRT process initially seemed extremely complicated to me. There were several documents, dates and legal terms that I simply did not understand. Legal Bharosa helped organise the information and explained the purpose of each important step. They kept the communication focused on the facts and documents involved in the case. The matter required patience because legal proceedings do not get resolved overnight. Having a team that could explain the process in understandable language made it easier to handle. My biggest takeaway was not to panic before understanding the actual legal position.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'DRT Process Advisory',
+    },
   },
   {
     id: 28,
@@ -255,6 +417,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Financial Distress Consultation',
     category: 'Restructuring',
     reviewText: 'Our family business had accumulated significant loan obligations after a difficult period in the market. Every month, managing the repayments had become a source of anxiety. Legal Bharosa first helped us understand the overall financial position rather than looking at one loan in isolation. They explained possible settlement and restructuring routes in a simple manner. The discussions helped us identify what information we needed before approaching the lenders. I appreciated that the team listened to our situation instead of treating it like just another file. That personal attention made the process much easier for us.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Family Debt Restructuring',
+    },
   },
   {
     id: 29,
@@ -262,6 +430,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Multi-Lender Settlement',
     category: 'OTS',
     reviewText: 'Our project had liabilities with more than one financial institution, which made negotiations particularly complicated. Each lender had different requirements, timelines and expectations. Legal Bharosa helped us look at the liabilities together and develop a coordinated approach. The process involved extensive documentation and repeated discussions. Instead of trying to solve everything at once, the team helped break the problem into manageable stages. That approach reduced a lot of confusion within our management team. For a multi-lender situation, I found the structured coordination particularly useful.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Multi-Lender Coordinated Settlement',
+    },
   },
   {
     id: 30,
@@ -269,6 +443,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Business Loan Distress',
     category: 'Restructuring',
     reviewText: 'The business was still operating, but the loan burden had become too heavy for our current cash flow. I was worried that a temporary financial problem could eventually destroy a business we had spent years building. Legal Bharosa helped us examine restructuring possibilities and understand what information lenders would need. The focus was on demonstrating the viability of the business and creating a realistic repayment plan. The discussions required patience and proper financial preparation. It helped us approach the lender from a position of facts rather than desperation. That change in approach made a significant difference to how we handled the situation.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Business Debt Restructuring',
+    },
   },
   {
     id: 31,
@@ -276,6 +456,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Credit Problem Guidance',
     category: 'Restructuring',
     reviewText: 'I had been avoiding my loan-related problems because I felt overwhelmed every time I looked at the outstanding amount. Eventually, I realised that ignoring the situation was making it worse. Legal Bharosa helped me understand the actual status of my accounts and the options available. They explained settlement and credit-report implications clearly. I was particularly comfortable asking questions because the team did not make me feel embarrassed about my financial situation. The process helped me move from fear to actually taking action. That emotional support was just as valuable to me as the financial guidance.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Credit Rehabilitation',
+    },
   },
   {
     id: 32,
@@ -283,6 +469,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Recovery Proceedings Support',
     category: 'DRT',
     reviewText: 'Recovery proceedings had started against our business, and the management team was under considerable pressure. We were receiving legal and financial communications from different sides and needed clarity. Legal Bharosa helped us organise the documents and understand which issues required immediate attention. The team explained the possible routes and the importance of responding properly within the relevant timelines. The process was not instant, but we finally had a structured roadmap. That reduced the confusion and helped our management team focus on running the business. I appreciated the professional and practical approach throughout the matter.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Recovery Defense Roadmap',
+    },
   },
   {
     id: 33,
@@ -290,6 +482,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'OTS Negotiation',
     category: 'OTS',
     reviewText: 'Our company had accumulated a sizeable overdue loan and the possibility of a settlement seemed uncertain. I had spoken to people who promised unrealistic results, so I was initially cautious. Legal Bharosa took a more practical approach and first understood our financial position. They helped prepare the settlement proposal and guided us through the lender discussions. The negotiations required patience because there were multiple factors to consider. The biggest positive for me was having realistic expectations throughout the process. That transparency made the entire experience more comfortable.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'OTS Negotiation & Structuring',
+    },
   },
   {
     id: 34,
@@ -297,6 +495,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Loan Settlement Support',
     category: 'OTS',
     reviewText: 'I was struggling to manage my outstanding loan and was constantly worried about what would happen next. The financial pressure was affecting my ability to concentrate on my work and family. Legal Bharosa helped me understand the settlement process and the documents involved. They explained the difference between simply making a payment and obtaining proper closure documentation. The team also answered my questions whenever I was confused about the next step. Gradually, I stopped feeling that I was dealing with the problem alone. The clarity and communication were the biggest positives for me.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Settlement & Closure Docs',
+    },
   },
   {
     id: 35,
@@ -304,6 +508,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Distressed Funding',
     category: 'Distressed',
     reviewText: 'Our company needed a financial solution urgently, but conventional funding was difficult because of the existing stressed account. We needed someone who understood both the lender side and the funding side of the problem. Legal Bharosa helped us examine possible structured funding and settlement options. They helped coordinate the financial information required for discussions with potential funders. The process involved several stages and required patience from our management team. What I appreciated was the effort to find a structure suited to our actual situation. It gave us a more organised way to approach a very difficult funding problem.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Distressed Debt Funding',
+    },
   },
   {
     id: 36,
@@ -311,6 +521,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Family Property Loan Issue',
     category: 'SARFAESI',
     reviewText: 'A loan issue connected with property had become a major concern for our family. We were worried about the possibility of recovery action affecting an important family asset. Legal Bharosa helped us understand the documents and the legal-financial process involved. They explained the available options without using complicated terminology. We were able to approach the situation with much more clarity after reviewing the matter with them. The regular communication also helped reduce the anxiety within the family. For us, having someone explain the situation calmly was extremely important.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'SARFAESI Property Defense',
+    },
   },
   {
     id: 37,
@@ -318,6 +534,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Business Loan Settlement',
     category: 'OTS',
     reviewText: 'Our business had gone through a difficult period and the accumulated dues had become unmanageable. I knew we needed to speak with the lender, but I did not know how to structure that conversation. Legal Bharosa helped prepare the financial background and explain how settlement discussions generally work. They helped us understand the importance of documentation and realistic payment commitments. The process took time, but the communication remained structured. I felt much better knowing what was happening at every stage. The experience gave me a more practical understanding of handling distressed debt.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Business Loan Settlement',
+    },
   },
   {
     id: 38,
@@ -325,6 +547,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Arbitration / Legal Support',
     category: 'DRT',
     reviewText: 'We were concerned about legal proceedings connected with our loan and did not know how to respond properly. The formal notices and legal language were difficult for our management team to understand. Legal Bharosa helped us organise the documents and understand the nature of the proceedings. They explained the importance of responding appropriately and maintaining proper records. The guidance helped us avoid making decisions purely out of fear or pressure. Although the matter required time and patience, we had a clearer roadmap. I appreciated the professional communication and the effort to explain the situation in simple terms.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Arbitration & Legal Defense',
+    },
   },
   {
     id: 39,
@@ -332,6 +560,12 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Large Exposure Resolution',
     category: 'Restructuring',
     reviewText: 'Our company was dealing with a very large financial exposure and multiple lender-related challenges. At one stage, it felt like every possible option had become complicated. Legal Bharosa helped us break the situation into separate financial, legal and negotiation issues. They explored settlement, restructuring and funding possibilities according to the circumstances. The process required substantial documentation and repeated discussions with stakeholders. What helped us most was having a structured strategy instead of trying random solutions. The experience gave our management team a much clearer direction during a very difficult phase.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Satisfied',
+      resolution: 'Large Exposure Restructuring',
+    },
   },
   {
     id: 40,
@@ -339,5 +573,11 @@ export const CLIENT_REVIEWS = [
     caseTopic: 'Overall Debt Resolution Support',
     category: 'Restructuring',
     reviewText: 'I approached Legal Bharosa during a period when my loan problems had started affecting almost every part of my life. I was worried about recovery action, credit records and how I would manage the outstanding amount. The team first listened to the complete situation before discussing possible solutions. They explained options such as settlement, restructuring and dealing with legal notices in straightforward language. There were no overnight solutions, and the process required documentation and patience. But having a team guide me through each stage made the situation feel manageable. The biggest relief was finally having a clear understanding of what I could do next.',
+    caseSummary: {
+      timeline: 'Not disclosed',
+      exposure: 'Not disclosed',
+      satisfaction: 'Very Satisfied',
+      resolution: 'Comprehensive Debt Resolution',
+    },
   },
 ];

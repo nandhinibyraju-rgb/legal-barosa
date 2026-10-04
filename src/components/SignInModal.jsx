@@ -202,7 +202,7 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                 </span>
               </div>
 
-              <h2 className="font-manrope font-bold text-2xl text-white tracking-tight">
+              <h2 className="font-heading font-bold text-2xl text-white tracking-tight">
                 {isSignUp ? 'Create Client Account' : 'Sign In'}
               </h2>
               <p className="font-inter text-xs text-slate-400 mt-1 mb-5">

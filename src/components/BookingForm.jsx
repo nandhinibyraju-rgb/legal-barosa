@@ -18,9 +18,9 @@ import TrustStrip from './TrustStrip';
 // WHATSAPP CONFIGURATION
 // To change the WhatsApp destination phone number, update the constant below.
 // Format: Country code without '+' followed by the 10-digit mobile number.
-// Example: '918790760524' (+91 8790760524)
+// Example: '917386444186' (+91 7386444186)
 // ============================================================================
-export const WHATSAPP_PHONE_NUMBER = '918790760524';
+export const WHATSAPP_PHONE_NUMBER = '917386444186';
 
 // The 6 official consultation services
 export const CONSULTATION_SERVICES = [

@@ -22,10 +22,11 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        heading: ['"Playfair Display"', 'Georgia', 'serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
         manrope: ['Manrope', 'sans-serif'],
         cabin: ['Cabin', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
       },
     },
   },

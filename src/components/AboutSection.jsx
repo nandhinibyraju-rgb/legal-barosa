@@ -52,7 +52,7 @@ export default function AboutSection({ onOpenConsult, onNavigateToAbout }) {
             <span>Dedicated Legal & Financial Counseling</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0B2A5B] font-inter uppercase">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0B2A5B] font-heading uppercase">
             ABOUT LEGALBHAROSA
           </h2>
 
@@ -116,7 +116,7 @@ export default function AboutSection({ onOpenConsult, onNavigateToAbout }) {
                 Bar Council Registered Advocates & Legal Specialists
               </div>
               <div className="text-xs text-neutral-500">
-                Operating under Indian legal standards with verified pan-India advocate desk representation.
+                Operating under Indian legal standards with qualified legal advocate representation.
               </div>
             </div>
           </div>

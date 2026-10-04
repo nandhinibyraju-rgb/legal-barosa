@@ -39,6 +39,10 @@ export default function AnimatedIllustration({
     if (!svg.includes('preserveAspectRatio')) {
       svg = svg.replace('<svg ', '<svg preserveAspectRatio="xMidYMid meet" ');
     }
+    // Remove any background-simple halftone dotted pattern element
+    if (svg.includes('background-simple')) {
+      svg = svg.replace(/<g[^>]*id=["']background-simple["'][^>]*>[\s\S]*?<\/g>/gi, '');
+    }
     return svg;
   }, [svgContent, animateOnView]);
 

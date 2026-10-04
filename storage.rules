@@ -1,0 +1,32 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() &&
+        firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Public read for website content media; Admin-only write
+    match /uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
+    }
+    match /articles/{allPaths=**} {
+      allow read: if true;
+      allow write: if (isAuthenticated() || isAdmin()) && request.resource.size < 10 * 1024 * 1024;
+    }
+    match /services/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
+    }
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
+    }
+  }
+}

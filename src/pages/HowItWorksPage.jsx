@@ -19,6 +19,7 @@ import {
 import Footer from '../components/Footer';
 import CardBorderTrace from '../components/CardBorderTrace';
 import TrustStrip from '../components/TrustStrip';
+import DarkPageHeader from '../components/DarkPageHeader';
 
 export const PROCESS_STEPS = [
   {
@@ -96,90 +97,61 @@ export default function HowItWorksPage({
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#ededed] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
+    <div className="min-h-screen w-full bg-[#F8FAFC] p-2 sm:p-3 lg:p-3.5 font-inter text-neutral-900 selection:bg-[#168CFF]/20 selection:text-[#0B2A5B] flex flex-col gap-3 sm:gap-4 overflow-x-hidden">
       
       {/* ======================================================== */}
       {/* 1. TOP HERO CONTAINER (Navbar + Breadcrumb + Headline) */}
       {/* ======================================================== */}
-      <div className="relative w-full overflow-hidden bg-[#d9d9d9] rounded-2xl sm:rounded-3xl flex flex-col justify-between pb-8 sm:pb-12 shadow-sm border border-neutral-200/60">
-        
-        {/* Seamless sky and soft clouds background */}
-        <img
-          src="/assets/hero-sky-clean.jpg"
-          alt="Clean sky background"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          loading="eager"
-        />
-
-        {/* Soft overlay */}
-        <div className="absolute inset-0 bg-white/10 pointer-events-none" />
-
-        {/* Foreground Content */}
-        <div className="relative z-10 flex flex-col w-full h-full">
-          {/* Breadcrumb Navigation Pill */}
-          <div className="max-w-6xl mx-auto w-full px-4 pt-6 sm:pt-8 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] bg-white/80 hover:bg-white px-3 py-1.5 rounded-full border border-neutral-200/80 shadow-xs transition-colors cursor-pointer group"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back to Home</span>
-            </button>
-
-            <span className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider hidden sm:inline">
-              LegalBharosa / Client Journey Roadmap
-            </span>
+      <DarkPageHeader
+        breadcrumbText="LegalBharosa / Client Journey Roadmap"
+        maxWidth="max-w-5xl"
+      >
+        <motion.div 
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="flex flex-col items-center px-4 pt-5 sm:pt-7 text-center select-none max-w-4xl mx-auto w-full"
+        >
+          <div className="inline-flex items-center gap-2 bg-[#0A2660]/85 backdrop-blur-md rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/35 text-[12px] sm:text-[12.5px] font-semibold text-[#BAE6FD] mb-3.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
+            <span>Transparent 6-Stage Resolution Process</span>
           </div>
 
-          {/* Headline & Subtitle */}
-          <motion.div 
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col items-center px-4 pt-4 sm:pt-6 text-center select-none max-w-4xl mx-auto w-full"
-          >
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-xs border border-[#168CFF]/20 text-[12.5px] font-semibold text-[#0B2A5B] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#F4B400]" />
-              <span>Transparent 6-Stage Resolution Process</span>
-            </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.18] max-w-3xl font-heading uppercase break-words px-2">
+            HOW LEGALBHAROSA WORKS
+          </h1>
 
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[50px] font-bold text-[#0B2A5B] tracking-tight leading-[1.15] max-w-3xl font-inter uppercase break-words px-2">
-              HOW LEGALBHAROSA WORKS
-            </h1>
+          <p className="mt-3.5 sm:mt-4 text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+            From your initial consultation to statutory notice replies and official No Dues Certificates — a structured, advocate-backed client journey.
+          </p>
 
-            <p className="mt-4 sm:mt-5 text-neutral-700 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
-              From your initial consultation to statutory notice replies and official No Dues Certificates — a structured, advocate-backed client journey.
-            </p>
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate('/book-consultation')}
+              className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full pl-6 sm:pl-7 pr-2 py-2.5 sm:py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px] border border-[#168CFF]/40"
+            >
+              <span>Book a Free Consultation</span>
+              <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                <ChevronRight className="w-4 h-4 text-[#F4B400]" />
+              </span>
+            </button>
 
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate('/book-consultation')}
-                className="inline-flex items-center gap-3 bg-[#0B2A5B] hover:bg-[#123E8A] text-white rounded-full pl-6 sm:pl-7 pr-2 py-2 sm:py-2.5 text-[14px] font-medium transition-all shadow-md cursor-pointer hover-glow-lift active:scale-[0.98] min-h-[44px]"
-              >
-                <span>Book a Free Consultation</span>
-                <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-                  <ChevronRight className="w-4 h-4 text-[#F4B400]" />
-                </span>
-              </button>
+            <button
+              type="button"
+              onClick={() => navigate('/services')}
+              className="text-xs sm:text-sm font-semibold text-white hover:text-white px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 transition-all cursor-pointer min-h-[44px] flex items-center justify-center backdrop-blur-md"
+            >
+              View All Services →
+            </button>
+          </div>
 
-              <button
-                type="button"
-                onClick={() => navigate('/services')}
-                className="text-xs font-semibold text-[#0B2A5B] hover:text-[#168CFF] px-4 py-2.5 rounded-full bg-white/70 hover:bg-white border border-neutral-200/80 transition-all cursor-pointer min-h-[44px] flex items-center justify-center"
-              >
-                View All Services →
-              </button>
-            </div>
-
-            {/* Repeat trust strip near hero CTA */}
-            <div className="mt-3">
-              <TrustStrip centered={true} />
-            </div>
-          </motion.div>
-        </div>
-      </div>
+          {/* Repeat trust strip near hero CTA */}
+          <div className="mt-4">
+            <TrustStrip variant="dark" centered={true} />
+          </div>
+        </motion.div>
+      </DarkPageHeader>
 
       {/* ======================================================== */}
       {/* 2. VERTICAL TREE / TIMELINE ROADMAP */}

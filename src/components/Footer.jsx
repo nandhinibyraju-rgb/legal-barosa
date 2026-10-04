@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Phone, Mail, MapPin, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, ChevronRight, ExternalLink } from 'lucide-react';
 
 // Brand Social SVG Icons
 function WhatsAppIcon({ className = "w-4 h-4" }) {
@@ -63,7 +63,7 @@ export default function Footer({
   };
 
   return (
-    <footer className="w-full bg-[#06152D] text-slate-300 relative z-10 border-t border-[#0F2A55] pt-14 sm:pt-16 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8">
+    <footer className="w-full bg-[#06152D] text-slate-300 relative z-10 border-t border-[#0F2A55] pt-10 sm:pt-12 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8">
       <motion.div 
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -226,6 +226,18 @@ export default function Footer({
                 <button 
                   type="button"
                   onClick={() => {
+                    navigate('/articles');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  }}
+                  className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
+                >
+                  Articles
+                </button>
+              </li>
+              <li>
+                <button 
+                  type="button"
+                  onClick={() => {
                     navigate('/faq');
                     window.scrollTo({ top: 0, behavior: 'instant' });
                   }}
@@ -237,7 +249,10 @@ export default function Footer({
               <li>
                 <button 
                   type="button"
-                  onClick={() => onOpenConsult?.('Contact Us')}
+                  onClick={() => {
+                    navigate('/contact');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  }}
                   className="text-slate-300 hover:text-white hover:translate-x-0.5 transition-all text-left cursor-pointer"
                 >
                   Contact Us
@@ -301,26 +316,37 @@ export default function Footer({
             <ul className="space-y-3 text-[13.5px]">
               <li>
                 <a 
-                  href="mailto:contact@legalbharosa.org" 
+                  href="mailto:Legalbharosa.orga@gmail.com" 
                   className="flex items-center gap-2.5 text-slate-300 hover:text-white transition-colors group"
                 >
                   <Mail className="w-4 h-4 text-[#168CFF] shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="break-all sm:break-normal">contact@legalbharosa.org</span>
+                  <span className="break-all sm:break-normal">Legalbharosa.orga@gmail.com</span>
                 </a>
               </li>
               <li>
                 <a 
-                  href="tel:+918790760524" 
+                  href="tel:7386444186" 
                   className="flex items-center gap-2.5 text-slate-300 hover:text-white transition-colors group"
                 >
                   <Phone className="w-4 h-4 text-[#168CFF] shrink-0 group-hover:scale-110 transition-transform" />
-                  <span>+91 87907 60524</span>
+                  <span className="tracking-wide">7386444186</span>
                 </a>
               </li>
               <li>
-                <div className="flex items-center gap-2.5 text-slate-300">
-                  <MapPin className="w-4 h-4 text-[#F4B400] shrink-0" />
-                  <span>Hyderabad, India</span>
+                <div className="flex flex-col gap-1.5 text-slate-300">
+                  <div className="flex items-center gap-2 text-slate-200">
+                    <MapPin className="w-4 h-4 text-[#F4B400] shrink-0" />
+                    <span className="font-semibold text-xs uppercase tracking-wider text-white">Company Location</span>
+                  </div>
+                  <a 
+                    href="https://maps.app.goo.gl/AUEVoh3Y6EPQoV5n6?g_st=ac" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-[#38BDF8] hover:text-[#7DD3FC] hover:underline pl-6 transition-colors"
+                  >
+                    <span>View on Google Maps</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               </li>
             </ul>
@@ -333,7 +359,7 @@ export default function Footer({
               <div className="flex items-center gap-2.5">
                 {/* 1. WhatsApp */}
                 <a 
-                  href="https://wa.me/918790760524"
+                  href="https://wa.me/917386444186"
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Chat on WhatsApp"

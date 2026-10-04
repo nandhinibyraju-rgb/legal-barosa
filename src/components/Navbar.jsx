@@ -14,8 +14,10 @@ const NAV_ITEMS = [
   { id: 'services', label: 'Services' },
   { id: 'about', label: 'About' },
   { id: 'client-stories', label: 'Client Stories' },
+  { id: 'articles', label: 'Articles' },
   { id: 'how-it-works', label: 'How It Works' },
   { id: 'faq', label: 'FAQ' },
+  { id: 'contact', label: 'Contact Us' },
 ];
 
 export default function Navbar({ 
@@ -70,6 +72,11 @@ export default function Navbar({
       return;
     }
 
+    if (sectionId === 'articles') {
+      navigate('/articles');
+      return;
+    }
+
     if (sectionId === 'how-it-works') {
       navigate('/how-it-works');
       return;
@@ -82,6 +89,11 @@ export default function Navbar({
 
     if (sectionId === 'faq') {
       navigate('/faq');
+      return;
+    }
+
+    if (sectionId === 'contact') {
+      navigate('/contact');
       return;
     }
 
@@ -106,6 +118,10 @@ export default function Navbar({
 
   // Scroll spy & route tracking
   useEffect(() => {
+    if (location.pathname === '/contact' || location.pathname === '/contact-us') {
+      setActiveSection('contact');
+      return;
+    }
     if (location.pathname === '/about') {
       setActiveSection('about');
       return;
@@ -116,6 +132,10 @@ export default function Navbar({
     }
     if (location.pathname === '/client-stories') {
       setActiveSection('client-stories');
+      return;
+    }
+    if (location.pathname.startsWith('/articles')) {
+      setActiveSection('articles');
       return;
     }
     if (location.pathname === '/how-it-works') {
@@ -159,10 +179,12 @@ export default function Navbar({
 
   const getItemHref = (id) => {
     if (id === 'services') return '/services';
+    if (id === 'articles') return '/articles';
     if (id === 'how-it-works') return '/how-it-works';
     if (id === 'about') return '/about';
     if (id === 'faq') return '/faq';
     if (id === 'client-stories') return '/client-stories';
+    if (id === 'contact') return '/contact';
     if (id === 'home') return '/';
     return `#${id}`;
   };
@@ -173,10 +195,10 @@ export default function Navbar({
       {/* 1. STANDARDIZED FIXED / STICKY HEADER */}
       {/* ======================================================== */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
           isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08),0_2px_6px_-1px_rgba(0,0,0,0.04)] border-b border-neutral-200/80' 
-            : 'bg-white/95 backdrop-blur-sm border-b border-neutral-200/60 shadow-xs'
+            ? 'bg-white/92 backdrop-blur-md shadow-[0_4px_24px_rgba(6,45,120,0.06)] border-b border-slate-200/70 shadow-[0_1px_0_0_rgba(18,185,242,0.18)]' 
+            : 'bg-white/95 backdrop-blur-sm border-b border-neutral-200/50 shadow-xs'
         }`}
       >
         <nav 
@@ -190,21 +212,21 @@ export default function Navbar({
             <a 
               href="#home" 
               onClick={(e) => handleNavClick('home', e)}
-              className="flex items-center group cursor-pointer focus:outline-none py-1"
+              className="flex items-center group cursor-pointer focus:outline-none py-1 transition-transform duration-300 ease-out hover:-translate-y-[1px]"
               aria-label="LegalBharosa Home"
             >
               <img 
                 src="/assets/legalbharosa-horizontal.png" 
                 alt="LegalBharosa — Trust. Support. Solutions." 
-                className="h-7.5 sm:h-11 md:h-12 max-w-[125px] sm:max-w-none w-auto object-contain shrink-0 transition-transform group-hover:scale-105" 
+                className="h-7.5 sm:h-11 md:h-12 max-w-[125px] sm:max-w-none w-auto object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04] group-hover:drop-shadow-[0_2px_10px_rgba(18,185,242,0.22)]" 
               />
             </a>
           </div>
 
           {/* ======================================================== */}
-          {/* CENTER: NAV LINKS WITH 0.2s SMOOTH BLUE HOVER TRANSITION */}
+          {/* CENTER: NAV LINKS WITH SMOOTH BLUE HOVER & ACTIVE POLISH */}
           {/* ======================================================== */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2 xl:gap-3 text-[14.5px]">
+          <div className="hidden md:flex items-center gap-0.5 lg:gap-1.5 xl:gap-2 text-[13px] lg:text-[13.5px] xl:text-[14px]">
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -212,20 +234,29 @@ export default function Navbar({
                   key={item.id}
                   href={getItemHref(item.id)}
                   onClick={(e) => handleNavClick(item.id, e)}
-                  className={`relative px-3.5 py-1.5 rounded-full font-medium cursor-pointer select-none transition-colors duration-200 ease-in-out ${
+                  className={`group relative px-2.5 lg:px-3 xl:px-3.5 py-1.5 rounded-full font-medium cursor-pointer select-none transition-all duration-250 ease-out hover:-translate-y-[1.5px] ${
                     isActive 
-                      ? 'text-[#0B2A5B] font-semibold bg-blue-50/90 border border-[#168CFF]/25 shadow-2xs' 
-                      : 'text-neutral-700 hover:text-[#168CFF]'
+                      ? 'text-[#0646A8] font-semibold' 
+                      : 'text-neutral-700 hover:text-[#078BE8] hover:drop-shadow-[0_0_8px_rgba(18,185,242,0.25)]'
                   }`}
                 >
-                  {/* Active Indicator Pill */}
+                  {/* Active Indicator: Polished glass effect, subtle gradient, soft blue/cyan glow */}
                   {isActive && (
                     <motion.div
                       layoutId="navbar-active-pill"
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.4 }}
-                      className="absolute inset-0 bg-blue-50/90 rounded-full -z-10 border border-[#168CFF]/25 shadow-2xs"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-sky-50/85 to-blue-50/95 backdrop-blur-sm rounded-full -z-10 border border-[#168CFF]/30 shadow-[0_0_14px_rgba(18,185,242,0.18),0_2px_8px_rgba(6,45,120,0.06)]"
                     />
                   )}
+
+                  {/* Non-active subtle animated underline highlight on hover */}
+                  {!isActive && (
+                    <span 
+                      aria-hidden="true"
+                      className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#078BE8]/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-250 ease-out origin-center pointer-events-none"
+                    />
+                  )}
+
                   <span>{item.label}</span>
                 </a>
               );
@@ -243,7 +274,7 @@ export default function Navbar({
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 pl-1.5 pr-2.5 sm:pr-3 py-1.5 rounded-full bg-blue-50/80 hover:bg-blue-100 border border-[#168CFF]/25 transition-all cursor-pointer shadow-xs"
+                  className="group flex items-center gap-2 pl-1.5 pr-2.5 sm:pr-3 py-1.5 rounded-full bg-blue-50/80 hover:bg-blue-100/90 border border-[#168CFF]/25 hover:border-[#168CFF]/50 transition-all duration-250 ease-out cursor-pointer shadow-xs hover:shadow-[0_0_14px_rgba(22,140,255,0.22),0_2px_8px_rgba(6,45,120,0.06)] hover:-translate-y-[1px]"
                   title="User Account Menu"
                 >
                   {user.photoURL ? (
@@ -261,7 +292,7 @@ export default function Navbar({
                   <span className="text-[12.5px] font-semibold text-[#0B2A5B] max-w-[85px] sm:max-w-[100px] truncate hidden sm:inline">
                     {user.displayName?.split(' ')[0] || 'Portal'}
                   </span>
-                  <ChevronRight className={`w-3.5 h-3.5 text-neutral-500 transition-transform ${userDropdownOpen ? 'rotate-90' : ''}`} />
+                  <ChevronRight className={`w-3.5 h-3.5 text-neutral-500 transition-all duration-250 ${userDropdownOpen ? 'rotate-90' : 'group-hover:translate-x-0.5'}`} />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -341,9 +372,10 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={() => onOpenSignIn?.()}
-                className="text-[12px] sm:text-[13.5px] font-semibold text-white bg-[#168CFF] hover:bg-[#0673d6] px-3 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all cursor-pointer whitespace-nowrap shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] min-h-[40px] sm:min-h-[44px] flex items-center justify-center shrink-0"
+                className="group relative text-[12px] sm:text-[13.5px] font-semibold text-white bg-gradient-to-r from-[#168CFF] to-[#078BE8] hover:from-[#0E7BE6] hover:to-[#0275D8] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full border border-sky-400/40 hover:border-sky-300 transition-all duration-250 ease-out cursor-pointer whitespace-nowrap shadow-xs hover:shadow-[0_0_18px_rgba(22,140,255,0.4),0_4px_12px_rgba(6,45,120,0.16)] hover:-translate-y-[1.5px] active:scale-[0.98] min-h-[40px] sm:min-h-[44px] flex items-center justify-center gap-1.5 shrink-0"
               >
-                Sign In
+                <span>Sign In</span>
+                <ChevronRight className="w-3.5 h-3.5 text-white/90 transition-transform duration-250 ease-out group-hover:translate-x-0.5" />
               </button>
             )}
 
