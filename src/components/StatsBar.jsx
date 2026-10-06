@@ -62,7 +62,7 @@ export default function StatsBar({ onOpenConsult }) {
                 {/* Glowing Travelling Border Beam */}
                 <CardBorderTrace delay={delays[index]} borderRadius={14} />
 
-                <div className={`relative z-10 w-7.5 h-7.5 sm:w-8.5 sm:h-8.5 rounded-lg ${stat.iconBg} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}>
+                <div className={`relative z-10 w-[30px] h-[30px] sm:w-[34px] sm:h-[34px] rounded-lg ${stat.iconBg} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform`}>
                   <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${stat.iconColor}`} />
                 </div>
                 <div className="relative z-10 flex flex-col">

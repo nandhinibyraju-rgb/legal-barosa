@@ -373,11 +373,10 @@ export default function VideoSection({ onOpenConsult }) {
                 }}
               >
                 <div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] aspect-square"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] aspect-square sm:drop-shadow-[0_0_12px_rgba(0,210,255,0.7)]"
                   style={{
                     background: 'conic-gradient(from 0deg at 50% 50%, #0B2A5B 0deg, #168CFF 90deg, #00D2FF 180deg, #F4B400 240deg, #168CFF 300deg, #0B2A5B 360deg)',
                     animation: 'borderTraceRotate 8s linear infinite',
-                    filter: 'drop-shadow(0 0 8px rgba(0,210,255,0.8)) drop-shadow(0 0 16px rgba(22,140,255,0.6))',
                   }}
                 />
               </div>

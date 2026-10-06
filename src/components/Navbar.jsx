@@ -57,8 +57,15 @@ export default function Navbar({
 
   // Reliable scroll listener for sticky elevation and shadow
   useEffect(() => {
+    let tickingWindow = false;
     const handleWindowScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      if (tickingWindow) return;
+      tickingWindow = true;
+      requestAnimationFrame(() => {
+        tickingWindow = false;
+        const scrolled = window.scrollY > 15;
+        setIsScrolled((prev) => (prev === scrolled ? prev : scrolled));
+      });
     };
 
     window.addEventListener('scroll', handleWindowScroll, { passive: true });
@@ -174,19 +181,25 @@ export default function Navbar({
 
     const sectionIds = ['home', 'client-stories'];
 
+    let ticking = false;
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 180;
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const id = sectionIds[i];
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(id);
-            break;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const scrollPosition = window.scrollY + 180;
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const id = sectionIds[i];
+          const el = document.getElementById(id);
+          if (el) {
+            const top = el.offsetTop;
+            if (scrollPosition >= top) {
+              setActiveSection((prev) => (prev === id ? prev : id));
+              break;
+            }
           }
         }
-      }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

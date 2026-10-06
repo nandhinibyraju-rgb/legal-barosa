@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 /**
@@ -45,6 +45,14 @@ const HERO_PARTICLES = [
 ];
 
 export default function HeroFullBleedBackground() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches);
+    }
+  }, []);
+
   return (
     <div 
       aria-hidden="true" 
@@ -95,7 +103,7 @@ export default function HeroFullBleedBackground() {
         <motion.path
           d="M -100 850 C 300 700, 600 480, 1050 280 C 1280 190, 1450 110, 1600 40 L 1600 190 C 1400 270, 1200 360, 980 460 C 600 640, 250 840, -100 960 Z"
           fill="url(#auroraWave1)"
-          animate={{
+          animate={isMobile ? undefined : {
             y: [-6, 6, -6],
           }}
           transition={{
@@ -103,14 +111,14 @@ export default function HeroFullBleedBackground() {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          style={{ filter: 'blur(16px)' }}
+          style={{ filter: isMobile ? 'blur(8px)' : 'blur(16px)' }}
         />
 
         {/* Aurora Wave 2: Secondary soft ribbon */}
         <motion.path
           d="M -100 680 C 260 560, 560 390, 940 210 C 1180 100, 1380 40, 1600 -10 L 1600 90 C 1350 160, 1150 260, 880 350 C 500 530, 160 720, -100 810 Z"
           fill="url(#auroraWave2)"
-          animate={{
+          animate={isMobile ? undefined : {
             y: [5, -5, 5],
           }}
           transition={{
@@ -118,14 +126,14 @@ export default function HeroFullBleedBackground() {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          style={{ filter: 'blur(20px)' }}
+          style={{ filter: isMobile ? 'blur(10px)' : 'blur(20px)' }}
         />
 
         {/* Aurora Wave 3: Third translucent ribbon */}
         <motion.path
           d="M -100 990 C 380 830, 780 590, 1180 390 C 1380 290, 1520 220, 1600 170 L 1600 290 C 1440 360, 1220 470, 960 590 C 580 780, 200 980, -100 1100 Z"
           fill="url(#auroraWave3)"
-          animate={{
+          animate={isMobile ? undefined : {
             y: [-4, 5, -4],
           }}
           transition={{
@@ -133,7 +141,7 @@ export default function HeroFullBleedBackground() {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          style={{ filter: 'blur(18px)' }}
+          style={{ filter: isMobile ? 'blur(9px)' : 'blur(18px)' }}
         />
       </svg>
 
@@ -141,7 +149,7 @@ export default function HeroFullBleedBackground() {
       {/* 3. CENTRAL GLOW LAYER (Behind Illustration, z-[2])                        */}
       {/* ========================================================================= */}
       <motion.div
-        animate={{
+        animate={isMobile ? undefined : {
           opacity: [0.88, 1, 0.88],
           scale: [0.98, 1.02, 0.98],
         }}
@@ -325,34 +333,37 @@ export default function HeroFullBleedBackground() {
       {/* 5. SCATTERED PARTICLE DOTS (Full-section distribution, z-[4])             */}
       {/* ========================================================================= */}
       <div className="absolute inset-0 w-full h-full z-[4]">
-        {HERO_PARTICLES.map((dot) => (
-          <motion.div
-            key={dot.id}
-            animate={{
-              opacity: [0.4, 1, 0.4],
-            }}
-            transition={{
-              duration: dot.duration,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: dot.delay,
-            }}
-            style={{
-              position: 'absolute',
-              top: dot.top,
-              bottom: dot.bottom,
-              left: dot.left,
-              right: dot.right,
-              width: `${dot.size}px`,
-              height: `${dot.size}px`,
-              borderRadius: '9999px',
-              backgroundColor: dot.color,
-              boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
-              pointerEvents: 'none',
-              transform: 'translateZ(0)',
-            }}
-          />
-        ))}
+        {HERO_PARTICLES.map((dot, idx) => {
+          if (isMobile && idx >= 8) return null;
+          return (
+            <motion.div
+              key={dot.id}
+              animate={{
+                opacity: [0.4, 1, 0.4],
+              }}
+              transition={{
+                duration: dot.duration,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: dot.delay,
+              }}
+              style={{
+                position: 'absolute',
+                top: dot.top,
+                bottom: dot.bottom,
+                left: dot.left,
+                right: dot.right,
+                width: `${dot.size}px`,
+                height: `${dot.size}px`,
+                borderRadius: '9999px',
+                backgroundColor: dot.color,
+                boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
+                pointerEvents: 'none',
+                transform: 'translateZ(0)',
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

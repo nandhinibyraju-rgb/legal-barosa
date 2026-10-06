@@ -1,41 +1,30 @@
-import React, { useRef, useState, useEffect, useId } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 
 /**
  * NavbarLogo:
  * Continuous Inch-by-Inch Path Drawing Animation with 5-Second Loop
  * for the LegalBharosa Navbar Brand Mark.
  *
- * Sequence (5-Second Full Cycle):
- * 1. 0.0s - 2.8s:
- *    - Starts from bottom-left root tip (14, 162).
- *    - Travels inch-by-inch up the vertical spine, arches over the crown,
- *      flows down into the central pillar & scales of justice, curves around the upper lobe,
- *      tucks into the waist, sweeps the lower lobe, arches the base, and sweeps along
- *      the golden hand to the opposite golden tip (188, 121).
- *    - A luminous pen / leading light tracer follows the leading edge (cyan transitioning to gold).
- * 2. 2.2s - 2.9s:
- *    - "LegalBharosa.org" text reveals smoothly from left to right as the mark completes.
- * 3. 2.9s - 4.75s:
- *    - Complete pristine logo displayed stably for ~1.85s.
- * 4. 4.75s - 5.0s:
- *    - Smooth 250ms fade reset back to initial state, seamlessly starting the next cycle from tip (14, 162).
- *
- * Constraints & Guarantees:
- * - Respects prefers-reduced-motion (shows complete static logo immediately).
- * - Exact dimensions, classes, and hover effects matching the original brand mark.
- * - Hardware accelerated requestAnimationFrame with direct DOM manipulation.
+ * Performance-Optimized Architecture:
+ * - Pure Declarative SVG & Hardware-Accelerated CSS Keyframe Animation
+ * - Zero JavaScript requestAnimationFrame loops or frame-by-frame DOM mutations
+ * - Zero expensive SVG blur filter re-computations on mobile/desktop
+ * - Smooth 5-Second Cycle:
+ *   1. 0.0s - 2.8s: Progressive inch-by-inch stroke reveal of the mark (root tip to gold hand)
+ *      with luminous cyan tracer following the leading edge natively.
+ *   2. 2.2s - 2.9s: Smooth directional text reveal of "LegalBharosa.org"
+ *   3. 2.9s - 4.75s: Complete logo displayed stably with full clarity
+ *   4. 4.75s - 5.0s: Smooth fade reset seamlessly transitioning to the next cycle
+ * - Robust mobile sizing: Uses explicit SVG dimensions & responsive CSS ensuring
+ *   crisp rendering at 320px, 375px, 390px, 430px, tablet, and desktop without collapsing.
+ * - Full support for prefers-reduced-motion (shows static brand mark).
  */
 export default function NavbarLogo() {
   const uniqueId = useId().replace(/:/g, '_');
   const maskId = `lb-nav-mask-${uniqueId}`;
-  const glowFilterId = `lb-glow-filter-${uniqueId}`;
+  const strokePathId = `lb-stroke-path-${uniqueId}`;
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  const svgRef = useRef(null);
-  const strokeRef = useRef(null);
-  const textMaskRef = useRef(null);
-  const lightTipRef = useRef(null);
 
   // Check prefers-reduced-motion
   useEffect(() => {
@@ -44,91 +33,11 @@ export default function NavbarLogo() {
       if (mediaQuery.matches) {
         setPrefersReducedMotion(true);
       }
-      const handler = (e) => {
-        setPrefersReducedMotion(e.matches);
-      };
+      const handler = (e) => setPrefersReducedMotion(e.matches);
       mediaQuery.addEventListener?.('change', handler);
       return () => mediaQuery.removeEventListener?.('change', handler);
     }
   }, []);
-
-  // Continuous 5-Second Loop Animation
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-
-    const svg = svgRef.current;
-    const stroke = strokeRef.current;
-    const textMask = textMaskRef.current;
-    const lightTip = lightTipRef.current;
-
-    if (!svg || !stroke || !textMask || !lightTip) return;
-
-    const totalLen = stroke.getTotalLength();
-    stroke.style.strokeDasharray = `${totalLen}`;
-    stroke.style.strokeDashoffset = `${totalLen}`;
-
-    const CYCLE_MS = 5000;
-    const DRAW_MS = 2800;
-    const TEXT_START_MS = 2200;
-    const TEXT_END_MS = 2900;
-    const FADE_START_MS = 4750;
-
-    let animFrameId = null;
-    let startTime = null;
-
-    const loopFrame = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = (timestamp - startTime) % CYCLE_MS;
-
-      // 1. Drawing B Stroke inch-by-inch
-      if (elapsed <= DRAW_MS) {
-        const bProgress = elapsed / DRAW_MS;
-        stroke.style.strokeDashoffset = `${totalLen * (1 - bProgress)}`;
-
-        // Position luminous light trace along the leading tip
-        const pt = stroke.getPointAtLength(totalLen * bProgress);
-        lightTip.setAttribute('cx', String(pt.x));
-        lightTip.setAttribute('cy', String(pt.y));
-        lightTip.style.opacity = '1';
-
-        // Transition light color from bright cyan to warm gold as it enters the gold hand section
-        if (bProgress > 0.72) {
-          lightTip.setAttribute('fill', '#F4B400');
-        } else {
-          lightTip.setAttribute('fill', '#12B9F2');
-        }
-      } else {
-        stroke.style.strokeDashoffset = '0';
-        lightTip.style.opacity = '0';
-      }
-
-      // 2. Smooth directional wipe for 'LegalBharosa.org' text
-      if (elapsed < TEXT_START_MS) {
-        textMask.setAttribute('width', '0');
-      } else if (elapsed <= TEXT_END_MS) {
-        const tProgress = (elapsed - TEXT_START_MS) / (TEXT_END_MS - TEXT_START_MS);
-        textMask.setAttribute('width', String(505 * tProgress));
-      } else {
-        textMask.setAttribute('width', '505');
-      }
-
-      // 3. Smooth Reset Phase (last 250ms of the 5s cycle)
-      if (elapsed >= FADE_START_MS) {
-        const fadeProgress = (elapsed - FADE_START_MS) / (CYCLE_MS - FADE_START_MS);
-        svg.style.opacity = String(1 - fadeProgress);
-      } else {
-        svg.style.opacity = '1';
-      }
-
-      animFrameId = requestAnimationFrame(loopFrame);
-    };
-
-    animFrameId = requestAnimationFrame(loopFrame);
-
-    return () => {
-      if (animFrameId) cancelAnimationFrame(animFrameId);
-    };
-  }, [prefersReducedMotion]);
 
   // If user prefers reduced motion, render complete static image asset
   if (prefersReducedMotion) {
@@ -136,7 +45,9 @@ export default function NavbarLogo() {
       <img
         src="/assets/legalbharosa-horizontal.png"
         alt="LegalBharosa — Trust. Support. Solutions."
-        className="h-7.5 sm:h-11 md:h-12 max-w-[125px] sm:max-w-none w-auto object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04] group-hover:drop-shadow-[0_2px_10px_rgba(18,185,242,0.22)]"
+        width="700"
+        height="180"
+        className="h-[32px] xs:h-[36px] sm:h-11 md:h-12 w-auto max-w-[135px] xs:max-w-[155px] sm:max-w-none object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04]"
       />
     );
   }
@@ -173,45 +84,40 @@ export default function NavbarLogo() {
 
   return (
     <svg
-      ref={svgRef}
       viewBox="0 0 700 180"
-      className="h-7.5 sm:h-11 md:h-12 max-w-[125px] sm:max-w-none w-auto object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04] group-hover:drop-shadow-[0_2px_10px_rgba(18,185,242,0.22)] overflow-visible"
+      width="700"
+      height="180"
+      style={{ aspectRatio: '700/180' }}
+      className="lb-nav-svg-anim h-[32px] xs:h-[36px] sm:h-11 md:h-12 w-auto max-w-[135px] xs:max-w-[155px] sm:max-w-none object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04] overflow-visible"
       aria-label="LegalBharosa — Trust. Support. Solutions."
       role="img"
     >
       <defs>
-        {/* Soft glow filter for the luminous pen tracer */}
-        <filter id={glowFilterId} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3.5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-
         {/* Dynamic Architectural Path Drawing Mask */}
         <mask id={maskId}>
           <rect width="700" height="180" fill="black" />
 
-          {/* Unified continuous stroke path revealing the mark inch-by-inch */}
+          {/* Continuous stroke path revealing the B emblem inch-by-inch */}
           <path
-            ref={strokeRef}
+            id={strokePathId}
             d={unifiedPathD}
+            pathLength="1000"
             fill="none"
             stroke="white"
             strokeWidth="32"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="lb-nav-stroke-anim"
           />
 
           {/* Directional wipe mask for 'LegalBharosa.org' text */}
           <rect
-            ref={textMaskRef}
             x="195"
             y="0"
-            width="0"
+            width="505"
             height="180"
             fill="white"
+            className="lb-nav-text-anim"
           />
         </mask>
       </defs>
@@ -224,14 +130,25 @@ export default function NavbarLogo() {
         mask={`url(#${maskId})`}
       />
 
-      {/* Luminous Leading-Edge Pen / Tracer following the path */}
+      {/* Luminous Leading-Edge Pen / Tracer following the path natively with 0 JS overhead */}
       <circle
-        ref={lightTipRef}
         r="5.5"
         fill="#12B9F2"
-        filter={`url(#${glowFilterId})`}
-        style={{ opacity: 0 }}
-      />
+        className="lb-nav-tracer-anim"
+        style={{
+          filter: 'drop-shadow(0 0 5px rgba(18, 185, 242, 0.9))',
+        }}
+      >
+        <animateMotion
+          dur="5s"
+          repeatCount="indefinite"
+          keyTimes="0; 0.56; 1"
+          keyPoints="0; 1; 1"
+          calcMode="linear"
+        >
+          <mpath href={`#${strokePathId}`} />
+        </animateMotion>
+      </circle>
     </svg>
   );
 }

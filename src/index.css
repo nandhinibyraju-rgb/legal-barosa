@@ -426,7 +426,7 @@ html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, 
 
 .animate-badge-glow {
   animation: badgeGlowPulse 3.5s ease-in-out infinite;
-  will-change: box-shadow, opacity;
+  will-change: opacity;
 }
 
 /* Speech bubble floating animations for Image A (Problem State) */
@@ -498,7 +498,7 @@ html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, 
 
 .animate-red-dot-glow {
   animation: redDotGlowPulse 3.2s ease-in-out infinite;
-  will-change: box-shadow, opacity;
+  will-change: opacity;
 }
 
 /* Background blend — fully dissolved edges (no visible rectangle) */
@@ -787,6 +787,99 @@ html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, 
   .animate-hand-nudge {
     animation: none !important;
     transform: none !important;
+  }
+}
+
+/* ======================================================== */
+/* NAVBAR LOGO CONTINUOUS 5S DRAWING & REVEAL ANIMATION     */
+/* Pure CSS / GPU-composited, zero JS CPU overhead          */
+/* ======================================================== */
+@keyframes navbarStrokeDraw {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  56% { /* 2.8s of 5.0s: Inch-by-inch stroke completed */
+    stroke-dashoffset: 0;
+  }
+  95% { /* 4.75s: Pristine logo held with full clarity */
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes navbarTextWipe {
+  0%, 44% { /* 0 to 2.2s: Text hidden while B stroke draws */
+    clip-path: inset(0 100% 0 0);
+    -webkit-clip-path: inset(0 100% 0 0);
+  }
+  58% { /* 2.9s: Smoothly wiped in */
+    clip-path: inset(0 0% 0 0);
+    -webkit-clip-path: inset(0 0% 0 0);
+  }
+  95% { /* 4.75s: Held stably */
+    clip-path: inset(0 0% 0 0);
+    -webkit-clip-path: inset(0 0% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+    -webkit-clip-path: inset(0 0% 0 0);
+  }
+}
+
+@keyframes navbarTracerFade {
+  0% {
+    opacity: 1;
+  }
+  54% {
+    opacity: 1;
+  }
+  56%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes navbarLogoCycleFade {
+  0%, 95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.lb-nav-svg-anim {
+  animation: navbarLogoCycleFade 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: opacity;
+}
+
+.lb-nav-stroke-anim {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: navbarStrokeDraw 5s cubic-bezier(0.25, 1, 0.35, 1) infinite;
+  will-change: stroke-dashoffset;
+}
+
+.lb-nav-text-anim {
+  animation: navbarTextWipe 5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  will-change: clip-path;
+}
+
+.lb-nav-tracer-anim {
+  animation: navbarTracerFade 5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-nav-svg-anim,
+  .lb-nav-stroke-anim,
+  .lb-nav-text-anim,
+  .lb-nav-tracer-anim {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+    clip-path: inset(0 0% 0 0) !important;
+    -webkit-clip-path: inset(0 0% 0 0) !important;
   }
 }
 

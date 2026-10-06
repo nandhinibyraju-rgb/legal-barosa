@@ -54,16 +54,17 @@ const STEPS = [
 export default function HowItWorks({ onOpenConsult }) {
   const { t } = useTranslation();
   const timelineRef = useRef(null);
-  const [fillProgress, setFillProgress] = useState(0);
+  const fillLineRef = useRef(null);
+  const beadRef = useRef(null);
   const [visibleSteps, setVisibleSteps] = useState({});
   const rowRefs = useRef([]);
 
-  // 1. PROGRESSIVE LINE FILL EFFECT (Scroll-driven)
+  // 1. PROGRESSIVE LINE FILL EFFECT (Scroll-driven direct DOM transform - ZERO React re-renders on scroll)
   useEffect(() => {
     let animationFrameId;
 
     const handleScroll = () => {
-      if (!timelineRef.current) return;
+      if (!timelineRef.current || !fillLineRef.current) return;
       const rect = timelineRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
@@ -72,7 +73,10 @@ export default function HowItWorks({ onOpenConsult }) {
       const scrolled = startOffset - rect.top;
       const progress = Math.min(Math.max(scrolled / totalDist, 0), 1);
       
-      setFillProgress(progress);
+      fillLineRef.current.style.transform = `scaleY(${progress})`;
+      if (beadRef.current) {
+        beadRef.current.style.top = `${progress * 100}%`;
+      }
     };
 
     const onScrollThrottled = () => {
@@ -161,17 +165,19 @@ export default function HowItWorks({ onOpenConsult }) {
 
           {/* PROGRESSIVE FILL LINE (Bright Blue #168CFF) */}
           <div 
+            ref={fillLineRef}
             aria-hidden="true"
             style={{
-              transform: `scaleY(${fillProgress})`,
+              transform: 'scaleY(0)',
               transformOrigin: 'top',
             }}
             className="absolute top-6 bottom-6 left-5 sm:left-8 md:left-1/2 -translate-x-1/2 w-[2px] bg-[#168CFF] pointer-events-none transition-transform duration-75 ease-out shadow-[0_0_8px_rgba(22,140,255,0.7)]"
           >
             {/* Gold Tip Bead */}
             <div 
+              ref={beadRef}
               style={{
-                top: `${fillProgress * 100}%`,
+                top: '0%',
               }}
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#F4B400] shadow-[0_0_10px_rgba(244,180,0,0.9)]"
             />

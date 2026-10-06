@@ -13,12 +13,12 @@ import React, { useEffect } from 'react';
  */
 export default function Card3DTiltManager() {
   useEffect(() => {
-    // Check if pointer is fine (desktop mouse)
     const isTouch = 
       typeof window !== 'undefined' && 
       (window.matchMedia('(pointer: coarse)').matches || 
        'ontouchstart' in window || 
-       navigator.maxTouchPoints > 0);
+       navigator.maxTouchPoints > 0 ||
+       window.innerWidth < 768);
 
     if (isTouch) return;
 

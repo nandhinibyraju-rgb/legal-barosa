@@ -39,7 +39,7 @@ export default function FloatingExpertButton({ onOpenConsult, isVisible = true }
       />
 
       {/* Headset Icon Container with subtle gold live dot */}
-      <div className="relative w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 rounded-full bg-gradient-to-br from-[#168CFF] to-[#0646A8] flex items-center justify-center shrink-0 shadow-xs border border-white/20">
+      <div className="relative w-[26px] h-[26px] sm:w-[30px] sm:h-[30px] rounded-full bg-gradient-to-br from-[#168CFF] to-[#0646A8] flex items-center justify-center shrink-0 shadow-xs border border-white/20">
         <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0 group-hover:scale-105 transition-transform duration-200" />
         {/* Subtle gold indicator dot */}
         <span 

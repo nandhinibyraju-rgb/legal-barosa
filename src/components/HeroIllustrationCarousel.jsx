@@ -304,6 +304,7 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
   const badge2Y = useTransform(springY, [-1, 1], [10, -10]);
 
   const handleMouseMove = (e) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
