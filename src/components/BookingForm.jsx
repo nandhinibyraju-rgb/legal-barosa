@@ -9,11 +9,15 @@ import {
   Lock, 
   AlertCircle, 
   CheckCircle2, 
-  ExternalLink 
+  ExternalLink,
+  LogIn 
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { submitConsultation, saveLead } from '../services/firestoreService';
 import TrustStrip from './TrustStrip';
+import SignInModal from './SignInModal';
 
 // ============================================================================
 // WHATSAPP CONFIGURATION
@@ -85,6 +89,10 @@ export default function BookingForm({
     return 'Harassment Protection';
   };
 
+  const [currentUser, setCurrentUser] = useState(() => auth?.currentUser || user || null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authNotice, setAuthNotice] = useState(null); // { type: 'warning' | 'success', message: '' }
+
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     phone: user?.phoneNumber || '',
@@ -97,6 +105,45 @@ export default function BookingForm({
   const [submittedConfirmation, setSubmittedConfirmation] = useState('');
   const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('');
 
+  // Reactive Firebase Auth listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setCurrentUser(firebaseUser);
+      if (firebaseUser) {
+        setFormData((prev) => ({
+          ...prev,
+          name: prev.name || firebaseUser.displayName || '',
+          phone: prev.phone || (firebaseUser.phoneNumber ? firebaseUser.phoneNumber.replace(/\D/g, '').slice(-10) : ''),
+        }));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Restore draft from sessionStorage if visitor previously filled form or returned from auth
+  useEffect(() => {
+    try {
+      const rawDraft = sessionStorage.getItem('lb_booking_draft');
+      if (rawDraft) {
+        const draft = JSON.parse(rawDraft);
+        // Valid for up to 30 minutes
+        if (draft && Date.now() - (draft.savedAt || 0) < 30 * 60 * 1000) {
+          setFormData((prev) => ({
+            name: prev.name || draft.name || '',
+            phone: prev.phone || draft.phone || '',
+            service: draft.service || prev.service,
+            message: prev.message || draft.message || '',
+          }));
+          if (draft.agreedToTerms) {
+            setAgreedToTerms(true);
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[BookingForm] Draft restore error:', err);
+    }
+  }, []);
+
   // Sync state if user auth or topic changes
   useEffect(() => {
     const serviceVal = resolveInitialService();
@@ -107,6 +154,35 @@ export default function BookingForm({
       service: prev.service || serviceVal,
     }));
   }, [user, defaultService, defaultTopic]);
+
+  const handleAuthModalClose = () => {
+    setIsAuthModalOpen(false);
+    const current = auth.currentUser;
+    if (!current) {
+      setAuthNotice({
+        type: 'warning',
+        message: t('booking.signInRequired', 'Please sign in or create an account before submitting your consultation request.')
+      });
+    }
+  };
+
+  const handleAuthModalSuccess = (loggedInUser) => {
+    setIsAuthModalOpen(false);
+    setCurrentUser(loggedInUser);
+    setAuthNotice({
+      type: 'success',
+      message: t('booking.signedInReady', 'Signed in as {{identifier}}. Click Submit via WhatsApp below to complete your consultation request.', {
+        identifier: loggedInUser?.displayName || loggedInUser?.email || 'authenticated user'
+      })
+    });
+    if (loggedInUser) {
+      setFormData((prev) => ({
+        ...prev,
+        name: prev.name || loggedInUser.displayName || '',
+        phone: prev.phone || (loggedInUser.phoneNumber ? loggedInUser.phoneNumber.replace(/\D/g, '').slice(-10) : ''),
+      }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,13 +208,51 @@ export default function BookingForm({
       return;
     }
 
-    // 4. Validate Mandatory Terms & Conditions and Privacy Policy Acknowledgement
+    // 4. Validate Mandatory Terms & Conditions
     if (!agreedToTerms) {
       setValidationError(t('booking.validationTerms', 'Please acknowledge the Terms & Conditions and Privacy Policy to continue.'));
       return;
     }
 
-    // 4. Construct WhatsApp Message text & URL
+    // =========================================================================
+    // 5. CRITICAL SECURITY GATE: REQUIRE AUTHENTICATED USER BEFORE WHATSAPP
+    // Must verify against auth.currentUser directly.
+    // =========================================================================
+    const verifiedUser = auth.currentUser;
+    if (!verifiedUser || !verifiedUser.uid) {
+      // STOP SUBMISSION IMMEDIATELY.
+      // DO NOT generate WhatsApp URL.
+      // DO NOT open WhatsApp.
+      // DO NOT call saveLead or submitConsultation.
+
+      // Persist draft in sessionStorage so user's typed data is 100% safe
+      try {
+        sessionStorage.setItem('lb_booking_draft', JSON.stringify({
+          name: trimmedName,
+          phone: cleanPhone,
+          service: formData.service,
+          message: formData.message.trim(),
+          agreedToTerms: true,
+          savedAt: Date.now()
+        }));
+      } catch {}
+
+      setAuthNotice({
+        type: 'warning',
+        message: t('booking.signInRequired', 'Please sign in or create an account before submitting your consultation request.')
+      });
+
+      // Show existing LegalBharosa SignInModal
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    // =========================================================================
+    // 6. VERIFIED AUTHENTICATED USER PROCEEDING TO WHATSAPP
+    // =========================================================================
+    setAuthNotice(null);
+
+    // Construct WhatsApp Message text & URL
     const messageLines = [
       'Hello LegalBharosa, I would like to book a consultation.',
       `Name: ${trimmedName}`,
@@ -150,12 +264,10 @@ export default function BookingForm({
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(messageText)}`;
     setLastWhatsAppUrl(whatsappUrl);
 
-    // 5. Determine Lead Source
+    // Determine Lead Source
     const source = isModal ? 'consultation_popup' : 'consultation_page';
 
-    // 6. Save lead to Firestore BEFORE WhatsApp redirect
-    // Requirement: Non-blocking error handling — if Firestore fails or times out,
-    // catch error so the WhatsApp redirect still proceeds.
+    // Save lead to Firestore with verified UID
     try {
       await Promise.race([
         saveLead({
@@ -166,7 +278,8 @@ export default function BookingForm({
           source,
           status: 'new',
           whatsappSent: true,
-          userId: user?.uid || null,
+          userId: verifiedUser.uid,
+          userEmail: verifiedUser.email || null,
         }),
         new Promise((_, reject) => 
           setTimeout(() => reject(new Error('Firestore lead logging timeout')), 2500)
@@ -176,26 +289,30 @@ export default function BookingForm({
       console.warn('[BookingForm] Firestore lead save warning (proceeding to WhatsApp):', dbErr);
     }
 
-    // Background sync to consultations collection for backwards compatibility with Admin Panel
+    // Background sync to consultations collection linked to verified UID
     submitConsultation({
       name: trimmedName,
       phone: cleanPhone,
-      email: '',
+      email: verifiedUser.email || '',
       problemCategory: mapServiceToCategory(formData.service),
       message: formData.message.trim() || `Consultation request for ${formData.service} (${source})`,
-      userId: user?.uid || null,
+      userId: verifiedUser.uid,
     }).catch((consultErr) => {
       console.warn('[BookingForm] Background consultation sync warning:', consultErr);
     });
 
-    // 7. Execute WhatsApp Redirect
+    // Execute WhatsApp Redirect
     const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      // Fallback if browser blocked the new window due to async delay
       window.location.href = whatsappUrl;
     }
 
-    // 8. Reset Form
+    // Clean up temporary draft
+    try {
+      sessionStorage.removeItem('lb_booking_draft');
+    } catch {}
+
+    // Reset Form
     setFormData({
       name: '',
       phone: '',
@@ -207,7 +324,6 @@ export default function BookingForm({
     const confirmationText = t('booking.confirmationAlmostDone', 'Almost done! Please tap Send in WhatsApp to complete your request.');
     setSubmittedConfirmation(confirmationText);
 
-    // 9. If in popup mode, trigger success callback (which closes modal & shows toast)
     if (isModal) {
       if (onSuccess) {
         onSuccess(confirmationText);
@@ -446,6 +562,49 @@ export default function BookingForm({
             )}
           </div>
 
+          {/* Authentication Requirement / Status Banner */}
+          {authNotice && (
+            <div 
+              className={`p-3 sm:p-3.5 rounded-xl border text-xs sm:text-sm flex items-start justify-between gap-3 animate-in fade-in duration-200 ${
+                authNotice.type === 'success'
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                  : 'bg-amber-50 border-amber-300 text-amber-900'
+              }`}
+            >
+              <div className="flex items-start gap-2.5">
+                {authNotice.type === 'success' ? (
+                  <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+                ) : (
+                  <Lock className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
+                )}
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-semibold text-[11px] uppercase tracking-wider text-slate-700">
+                    {authNotice.type === 'success' ? t('booking.authSuccess', 'Account Verified') : t('booking.authRequired', 'Sign-in Required')}
+                  </span>
+                  <span className="leading-snug text-xs sm:text-[13px]">{authNotice.message}</span>
+                </div>
+              </div>
+              {authNotice.type !== 'success' && (
+                <button
+                  type="button"
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0B2A5B] hover:bg-[#123E8A] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-[#F4B400]" />
+                  <span>{t('auth.signInTitle', 'Sign In')}</span>
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Verified Client Badge if already authenticated */}
+          {currentUser && !authNotice && (
+            <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-lg border border-emerald-200/60 w-fit">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>{t('booking.verifiedUser', 'Verified Client:')} <strong>{currentUser.displayName || currentUser.email}</strong></span>
+            </div>
+          )}
+
           {/* Submit Button */}
           <button
             type="submit"
@@ -466,6 +625,17 @@ export default function BookingForm({
 
         </form>
       )}
+
+      {/* Embedded Authentication Modal with elevated zIndex for popups */}
+      <SignInModal
+        isOpen={isAuthModalOpen}
+        onClose={handleAuthModalClose}
+        onSuccess={handleAuthModalSuccess}
+        title={t('booking.authModalTitle', 'Sign In to Continue')}
+        subtitle={t('booking.authModalSubtitle', 'Please sign in or create an account before submitting your consultation request.')}
+        badgeText={t('booking.authBadge', 'ACCOUNT REQUIRED')}
+        zIndex={1150}
+      />
     </div>
   );
 }

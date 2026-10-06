@@ -12,7 +12,15 @@ import {
 } from 'firebase/auth';
 import { syncUserProfile } from '../services/firestoreService';
 
-export default function SignInModal({ isOpen, onClose, onSuccess }) {
+export default function SignInModal({ 
+  isOpen, 
+  onClose, 
+  onSuccess,
+  title,
+  subtitle,
+  badgeText,
+  zIndex = 1050
+}) {
   const { t } = useTranslation();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -153,7 +161,10 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[1050] flex items-center justify-center p-4">
+      <div 
+        className="fixed inset-0 flex items-center justify-center p-4"
+        style={{ zIndex }}
+      >
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -201,17 +212,17 @@ export default function SignInModal({ isOpen, onClose, onSuccess }) {
                   <Lock className="w-4 h-4 text-[#12B9F2]" />
                 </div>
                 <span className="font-manrope text-xs font-semibold text-[#12B9F2] uppercase tracking-wider">
-                  {t('nav.clientPortal', 'SECURE CLIENT PORTAL')}
+                  {badgeText || t('nav.clientPortal', 'SECURE CLIENT PORTAL')}
                 </span>
               </div>
 
               <h2 className="font-heading font-bold text-2xl text-white tracking-tight">
-                {isSignUp ? t('auth.signUpTitle', 'Create Client Account') : t('auth.signInTitle', 'Sign In')}
+                {title ? title : (isSignUp ? t('auth.signUpTitle', 'Create Client Account') : t('auth.signInTitle', 'Sign In'))}
               </h2>
               <p className="font-inter text-xs text-slate-400 mt-1 mb-5">
-                {isSignUp 
+                {subtitle ? subtitle : (isSignUp 
                   ? t('auth.signUpSubtitle', 'Register in seconds to track consultations and receive advocate support.') 
-                  : t('auth.signInSubtitle', 'Access your case updates, messages, and legal documentation securely.')}
+                  : t('auth.signInSubtitle', 'Access your case updates, messages, and legal documentation securely.'))}
               </p>
 
               {error && (
