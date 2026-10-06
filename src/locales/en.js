@@ -29,6 +29,7 @@ export const en = {
     enquiriesTitle: 'Confidential Enquiries',
     enquiriesSub: 'Discuss your concerns through the available contact channels.',
     language: 'Language',
+    talkToExpert: 'Talk to an Expert',
   },
 
   nav: {
@@ -282,11 +283,11 @@ export const en = {
         intro: 'If your secured property or business loan is facing Section 13(2) or 13(4) possession notices, our advocates file appropriate representations and DRT appeals to halt unlawful auctions.',
       },
       creditRecovery: {
-        title: 'Credit Record & CIBIL Correction',
-        shortDesc: 'Dispute erroneous bank reporting, update closed loan statuses, and rebuild your credit score systematically.',
-        tag: 'Credit Score Repair',
-        heading: 'Rebuild Your Financial Reputation',
-        intro: 'Rectify incorrect bank reporting, ensure accurate updates of settled accounts on credit bureaus, and follow proven advocate guidance to restore your creditworthiness.',
+        title: 'Credit Score & CIBIL Correction',
+        shortDesc: 'Review credit reports for disputed entries, incorrect default reporting, and understand formal correction steps.',
+        tag: 'Credit Score & CIBIL',
+        heading: 'Credit Score & CIBIL Correction',
+        intro: 'Review credit reports to identify disputed entries or incorrect default dates, and understand lawful steps to maintain accurate credit bureau records without false promises.',
       },
     },
   },

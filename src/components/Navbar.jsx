@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import LanguageSelector from './LanguageSelector';
+import NavbarLogo from './NavbarLogo';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Home' },
@@ -211,10 +212,10 @@ export default function Navbar({
       {/* 1. STANDARDIZED FIXED / STICKY HEADER */}
       {/* ======================================================== */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out bg-white border-b border-neutral-200/80 ${
           isScrolled 
-            ? 'bg-white/92 backdrop-blur-md shadow-[0_4px_24px_rgba(6,45,120,0.06)] border-b border-slate-200/70 shadow-[0_1px_0_0_rgba(18,185,242,0.18)]' 
-            : 'bg-white/95 backdrop-blur-sm border-b border-neutral-200/50 shadow-xs'
+            ? 'shadow-[0_4px_20px_rgba(6,45,120,0.06)]' 
+            : 'shadow-[0_1px_3px_rgba(0,0,0,0.03)]'
         }`}
       >
         <nav 
@@ -231,11 +232,7 @@ export default function Navbar({
               className="flex items-center group cursor-pointer focus:outline-none py-1 transition-transform duration-300 ease-out hover:-translate-y-[1px]"
               aria-label="LegalBharosa Home"
             >
-              <img 
-                src="/assets/legalbharosa-horizontal.png" 
-                alt="LegalBharosa — Trust. Support. Solutions." 
-                className="h-7.5 sm:h-11 md:h-12 max-w-[125px] sm:max-w-none w-auto object-contain shrink-0 transition-all duration-300 ease-out group-hover:brightness-[1.04] group-hover:drop-shadow-[0_2px_10px_rgba(18,185,242,0.22)]" 
-              />
+              <NavbarLogo />
             </a>
           </div>
 

@@ -87,22 +87,69 @@ export default function ReviewsSlideoutWidget({ onOpenConsult }) {
   return (
     <>
       {/* ======================================================== */}
-      {/* 1. CONSOLIDATED FLOATING VERTICAL 'NEED HELP' TAB */}
+      {/* 1. CONSOLIDATED FLOATING VERTICAL 'NEED HELP' TAB + HINT */}
       {/* ======================================================== */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        aria-label="Need Help & Contact Support"
-        className="fixed right-0 top-[38%] sm:top-1/2 -translate-y-1/2 z-40 bg-[#0B2A5B] hover:bg-[#168CFF] text-white py-3 px-1.5 sm:py-4 sm:px-2 rounded-l-xl shadow-2xl border-l border-y border-white/20 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer group hover:-translate-x-1 min-h-[48px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168CFF]"
-        style={{ writingMode: 'vertical-rl' }}
-      >
-        <div className="flex items-center gap-1.5 rotate-180">
-          <HelpCircle className="w-3.5 h-3.5 text-[#F4B400] shrink-0" />
-          <span className="font-mono text-[10.5px] sm:text-[11px] font-bold tracking-widest uppercase">
-            NEED HELP
-          </span>
+      {!isOpen && (
+        <div 
+          className="fixed right-0 top-[38%] sm:top-1/2 -translate-y-1/2 z-40 flex flex-col items-end pointer-events-none select-none"
+        >
+          {/* Main Clickable Tab (enlarged ~12-15%, soft blue shadow, high contrast) */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Need Help & Contact Support"
+            className="pointer-events-auto bg-[#0B2A5B] hover:bg-[#168CFF] active:bg-[#072046] text-white py-3.5 px-2 sm:py-4.5 sm:px-2.5 rounded-l-xl sm:rounded-l-2xl shadow-[0_8px_24px_rgba(6,45,120,0.38),0_0_16px_rgba(22,140,255,0.32)] border-l-2 border-y border-[#168CFF]/45 hover:border-[#F4B400]/60 transition-all duration-200 flex flex-col items-center gap-2 cursor-pointer group hover:-translate-x-1 min-h-[54px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168CFF]"
+            style={{ writingMode: 'vertical-rl' }}
+          >
+            <div className="flex items-center gap-1.5 rotate-180">
+              <HelpCircle className="w-4 h-4 text-[#F4B400] shrink-0 group-hover:scale-110 transition-transform duration-200" />
+              <span className="font-mono text-[11.5px] sm:text-[12.5px] font-bold tracking-widest uppercase text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                NEED HELP
+              </span>
+            </div>
+          </button>
+
+          {/* Small Visual Hint: Pointing Hand Illustration Underneath Tab Pointing UPWARD */}
+          <div 
+            aria-hidden="true"
+            className="pointer-events-none mt-2 w-full flex justify-center animate-hand-nudge"
+            title="Need help? Click above"
+          >
+            <svg 
+              width="24" 
+              height="32" 
+              viewBox="0 0 24 32" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0 drop-shadow-[0_2px_8px_rgba(22,140,255,0.35)]"
+            >
+              {/* Upward directional gold spark / arrow above the fingertip pointing straight to the tab */}
+              <path d="M12 0.5L14.5 3.5H9.5L12 0.5Z" fill="#F4B400" />
+
+              {/* Hand silhouette and base */}
+              <path 
+                d="M9.5 5C9.5 3.62 10.62 2.5 12 2.5C13.38 2.5 14.5 3.62 14.5 5V13H15.5C16.88 13 18 14.12 18 15.5C18 15.8 17.95 16.08 17.85 16.35C18.45 16.75 18.85 17.42 18.85 18.2C18.85 18.7 18.66 19.16 18.35 19.5C18.65 19.88 18.85 20.37 18.85 20.9C18.85 22.14 17.84 23.15 16.6 23.15H15.5V25C15.5 25.9 14.7 26.6 13.8 26.6H10.2C9.3 26.6 8.5 25.9 8.5 25V23.15H7.5C5.84 23.15 4.5 21.81 4.5 20.15C4.5 19 5.16 18 6.13 17.52C5.81 17.01 5.78 16.36 6.07 15.81C6.58 14.88 7.65 14.32 8.76 14.49L9.5 14.6V5Z" 
+                fill="#FFFFFF" 
+                stroke="#0B2A5B" 
+                strokeWidth="1.3" 
+                strokeLinejoin="round" 
+              />
+
+              {/* Knuckle and finger creases in brand light blue */}
+              <path d="M14.5 16.5H17.5" stroke="#168CFF" strokeWidth="0.9" strokeLinecap="round" />
+              <path d="M14.5 20H18" stroke="#168CFF" strokeWidth="0.9" strokeLinecap="round" />
+              <path d="M9.5 9.5H14.5" stroke="#168CFF" strokeWidth="0.8" strokeLinecap="round" strokeDasharray="1 1.5" />
+
+              {/* Thumb crease in dark blue */}
+              <path d="M8.7 14.5C9.4 15 10 16.1 10 17.1" stroke="#0B2A5B" strokeWidth="1.1" strokeLinecap="round" />
+
+              {/* Wrist Cuff in brand blue with subtle gold accent pip */}
+              <rect x="8.5" y="24.5" width="7" height="2.5" rx="0.8" fill="#168CFF" stroke="#0B2A5B" strokeWidth="0.9" />
+              <circle cx="12" cy="25.75" r="0.75" fill="#F4B400" />
+            </svg>
+          </div>
         </div>
-      </button>
+      )}
 
       {/* ======================================================== */}
       {/* 2. BACKDROP OVERLAY & CONSOLIDATED SLIDEOUT DRAWER */}

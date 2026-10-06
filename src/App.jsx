@@ -28,7 +28,7 @@ import ConsultationModal from './components/ConsultationModal';
 import SignInModal from './components/SignInModal';
 import AutoConsultationPopup from './components/AutoConsultationPopup';
 import FloatingContactWidget from './components/FloatingContactWidget';
-import CustomCursor from './components/CustomCursor';
+import FloatingExpertButton from './components/FloatingExpertButton';
 import Card3DTiltManager from './components/Card3DTiltManager';
 import { auth } from './firebase';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
@@ -364,7 +364,6 @@ export default function App() {
   return (
     <div className="relative w-full min-h-screen">
       {/* Global Interactive Enhancements */}
-      <CustomCursor />
       <Card3DTiltManager />
 
       {/* Shared Standardized Sticky Navbar across all pages */}
@@ -717,6 +716,12 @@ export default function App() {
       <AutoConsultationPopup
         isOpen={autoPopupOpen}
         onClose={handleDismissAutoPopup}
+      />
+
+      {/* Persistent 'Talk to an Expert' Floating Consultation Button */}
+      <FloatingExpertButton
+        isVisible={contactLauncherVisible && !isPortalRoute && !autoPopupOpen}
+        onOpenConsult={handleOpenConsult}
       />
 
       {/* Floating WhatsApp Contact Launcher & Polished Contact Panel */}

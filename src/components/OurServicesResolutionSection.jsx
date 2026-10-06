@@ -12,11 +12,13 @@ import {
   ArrowRight,
   ArrowLeft,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
+import CentralLogoReveal from './CentralLogoReveal';
 
 const SERVICE_KEY_MAP = {
-  'debt-counselling': 'debtManagement',
+  'credit-score-cibil': 'creditRecovery',
   'emi-debt-management': 'debtManagement',
   'harassment-protection': 'harassmentProtection',
   'loan-settlement-ots': 'loanSettlement',
@@ -37,11 +39,11 @@ const getLocalizedService = (service, t) => {
 // Left Side 3 Floating Services
 const LEFT_SERVICES = [
   {
-    id: 'debt-counselling',
-    title: 'Debt Counselling',
-    description: 'Personalized guidance to understand your financial situation and explore practical repayment options.',
-    route: '/services/debt-management',
-    icon: HeartHandshake,
+    id: 'credit-score-cibil',
+    title: 'Credit Score & CIBIL Correction',
+    description: 'Review credit reports for disputed entries, incorrect default dates, and formal rectification steps.',
+    route: '/services/credit-recovery',
+    icon: TrendingUp,
     iconColor: 'text-[#078BE8]',
     iconBg: 'bg-blue-50 border-blue-200/70',
     floatAmp: 4,
@@ -453,68 +455,11 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
 
             {/* 
               ------------------------------------------------------------------
-              CENTERPIECE: OFFICIAL LEGALBHAROSA LOGO IN GLASS TREATMENT
-              - Soft blue atmospheric glow
-              - Subtle cyan halo
-              - Subtle gold accent
-              - Soft drop shadow
-              - Extremely slow animated light ring
-              - Stable, floating, recognizable
+              CENTERPIECE: PREMIUM START-TO-FINISH LOGO REVEAL ANIMATION
+              Progressive reveal from left to right, light sweep, gold finish glow
               ------------------------------------------------------------------
             */}
-            <div className="relative flex flex-col items-center justify-center p-2">
-              
-              {/* Outer Deep Atmospheric Glow & Cyan Halo */}
-              <motion.div
-                animate={{
-                  scale: [1, 1.06, 1],
-                  opacity: [0.75, 0.98, 0.75],
-                }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute w-[280px] xl:w-[320px] h-[280px] xl:h-[320px] rounded-full bg-[radial-gradient(circle,rgba(7,139,232,0.22)_0%,rgba(18,185,242,0.12)_45%,rgba(245,158,11,0.05)_65%,transparent_75%)] blur-2xl pointer-events-none"
-                aria-hidden="true"
-              />
-
-              {/* Extremely Slow Subtle Animated Light Ring */}
-              <div 
-                aria-hidden="true"
-                className="absolute w-[210px] xl:w-[245px] h-[210px] xl:h-[245px] rounded-full border border-dashed border-[#12B9F2]/30 pointer-events-none animate-spin-extremely-slow"
-              />
-
-              {/* Gold Micro-Accent Halo */}
-              <div 
-                aria-hidden="true"
-                className="absolute w-[195px] xl:w-[225px] h-[195px] xl:h-[225px] rounded-full border border-amber-400/20 shadow-[0_0_20px_rgba(245,158,11,0.1)] pointer-events-none"
-              />
-
-              {/* Center Pristine Glass Disc with Smooth Floating Motion */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                animate={{
-                  y: [-3.5, 3.5, -3.5],
-                }}
-                style={{
-                  transition: 'y 6s ease-in-out infinite',
-                }}
-                className="relative z-10 w-[185px] xl:w-[215px] h-[185px] xl:h-[215px] rounded-full bg-white/95 backdrop-blur-xl border-2 border-white shadow-[0_16px_40px_rgba(6,45,120,0.12),0_4px_20px_rgba(18,185,242,0.16)] flex flex-col items-center justify-center p-5 text-center"
-              >
-                {/* Real Official LegalBharosa Logo Asset */}
-                <img 
-                  src="/assets/legalbharosa-logo.png" 
-                  alt="LegalBharosa Official Logo" 
-                  className="w-[130px] xl:w-[155px] h-auto object-contain select-none pointer-events-none drop-shadow-[0_4px_12px_rgba(11,42,91,0.12)]"
-                />
-
-                {/* Subtitle Badge Below Logo */}
-                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50/90 border border-[#078BE8]/25 text-[9px] font-semibold tracking-wider uppercase text-[#0646A8] shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#078BE8] animate-pulse" />
-                  Resolution Hub
-                </div>
-              </motion.div>
-            </div>
+            <CentralLogoReveal isMobile={false} />
 
             {/* RIGHT 3 FLOATING SERVICE ITEMS */}
             <div className="flex flex-col gap-3.5 xl:gap-4 w-full max-w-[390px] xl:max-w-[420px] justify-self-start">
@@ -603,29 +548,8 @@ export default function OurServicesResolutionSection({ onOpenConsult }) {
           */}
           <div className="flex lg:hidden flex-col items-center gap-5 sm:gap-6 w-full max-w-xl mx-auto">
             
-            {/* Centerpiece Logo */}
-            <div className="relative flex flex-col items-center justify-center py-2">
-              <motion.div
-                animate={{
-                  scale: [1, 1.05, 1],
-                  opacity: [0.75, 0.95, 0.75],
-                }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute w-[220px] h-[220px] rounded-full bg-[radial-gradient(circle,rgba(7,139,232,0.2)_0%,rgba(18,185,242,0.1)_45%,transparent_75%)] blur-2xl pointer-events-none"
-                aria-hidden="true"
-              />
-
-              <div className="relative z-10 w-[170px] h-[170px] rounded-full bg-white/95 backdrop-blur-xl border-2 border-white shadow-[0_14px_36px_rgba(6,45,120,0.12)] flex flex-col items-center justify-center p-4 text-center">
-                <img 
-                  src="/assets/legalbharosa-logo.png" 
-                  alt="LegalBharosa Logo" 
-                  className="w-[120px] h-auto object-contain select-none pointer-events-none"
-                />
-                <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 text-[8.5px] font-semibold uppercase text-[#0646A8]">
-                  Resolution Hub
-                </div>
-              </div>
-            </div>
+            {/* Centerpiece Logo with Progressive Reveal Animation */}
+            <CentralLogoReveal isMobile={true} />
 
             {/* 6 Stacked Floating Cards */}
             <div className="flex flex-col gap-3 sm:gap-3.5 w-full">

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logo Draw Animation Test Harness</title>
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: system-ui, sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+    .header-bar {
+      background: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .btn-replay {
+      padding: 8px 16px;
+      background: #0646A8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .comparison-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+  <h1>LegalBharosa Navbar Logo Draw Animation Test</h1>
+  <button class="btn-replay" onclick="replayAll()">Replay Animation</button>
+
+  <div class="comparison-container">
+    <div class="card">
+      <h3>Option 1: True Continuous Path Drawing (B-Ribbon to Gold Tip)</h3>
+      <div id="container-1"></div>
+    </div>
+    
+    <div class="card">
+      <h3>Option 2: Coordinated Architectural Draw (Ribbon + Scales Synchronized)</h3>
+      <div id="container-2"></div>
+    </div>
+
+    <div class="card">
+      <h3>Static Reference (Original Horizontal Asset)</h3>
+      <img src="/assets/legalbharosa-horizontal.png" style="height: 48px; width: auto;" alt="Static Reference">
+    </div>
+  </div>
+
+  <script>
+    function renderOption1() {
+      const container = document.getElementById('container-1');
+      container.innerHTML = `
+        <div style="height: 48px; display: inline-block;">
+          <svg viewBox="0 0 700 180" style="height: 48px; width: auto; overflow: visible;">
+            <defs>
+              <mask id="mask-opt-1">
+                <rect width="700" height="180" fill="black" />
+                
+                <!-- Main B-Shape Continuous Stroke Path -->
+                <!-- From Bottom-Left tip (12, 155), up spine, over crown, upper lobe, waist, lower lobe, bottom curve, up golden hand to golden tip (188, 121) -->
+                <path id="stroke-opt-1"
+                  d="M 14 158 
+                     L 14 42 
+                     C 14 20, 32 8, 75 6 
+                     C 115 5, 168 18, 168 50 
+                     C 168 70, 142 76, 118 76 
+                     C 152 76, 186 90, 186 116 
+                     C 186 142, 148 174, 105 175 
+                     C 55 176, 38 165, 55 158 
+                     C 95 148, 155 142, 188 121"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="44"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <!-- Scale of Justice central drop in -->
+                <path id="scales-opt-1"
+                  d="M 95 25 L 95 120 
+                     M 52 52 L 138 52 
+                     M 62 52 L 62 98 
+                     M 128 52 L 128 98 
+                     M 46 98 C 46 108, 78 108, 78 98 Z 
+                     M 112 98 C 112 108, 144 108, 144 98 Z"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="32"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+
+                <!-- Text Mask (x: 200..700) -->
+                <rect id="text-mask-opt-1" x="200" y="0" width="500" height="180" fill="white" opacity="0" />
+              </mask>
+            </defs>
+
+            <image href="/assets/legalbharosa-horizontal.png" width="700" height="180" mask="url(#mask-opt-1)" />
+
+            <!-- Luminous Pen / Particle Light Trace following the leading tip -->
+            <circle id="light-tip-opt-1" r="5" fill="#12B9F2" filter="drop-shadow(0 0 6px #F4B400)" opacity="0" />
+          </svg>
+        </div>
+      `;
+
+      animateOption1();
+    }
+
+    function animateOption1() {
+      const stroke = document.getElementById('stroke-opt-1');
+      const scales = document.getElementById('scales-opt-1');
+      const textMask = document.getElementById('text-mask-opt-1');
+      const lightTip = document.getElementById('light-tip-opt-1');
+
+      const len = stroke.getTotalLength();
+      stroke.style.strokeDasharray = len;
+      stroke.style.strokeDashoffset = len;
+
+      const scalesLen = scales.getTotalLength();
+      scales.style.strokeDasharray = scalesLen;
+      scales.style.strokeDashoffset = scalesLen;
+
+      textMask.style.opacity = 0;
+      lightTip.style.opacity = 1;
+
+      const duration = 2200; // 2.2s
+      const startTime = performance.now();
+
+      function frame(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Smooth cubic-bezier-like easing: easeInOutCubic
+        const ease = progress < 0.5 
+          ? 4 * progress * progress * progress 
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        // Animate B stroke (0 -> 1 over 0 to 80% of total duration)
+        const bProgress = Math.min(progress / 0.82, 1);
+        const bEase = bProgress < 0.5 
+          ? 4 * bProgress * bProgress * bProgress 
+          : 1 - Math.pow(-2 * bProgress + 2, 3) / 2;
+        
+        stroke.style.strokeDashoffset = len * (1 - bEase);
+
+        // Position luminous tip along the path
+        if (bProgress < 1) {
+          const pt = stroke.getPointAtLength(len * bEase);
+          lightTip.setAttribute('cx', pt.x);
+          lightTip.setAttribute('cy', pt.y);
+          // Transition color from cyan/blue to gold as it enters the gold section
+          if (bProgress > 0.65) {
+            lightTip.setAttribute('fill', '#F4B400');
+          } else {
+            lightTip.setAttribute('fill', '#12B9F2');
+          }
+        } else {
+          lightTip.style.opacity = 0;
+        }
+
+        // Animate scales: start when B is at top arch (progress ~ 0.25 to 0.65)
+        if (progress > 0.2) {
+          const sProgress = Math.min((progress - 0.2) / 0.45, 1);
+          scales.style.strokeDashoffset = scalesLen * (1 - sProgress);
+        } else {
+          scales.style.strokeDashoffset = scalesLen;
+        }
+
+        // Animate text reveal: start around 70% progress
+        if (progress > 0.68) {
+          const tProgress = Math.min((progress - 0.68) / 0.32, 1);
+          textMask.style.opacity = tProgress;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          textMask.style.opacity = 1;
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    function replayAll() {
+      renderOption1();
+    }
+
+    window.onload = () => {
+      renderOption1();
+    };
+  </script>
+</body>
+</html>

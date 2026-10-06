@@ -466,6 +466,8 @@ function AdminDashboardInner({
             {SIDEBAR_ITEMS.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
+              const pendingCount = (articles || []).filter((a) => a.status === 'pending').length;
+
               return (
                 <button
                   key={item.id}
@@ -474,14 +476,21 @@ function AdminDashboardInner({
                     setActiveTab(item.id);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     isActive
                       ? 'bg-gradient-to-r from-[#168CFF] to-[#00D2FF] text-[#041229] shadow-md shadow-[#168CFF]/20 font-bold'
                       : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#041229]' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#041229]' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.id === 'articles' && pendingCount > 0 && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-950 shadow-sm animate-pulse">
+                      {pendingCount}
+                    </span>
+                  )}
                 </button>
               );
             })}

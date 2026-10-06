@@ -340,6 +340,9 @@ export default function Footer({
                     <MapPin className="w-4 h-4 text-[#F4B400] shrink-0" />
                     <span className="font-semibold text-xs uppercase tracking-wider text-white">{t('footer.companyLocation', 'Company Location')}</span>
                   </div>
+                  <p className="text-xs text-slate-300 pl-6 leading-relaxed">
+                    Raj Bhavan Rd, Lumbini Classic Apartment, Somajiguda, Hyderabad, Telangana 500082
+                  </p>
                   <a 
                     href="https://maps.app.goo.gl/AUEVoh3Y6EPQoV5n6?g_st=ac" 
                     target="_blank" 

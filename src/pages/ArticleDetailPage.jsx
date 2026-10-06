@@ -109,13 +109,26 @@ export default function ArticleDetailPage({
           return;
         }
 
+        // Verify publication / moderation state
+        const isApproved = data.status === 'approved' || data.status === 'published';
+        const isAuthorUser = user?.uid && data.authorId === user.uid;
+        const isAdminUser = userProfile?.role === 'admin';
+
+        if (!isApproved && !isAuthorUser && !isAdminUser) {
+          setError('This article is currently under editorial review and is not publicly accessible.');
+          setLoading(false);
+          return;
+        }
+
         setArticle(data);
         setLikes(data.likes || []);
         setBookmarks(data.bookmarks || []);
         setViews((data.views || 0) + 1);
 
-        // Track view
-        incrementArticleViews(id);
+        // Track view only for approved articles
+        if (isApproved) {
+          incrementArticleViews(id);
+        }
 
         // Fetch Author Articles Count
         if (data.authorId) {

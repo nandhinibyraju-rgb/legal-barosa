@@ -515,18 +515,7 @@ html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, 
 /* ======================================================== */
 /* CUSTOM CURSOR & 3D TILT UTILITIES */
 /* ======================================================== */
-@media (pointer: fine) {
-  body.custom-cursor-active,
-  body.custom-cursor-active a,
-  body.custom-cursor-active button,
-  body.custom-cursor-active [role="button"],
-  body.custom-cursor-active input,
-  body.custom-cursor-active select,
-  body.custom-cursor-active textarea,
-  body.custom-cursor-active .cursor-pointer {
-    cursor: none !important;
-  }
-}
+/* Standard system cursor preserved */
 
 @keyframes bounceSubtle {
   0%, 100% {
@@ -624,5 +613,182 @@ html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3, html[lang="ta"] h4, 
 .animate-pulse-flow-right {
   animation: pulseFlowRight 4.5s ease-in-out infinite;
 }
+
+/* ======================================================== */
+/* PREMIUM LEGALBHAROSA LOGO PROGRESSIVE REVEAL ANIMATION   */
+/* Total duration ~2.5s: Hidden -> Reveal -> Sweep -> Gold */
+/* ======================================================== */
+
+/* Phase 1 & 2: Progressive reveal from left to right */
+@keyframes logoProgressiveReveal {
+  0% {
+    clip-path: inset(0% 100% 0% 0%);
+    -webkit-clip-path: inset(0% 100% 0% 0%);
+    opacity: 0;
+  }
+  2% {
+    clip-path: inset(0% 100% 0% 0%);
+    -webkit-clip-path: inset(0% 100% 0% 0%);
+    opacity: 1;
+  }
+  88% {
+    clip-path: inset(0% 0% 0% 0%);
+    -webkit-clip-path: inset(0% 0% 0% 0%);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0%);
+    -webkit-clip-path: inset(0% 0% 0% 0%);
+    opacity: 1;
+  }
+}
+
+/* Phase 3: Refined brand highlight sweep traveling across the logo */
+@keyframes logoLightSweep {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  3% {
+    left: 0%;
+    opacity: 0.95;
+  }
+  88% {
+    left: 100%;
+    opacity: 0.95;
+  }
+  96% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Phase 3: Radiant gold & blue highlight ray following the reveal leading edge */
+@keyframes logoLeadingEdgeRay {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  3% {
+    left: 0%;
+    opacity: 1;
+  }
+  88% {
+    left: 100%;
+    opacity: 1;
+  }
+  96% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Phase 4: Resolution Hub Subtitle Badge gentle fade-in */
+@keyframes logoSubtitleBadgeReveal {
+  0%, 75% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Phase 4: Circular container gold glow blooming gently into static subtle state */
+@keyframes logoContainerGoldGlow {
+  0% {
+    box-shadow: 0 16px 40px rgba(6, 45, 120, 0.12), 0 4px 20px rgba(18, 185, 242, 0.12), 0 0 0 rgba(244, 180, 0, 0), 0 0 0 0 rgba(244, 180, 0, 0);
+  }
+  70% {
+    box-shadow: 0 16px 40px rgba(6, 45, 120, 0.12), 0 4px 20px rgba(18, 185, 242, 0.14), 0 0 42px rgba(244, 180, 0, 0.26), 0 0 0 1.5px rgba(244, 180, 0, 0.32);
+  }
+  100% {
+    box-shadow: 0 16px 40px rgba(6, 45, 120, 0.12), 0 4px 20px rgba(18, 185, 242, 0.14), 0 0 36px rgba(244, 180, 0, 0.18), 0 0 0 1.5px rgba(244, 180, 0, 0.25);
+  }
+}
+
+/* State classes */
+.logo-reveal-pending {
+  clip-path: inset(0% 100% 0% 0%);
+  -webkit-clip-path: inset(0% 100% 0% 0%);
+  opacity: 0;
+}
+
+.logo-reveal-active {
+  animation: logoProgressiveReveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.logo-sweep-active {
+  animation: logoLightSweep 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.logo-edge-active {
+  animation: logoLeadingEdgeRay 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.logo-badge-active {
+  animation: logoSubtitleBadgeReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.logo-container-glow-active {
+  animation: logoContainerGoldGlow 2.5s ease-out forwards;
+}
+
+/* Accessibility: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .logo-reveal-pending,
+  .logo-reveal-active {
+    clip-path: inset(0% 0% 0% 0%) !important;
+    -webkit-clip-path: inset(0% 0% 0% 0%) !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .logo-sweep-active,
+  .logo-edge-active {
+    display: none !important;
+  }
+  .logo-badge-active {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .logo-container-glow-active {
+    box-shadow: 0 16px 40px rgba(6, 45, 120, 0.12), 0 4px 20px rgba(18, 185, 242, 0.14), 0 0 36px rgba(244, 180, 0, 0.18), 0 0 0 1.5px rgba(244, 180, 0, 0.25) !important;
+    animation: none !important;
+  }
+}
+
+/* ======================================================== */
+/* FLOATING 'NEED HELP' TAB POINTING HAND NUDGE ANIMATION   */
+/* ======================================================== */
+@keyframes pointingHandNudge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-hand-nudge {
+  animation: pointingHandNudge 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hand-nudge {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 
 

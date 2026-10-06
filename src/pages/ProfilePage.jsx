@@ -50,6 +50,7 @@ import {
   subscribeUserBookmarks
 } from '../services/firestoreService';
 import Footer from '../components/Footer';
+import ArticleEditorModal from '../components/ArticleEditorModal';
 
 const INDIAN_STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -115,6 +116,8 @@ export default function ProfilePage({
   const [userArticles, setUserArticles] = useState([]);
   const [bookmarkedArticles, setBookmarkedArticles] = useState([]);
   const [loadingActivity, setLoadingActivity] = useState(true);
+  const [editingArticle, setEditingArticle] = useState(null);
+  const [editorOpen, setEditorOpen] = useState(false);
 
   // Security States
   const [resetEmailSent, setResetEmailSent] = useState(false);
@@ -1194,50 +1197,185 @@ export default function ProfilePage({
               )}
             </div>
 
-            {/* 3. User's Authored Articles (if any) */}
-            {userArticles.length > 0 && (
-              <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_4px_24px_rgba(6,45,120,0.04)] p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-                  <div>
-                    <h2 className="text-lg font-bold text-[#0B2A5B]">Articles Authored by You</h2>
-                    <p className="text-xs text-neutral-500 mt-0.5">
-                      Articles and borrower advisory posts contributed under your profile.
-                    </p>
-                  </div>
+            {/* 3. User's Authored Articles: My Articles Management */}
+            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_4px_24px_rgba(6,45,120,0.04)] p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
+                <div>
+                  <h2 className="text-lg font-bold text-[#0B2A5B] flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-[#168CFF]" />
+                    <span>My Articles & Contributions</span>
+                  </h2>
+                  <p className="text-xs text-neutral-500 mt-0.5">
+                    Track the editorial review status, feedback, and publication state of your articles.
+                  </p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {userArticles.map((art) => (
-                    <div
-                      key={art.id}
-                      onClick={() => navigate(`/articles/${art.id}`)}
-                      className="p-5 rounded-2xl border border-slate-200 hover:border-[#168CFF]/50 bg-slate-50/50 hover:bg-blue-50/30 transition-all cursor-pointer group"
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="text-[10px] font-bold text-[#168CFF] uppercase tracking-wider">
-                          {art.category || 'Article'}
-                        </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          art.status === 'published' ? 'bg-emerald-100 text-emerald-800' : 'bg-neutral-200 text-neutral-700'
-                        }`}>
-                          {art.status}
-                        </span>
-                      </div>
-                      <h3 className="text-sm font-bold text-neutral-900 group-hover:text-[#0B2A5B] transition-colors mb-2">
-                        {art.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-slate-200/60">
-                        <span>{art.views || 0} Views</span>
-                        <span className="text-[#168CFF] font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                          <span>View</span>
-                          <ChevronRight className="w-3 h-3" />
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingArticle(null);
+                    setEditorOpen(true);
+                  }}
+                  className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-[#168CFF] to-[#078BE8] hover:brightness-105 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Write New Article</span>
+                </button>
               </div>
-            )}
+
+              {userArticles.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {userArticles.map((art) => {
+                    const status = art.status || 'pending';
+                    const isDraft = status === 'draft';
+                    const isPending = status === 'pending';
+                    const isApproved = status === 'approved' || status === 'published';
+                    const isChangesRequested = status === 'changes_requested';
+                    const isRejected = status === 'rejected';
+
+                    return (
+                      <div
+                        key={art.id}
+                        className="p-5 rounded-2xl border border-slate-200 hover:border-[#168CFF]/50 bg-slate-50/50 hover:bg-blue-50/30 transition-all flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <span className="text-[10px] font-bold text-[#168CFF] uppercase tracking-wider">
+                              {art.category || 'Article'}
+                            </span>
+                            
+                            {/* Clear Status Badges */}
+                            {isApproved && (
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>Published</span>
+                              </span>
+                            )}
+                            {isPending && (
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                <span>Under Review</span>
+                              </span>
+                            )}
+                            {isChangesRequested && (
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-900 border border-orange-300 flex items-center gap-1">
+                                <AlertCircle className="w-3 h-3" />
+                                <span>Changes Requested</span>
+                              </span>
+                            )}
+                            {isRejected && (
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300 flex items-center gap-1">
+                                <X className="w-3 h-3" />
+                                <span>Rejected</span>
+                              </span>
+                            )}
+                            {isDraft && (
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1">
+                                <FileText className="w-3 h-3" />
+                                <span>Draft</span>
+                              </span>
+                            )}
+                          </div>
+
+                          <h3 className="text-sm font-bold text-neutral-900 mb-1.5 line-clamp-2">
+                            {art.title}
+                          </h3>
+
+                          {art.excerpt && (
+                            <p className="text-xs text-neutral-500 line-clamp-2 mb-3">
+                              {art.excerpt}
+                            </p>
+                          )}
+
+                          {/* Editorial Feedback Callout for Changes Requested */}
+                          {isChangesRequested && (
+                            <div className="my-2.5 p-3 rounded-xl bg-orange-50/90 border border-orange-200 text-orange-900 text-xs">
+                              <span className="font-bold flex items-center gap-1 text-orange-950 mb-0.5">
+                                <AlertCircle className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                                Admin Feedback:
+                              </span>
+                              <p className="text-orange-900 font-medium leading-relaxed italic pl-4">
+                                "{art.adminFeedback || 'Please update your article according to editorial standards.'}"
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Rejection Reason Callout */}
+                          {isRejected && (
+                            <div className="my-2.5 p-3 rounded-xl bg-red-50/90 border border-red-200 text-red-900 text-xs">
+                              <span className="font-bold flex items-center gap-1 text-red-950 mb-0.5">
+                                <X className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                                Rejection Reason:
+                              </span>
+                              <p className="text-red-900 font-medium leading-relaxed italic pl-4">
+                                "{art.rejectionReason || 'Content did not meet publishing guidelines.'}"
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Card Bottom Actions */}
+                        <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-3 border-t border-slate-200/60 mt-2">
+                          <span>
+                            {isApproved ? `${art.views || 0} Views` : (art.readingTime || '3 min read')}
+                          </span>
+
+                          <div className="flex items-center gap-2">
+                            {(isDraft || isChangesRequested) && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingArticle(art);
+                                  setEditorOpen(true);
+                                }}
+                                className="px-2.5 py-1 rounded-lg text-xs font-semibold text-white bg-[#0B2A5B] hover:bg-[#168CFF] transition-colors cursor-pointer flex items-center gap-1"
+                              >
+                                <Edit3 className="w-3 h-3" />
+                                <span>{isChangesRequested ? 'Edit & Resubmit' : 'Edit Draft'}</span>
+                              </button>
+                            )}
+
+                            {isApproved && (
+                              <button
+                                type="button"
+                                onClick={() => navigate(`/articles/${art.id}`)}
+                                className="text-[#168CFF] font-semibold flex items-center gap-1 hover:underline cursor-pointer"
+                              >
+                                <span>View Article</span>
+                                <ChevronRight className="w-3 h-3" />
+                              </button>
+                            )}
+
+                            {isPending && (
+                              <span className="text-amber-700 font-medium italic text-[11px]">
+                                Awaiting Admin Review
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="p-8 rounded-2xl bg-neutral-50 border border-neutral-200/70 text-center">
+                  <FileText className="w-8 h-8 text-neutral-300 mx-auto mb-2" />
+                  <h4 className="text-sm font-bold text-neutral-700">No articles authored yet</h4>
+                  <p className="text-xs text-neutral-500 max-w-sm mx-auto mt-1 mb-4">
+                    Share borrower defense experiences, RBI legal rights guides, or practical loan resolution advice with the community.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingArticle(null);
+                      setEditorOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-[#168CFF] hover:bg-[#078BE8] transition-colors cursor-pointer"
+                  >
+                    Write an Article
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -1545,6 +1683,16 @@ export default function ProfilePage({
           </div>
         )}
       </AnimatePresence>
+
+      {/* Article Editor Modal for Creating or Resubmitting Articles */}
+      <ArticleEditorModal
+        isOpen={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        user={user}
+        userProfile={userProfile}
+        editingArticle={editingArticle}
+        onSaved={() => setEditorOpen(false)}
+      />
 
       {/* Standard LegalBharosa Footer */}
       <Footer 

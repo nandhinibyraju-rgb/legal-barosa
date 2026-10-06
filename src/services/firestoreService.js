@@ -708,7 +708,18 @@ function saveLocalComments(list) {
 }
 
 /**
- * Create a new article (published or draft)
+ * Article Status Constants for Editorial Moderation Workflow
+ */
+export const ARTICLE_STATUSES = {
+  DRAFT: 'draft',
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  CHANGES_REQUESTED: 'changes_requested',
+  REJECTED: 'rejected',
+};
+
+/**
+ * Create a new article (pending approval, draft, or approved if admin)
  */
 export async function createArticle({
   title,
@@ -721,7 +732,7 @@ export async function createArticle({
   authorName = 'LegalBharosa Member',
   authorEmail = '',
   authorPhoto = '',
-  status = 'published',
+  status = 'pending',
 }) {
   if (!title || !title.trim()) throw new Error('Article title is required.');
   if (!content || !content.trim()) throw new Error('Article content is required.');
@@ -731,6 +742,11 @@ export async function createArticle({
   const cleanContent = content.trim();
   const cleanTitle = title.trim();
   const autoExcerpt = excerpt.trim() || cleanContent.slice(0, 180) + (cleanContent.length > 180 ? '...' : '');
+
+  // Allowed statuses
+  const validStatus = ['draft', 'pending', 'approved', 'published', 'changes_requested', 'rejected'].includes(status)
+    ? status
+    : 'pending';
 
   const articleData = {
     title: cleanTitle,
@@ -744,7 +760,16 @@ export async function createArticle({
     authorName: authorName.trim() || 'Community Contributor',
     authorEmail: authorEmail || '',
     authorPhoto: authorPhoto || null,
-    status: status === 'draft' ? 'draft' : 'published',
+    status: validStatus,
+    submittedAt: validStatus === 'pending' ? serverTimestamp() : null,
+    approvedAt: (validStatus === 'approved' || validStatus === 'published') ? serverTimestamp() : null,
+    approvedBy: (validStatus === 'approved' || validStatus === 'published') ? authorId : null,
+    rejectedAt: null,
+    rejectedBy: null,
+    rejectionReason: null,
+    changesRequestedAt: null,
+    changesRequestedBy: null,
+    adminFeedback: null,
     views: 0,
     likes: [],
     bookmarks: [],
@@ -767,6 +792,7 @@ export async function createArticle({
       ...articleData,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      submittedAt: validStatus === 'pending' ? new Date().toISOString() : null,
     };
     const current = getLocalArticles();
     saveLocalArticles([fallbackArticle, ...current]);
@@ -797,6 +823,11 @@ export async function updateArticle(articleId, updates) {
     }
   }
 
+  // If author resubmits article for review after changes_requested or from draft
+  if (updates.status === 'pending') {
+    cleanUpdates.submittedAt = new Date().toISOString();
+  }
+
   // Also update local cache
   const localList = getLocalArticles();
   const idx = localList.findIndex((a) => a.id === articleId);
@@ -807,15 +838,132 @@ export async function updateArticle(articleId, updates) {
 
   try {
     const articleRef = doc(db, 'articles', articleId);
-    await updateDoc(articleRef, {
-      ...cleanUpdates,
-      updatedAt: serverTimestamp(),
-    });
+    const firestoreUpdates = { ...cleanUpdates, updatedAt: serverTimestamp() };
+    if (updates.status === 'pending') {
+      firestoreUpdates.submittedAt = serverTimestamp();
+    }
+    await updateDoc(articleRef, firestoreUpdates);
   } catch (err) {
     console.warn('[Firestore] updateDoc fallback:', err);
   }
 
   return { id: articleId, ...cleanUpdates };
+}
+
+/**
+ * Admin Moderation: Approve an article for public display
+ */
+export async function approveArticle(articleId, adminUid = 'admin') {
+  if (!articleId) throw new Error('Article ID is required');
+
+  const updates = {
+    status: 'approved',
+    approvedAt: new Date().toISOString(),
+    approvedBy: adminUid,
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Local cache update
+  const localList = getLocalArticles();
+  const idx = localList.findIndex((a) => a.id === articleId);
+  if (idx !== -1) {
+    localList[idx] = { ...localList[idx], ...updates };
+    saveLocalArticles(localList);
+  }
+
+  try {
+    const articleRef = doc(db, 'articles', articleId);
+    await updateDoc(articleRef, {
+      status: 'approved',
+      approvedAt: serverTimestamp(),
+      approvedBy: adminUid,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('[Firestore] approveArticle fallback:', err);
+  }
+
+  return { id: articleId, ...updates };
+}
+
+/**
+ * Admin Moderation: Request changes with required feedback message
+ */
+export async function requestArticleChanges(articleId, feedbackMessage, adminUid = 'admin') {
+  if (!articleId) throw new Error('Article ID is required');
+  if (!feedbackMessage || !feedbackMessage.trim()) {
+    throw new Error('Please provide specific feedback explaining what changes are needed.');
+  }
+
+  const updates = {
+    status: 'changes_requested',
+    adminFeedback: feedbackMessage.trim(),
+    changesRequestedAt: new Date().toISOString(),
+    changesRequestedBy: adminUid,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const localList = getLocalArticles();
+  const idx = localList.findIndex((a) => a.id === articleId);
+  if (idx !== -1) {
+    localList[idx] = { ...localList[idx], ...updates };
+    saveLocalArticles(localList);
+  }
+
+  try {
+    const articleRef = doc(db, 'articles', articleId);
+    await updateDoc(articleRef, {
+      status: 'changes_requested',
+      adminFeedback: feedbackMessage.trim(),
+      changesRequestedAt: serverTimestamp(),
+      changesRequestedBy: adminUid,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('[Firestore] requestArticleChanges fallback:', err);
+  }
+
+  return { id: articleId, ...updates };
+}
+
+/**
+ * Admin Moderation: Reject an article with required reason
+ */
+export async function rejectArticle(articleId, reason, adminUid = 'admin') {
+  if (!articleId) throw new Error('Article ID is required');
+  if (!reason || !reason.trim()) {
+    throw new Error('Please provide a reason for rejecting this article.');
+  }
+
+  const updates = {
+    status: 'rejected',
+    rejectionReason: reason.trim(),
+    rejectedAt: new Date().toISOString(),
+    rejectedBy: adminUid,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const localList = getLocalArticles();
+  const idx = localList.findIndex((a) => a.id === articleId);
+  if (idx !== -1) {
+    localList[idx] = { ...localList[idx], ...updates };
+    saveLocalArticles(localList);
+  }
+
+  try {
+    const articleRef = doc(db, 'articles', articleId);
+    await updateDoc(articleRef, {
+      status: 'rejected',
+      rejectionReason: reason.trim(),
+      rejectedAt: serverTimestamp(),
+      rejectedBy: adminUid,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('[Firestore] rejectArticle fallback:', err);
+  }
+
+  return { id: articleId, ...updates };
 }
 
 /**
@@ -859,14 +1007,16 @@ export async function getArticle(articleId) {
 }
 
 /**
- * Real-time subscription to published articles
+ * Real-time subscription to published / approved articles (Public Facing)
+ * Only returns articles with status 'approved' or legacy 'published'.
+ * Unpublished articles (draft, pending, changes_requested, rejected) are NEVER exposed.
  */
 export function subscribeArticles(callback) {
   const articlesRef = collection(db, 'articles');
   let firestoreArticles = [];
 
   const notify = () => {
-    const local = getLocalArticles().filter((a) => a.status === 'published');
+    const local = getLocalArticles().filter((a) => a.status === 'approved' || a.status === 'published');
     const map = new Map();
     // Prioritize firestore
     firestoreArticles.forEach((a) => map.set(a.id, a));
@@ -875,7 +1025,7 @@ export function subscribeArticles(callback) {
       if (!map.has(a.id)) map.set(a.id, a);
     });
 
-    const combined = Array.from(map.values());
+    const combined = Array.from(map.values()).filter((a) => a.status === 'approved' || a.status === 'published');
     combined.sort((a, b) => {
       const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : new Date(a.createdAt || 0).getTime());
       const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : new Date(b.createdAt || 0).getTime());
@@ -895,20 +1045,35 @@ export function subscribeArticles(callback) {
 
   let unsubFirestore = () => {};
   try {
+    // Primary query: only approved / published
+    const q = query(articlesRef, where('status', 'in', ['approved', 'published']));
     unsubFirestore = onSnapshot(
-      articlesRef,
+      q,
       (snapshot) => {
         firestoreArticles = snapshot.docs
           .map((d) => ({
             id: d.id,
             ...d.data(),
           }))
-          .filter((a) => a.status === 'published');
+          .filter((a) => a.status === 'approved' || a.status === 'published');
         notify();
       },
       (error) => {
-        console.warn('[Firestore] Error subscribing to articles, serving local:', error);
-        notify();
+        console.warn('[Firestore] Error subscribing to approved articles, trying query fallback:', error);
+        // Fallback subscription if composite index needed
+        unsubFirestore = onSnapshot(
+          articlesRef,
+          (snap) => {
+            firestoreArticles = snap.docs
+              .map((d) => ({ id: d.id, ...d.data() }))
+              .filter((a) => a.status === 'approved' || a.status === 'published');
+            notify();
+          },
+          (err2) => {
+            console.warn('[Firestore] Fallback subscription failed, serving local:', err2);
+            notify();
+          }
+        );
       }
     );
   } catch (err) {
@@ -1259,7 +1424,7 @@ export async function getUserArticlesCount(userId) {
   if (!userId) return 0;
   try {
     const articlesRef = collection(db, 'articles');
-    const q = query(articlesRef, where('authorId', '==', userId), where('status', '==', 'published'));
+    const q = query(articlesRef, where('authorId', '==', userId), where('status', 'in', ['approved', 'published']));
     const snap = await getDocs(q);
     return snap.size;
   } catch (err) {
