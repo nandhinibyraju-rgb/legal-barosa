@@ -45,6 +45,15 @@ service cloud.firestore {
       allow create: if isAdmin() || (isOwner(userId) && (!request.resource.data.keys().hasAny(['role']) || request.resource.data.role == 'client'));
       allow update: if isAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role);
       allow delete: if isAdmin() || isOwner(userId);
+
+      // AI Case Intelligence subcollections (Strict User Isolation)
+      match /aiCases/{caseId} {
+        allow read, write: if isAdmin() || isOwner(userId);
+
+        match /{subcollection}/{docId} {
+          allow read, write: if isAdmin() || isOwner(userId);
+        }
+      }
     }
 
     // 3. cases collection (case records linked to a client)

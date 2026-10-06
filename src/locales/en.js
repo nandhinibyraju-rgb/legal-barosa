@@ -35,6 +35,7 @@ export const en = {
   nav: {
     home: 'Home',
     services: 'Services',
+    aiAssistant: 'AI Assistant',
     about: 'About',
     clientStories: 'Client Stories',
     articles: 'Articles',

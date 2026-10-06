@@ -22,6 +22,7 @@ import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import ContactPage from './pages/ContactPage';
+const AIAssistantPage = React.lazy(() => import('./pages/AIAssistantPage'));
 import Footer from './components/Footer';
 import ReviewsSlideoutWidget from './components/ReviewsSlideoutWidget';
 import ConsultationModal from './components/ConsultationModal';
@@ -29,6 +30,7 @@ import SignInModal from './components/SignInModal';
 import AutoConsultationPopup from './components/AutoConsultationPopup';
 import FloatingContactWidget from './components/FloatingContactWidget';
 import FloatingExpertButton from './components/FloatingExpertButton';
+import FloatingAIAssistantWidget from './components/FloatingAIAssistantWidget';
 import Card3DTiltManager from './components/Card3DTiltManager';
 import { auth } from './firebase';
 import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
@@ -685,6 +687,26 @@ export default function App() {
         />
         <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
 
+        {/* Dedicated LegalBharosa AI Assistant (Lazy Loaded) */}
+        <Route 
+          path="/ai-assistant" 
+          element={
+            <React.Suspense fallback={
+              <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+                <div className="w-8 h-8 border-3 border-[#0B2A5B] border-t-[#168CFF] rounded-full animate-spin" />
+              </div>
+            }>
+              <AIAssistantPage
+                user={user}
+                userProfile={userProfile}
+                onOpenConsult={handleOpenConsult}
+                onOpenSignIn={() => setSignInModalOpen(true)}
+              />
+            </React.Suspense>
+          } 
+        />
+        <Route path="/ai" element={<Navigate to="/ai-assistant" replace />} />
+
         {/* Catch-all redirect to Home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -717,6 +739,9 @@ export default function App() {
         isOpen={autoPopupOpen}
         onClose={handleDismissAutoPopup}
       />
+
+      {/* Small AI Assistant Entry Widget (Fixed to Bottom-Left) */}
+      <FloatingAIAssistantWidget />
 
       {/* Persistent 'Talk to an Expert' Floating Consultation Button */}
       <FloatingExpertButton

@@ -16,7 +16,8 @@ import {
   AlertTriangle,
   FolderOpen,
   ChevronRight,
-  Shield
+  Shield,
+  Sparkles
 } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
@@ -252,6 +253,18 @@ export default function DashboardPage({
               <span>{t('nav.adminConsole', 'Admin Panel')}</span>
             </button>
           )}
+
+          {/* AI Case Intelligence Assistant */}
+          <button
+            type="button"
+            onClick={() => navigate('/ai-assistant')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-manrope font-bold text-[#12B9F2] bg-[#078BE8]/15 border border-[#078BE8]/40 hover:bg-[#078BE8]/25 transition-all cursor-pointer shadow-xs"
+            title="AI Case Intelligence Assistant"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#12B9F2]" />
+            <span className="hidden sm:inline">AI Assistant</span>
+            <span className="sm:hidden">AI</span>
+          </button>
 
           <button
             type="button"

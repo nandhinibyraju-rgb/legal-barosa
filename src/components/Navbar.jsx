@@ -6,7 +6,8 @@ import {
   Menu, 
   X,
   User,
-  LayoutDashboard
+  LayoutDashboard,
+  Sparkles
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase';
@@ -17,6 +18,7 @@ import NavbarLogo from './NavbarLogo';
 const NAV_ITEMS = [
   { id: 'home', label: 'Home' },
   { id: 'services', label: 'Services' },
+  { id: 'ai-assistant', label: 'AI Assistant' },
   { id: 'about', label: 'About' },
   { id: 'client-stories', label: 'Client Stories' },
   { id: 'articles', label: 'Articles' },
@@ -40,6 +42,7 @@ export default function Navbar({
   const navItems = [
     { id: 'home', label: t('nav.home') },
     { id: 'services', label: t('nav.services') },
+    { id: 'ai-assistant', label: t('nav.aiAssistant', 'AI Assistant') },
     { id: 'about', label: t('nav.about') },
     { id: 'client-stories', label: t('nav.clientStories') },
     { id: 'articles', label: t('nav.articles') },
@@ -96,6 +99,11 @@ export default function Navbar({
       return;
     }
 
+    if (sectionId === 'ai-assistant') {
+      navigate('/ai-assistant');
+      return;
+    }
+
     if (sectionId === 'articles') {
       navigate('/articles');
       return;
@@ -142,6 +150,10 @@ export default function Navbar({
 
   // Scroll spy & route tracking
   useEffect(() => {
+    if (location.pathname.startsWith('/ai-assistant') || location.pathname === '/ai') {
+      setActiveSection('ai-assistant');
+      return;
+    }
     if (location.pathname === '/contact' || location.pathname === '/contact-us') {
       setActiveSection('contact');
       return;
@@ -209,6 +221,7 @@ export default function Navbar({
 
   const getItemHref = (id) => {
     if (id === 'services') return '/services';
+    if (id === 'ai-assistant') return '/ai-assistant';
     if (id === 'articles') return '/articles';
     if (id === 'how-it-works') return '/how-it-works';
     if (id === 'about') return '/about';
@@ -359,6 +372,21 @@ export default function Navbar({
                         <span>{t('nav.myProfile')}</span>
                       </span>
                       <ChevronRight className="w-3.5 h-3.5 text-[#168CFF]" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        navigate('/ai-assistant');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-[#0B2A5B] hover:bg-neutral-50 transition-colors flex items-center justify-between cursor-pointer mb-0.5"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-[#168CFF]" />
+                        <span>{t('nav.aiAssistant', 'AI Case Assistant')}</span>
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
                     </button>
 
                     <button

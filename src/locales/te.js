@@ -35,6 +35,7 @@ export const te = {
   nav: {
     home: 'హోమ్',
     services: 'సేవలు',
+    aiAssistant: 'AI సహాయకుడు',
     about: 'మా గురించి',
     clientStories: 'క్లయింట్ విజయగాథలు',
     articles: 'వ్యాసాలు',

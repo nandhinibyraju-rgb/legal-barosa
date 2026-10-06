@@ -35,6 +35,7 @@ export const hi = {
   nav: {
     home: 'होम',
     services: 'सेवाएं',
+    aiAssistant: 'एआई सहायक',
     about: 'हमारे बारे में',
     clientStories: 'सफलता की कहानियां',
     articles: 'लेख',
