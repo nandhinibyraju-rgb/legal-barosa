@@ -57,3 +57,4 @@ const updated = src.replace(/(\s+id:\s*(\d+),[\s\S]*?reviewText:\s*['"`][\s\S]*?
 
 fs.writeFileSync('src/data/reviewsData.js', updated, 'utf8');
 console.log('Successfully updated src/data/reviewsData.js with structured caseSummary for all reviews!');
+// Final submission update

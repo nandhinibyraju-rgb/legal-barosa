@@ -163,3 +163,4 @@ export default function LanguageSelector({ isMobile = false, className = '' }) {
     </div>
   );
 }
+// Final submission update

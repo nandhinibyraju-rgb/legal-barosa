@@ -289,3 +289,4 @@ export default function HowItWorks({ onOpenConsult }) {
     </section>
   );
 }
+// Final submission update

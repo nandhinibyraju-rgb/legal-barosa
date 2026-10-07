@@ -55,3 +55,4 @@ export default function FloatingExpertButton({ onOpenConsult, isVisible = true }
     </motion.button>
   );
 }
+// Final submission update

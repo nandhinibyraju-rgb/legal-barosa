@@ -167,3 +167,4 @@ export default function HeroIssueBadges({ customIcons = {}, className = '' }) {
     </div>
   );
 }
+// Final submission update

@@ -587,3 +587,4 @@ export default function HeroIllustrationCarousel({ className = '', onOpenConsult
     </div>
   );
 }
+// Final submission update

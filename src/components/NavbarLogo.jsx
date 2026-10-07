@@ -152,3 +152,4 @@ export default function NavbarLogo() {
     </svg>
   );
 }
+// Final submission update

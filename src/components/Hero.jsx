@@ -23,3 +23,4 @@ export default function Hero({ onOpenConsult }) {
     </div>
   );
 }
+// Final submission update
