@@ -58,6 +58,21 @@ export default defineConfig(({ mode }) => {
   }
   return {
     plugins: [react(), aiApiPlugin()],
+    build: {
+      chunkSizeWarningLimit: 900,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('firebase')) return 'vendor-firebase';
+              if (id.includes('framer-motion') || id.includes('gsap')) return 'vendor-motion';
+              if (id.includes('lucide-react')) return 'vendor-icons';
+              if (id.includes('i18next') || id.includes('react-i18next')) return 'vendor-i18n';
+            }
+          }
+        }
+      }
+    }
   };
 })
 

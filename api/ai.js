@@ -23,7 +23,7 @@ import { GoogleGenAI } from '@google/genai';
 // ENVIRONMENT VARIABLE LOADER (Server-side Only)
 // ============================================================================
 function ensureEnvLoaded() {
-  if (process.env.GEMINI_API_KEY) return;
+  if (process.env.GEMINI_API_KEY && (process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY)) return;
   try {
     const envPaths = [
       path.resolve(process.cwd(), '.env.local'),
@@ -132,12 +132,12 @@ async function callGeminiWithFallback({ contents, systemInstruction, responseMim
 
   const candidateModels = [
     preferredModel,
-    'gemini-3.5-flash-lite',
-    'gemini-3.1-flash-lite',
-    'gemini-flash-lite-latest',
     'gemini-3.8-flash',
     'gemini-3.5-flash',
-    'gemini-flash-latest'
+    'gemini-flash-latest',
+    'gemini-3.5-flash-lite',
+    'gemini-3.1-flash-lite',
+    'gemini-flash-lite-latest'
   ];
   const uniqueModels = [...new Set(candidateModels)];
 
@@ -282,6 +282,56 @@ OUTPUT FORMAT: Return VALID JSON ONLY matching this schema:
 }
 
 // ============================================================================
+// SERVER-SIDE AUTHENTICATION TOKEN VERIFICATION
+// ============================================================================
+async function verifyFirebaseToken(idToken) {
+  if (!idToken) return null;
+  ensureEnvLoaded();
+  const apiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || 'AIzaSyA2RceuG4EDp8NG5wPOrGZmP_p7FA-JTj8';
+  
+  // 1. Authoritative verification via Google Identity Toolkit
+  try {
+    const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken })
+    });
+    if (response.ok) {
+      const data = await response.json();
+      const user = data.users?.[0];
+      if (user && user.localId) {
+        return { uid: user.localId, email: user.email };
+      }
+    }
+  } catch (err) {
+    console.warn('[AI Server Auth] Identity Toolkit lookup error:', err?.message || err);
+  }
+
+  // 2. Fallback: Parse and validate Firebase JWT claims
+  try {
+    const parts = idToken.split('.');
+    if (parts.length === 3) {
+      const payloadStr = Buffer.from(parts[1], 'base64').toString('utf8');
+      const payload = JSON.parse(payloadStr);
+      const projectId = process.env.VITE_FIREBASE_PROJECT_ID || 'legal-bharosa-4fd85';
+      const now = Math.floor(Date.now() / 1000);
+      if (
+        payload.aud === projectId &&
+        payload.iss === `https://securetoken.google.com/${projectId}` &&
+        payload.sub &&
+        payload.exp > now
+      ) {
+        return { uid: payload.sub, email: payload.email };
+      }
+    }
+  } catch (jwtErr) {
+    console.warn('[AI Server Auth] JWT payload parse error:', jwtErr?.message || jwtErr);
+  }
+
+  return null;
+}
+
+// ============================================================================
 // MAIN HTTP HANDLER
 // ============================================================================
 export default async function handler(req, res) {
@@ -308,6 +358,30 @@ export default async function handler(req, res) {
     };
   }
 
+  // Mandatory Server-side Authentication Verification
+  // Derive verified UID from token — Never trust a client-provided userId
+  const authHeader = req.headers?.authorization || req.headers?.Authorization;
+  const token = authHeader?.replace(/^Bearer\s+/i, '').trim();
+
+  if (!token) {
+    return res.status(401).json({
+      isError: true,
+      error: 'Authentication required. Please sign in to access LegalBharosa AI intelligence.',
+      message: 'Authentication required. Please sign in to access LegalBharosa AI intelligence.'
+    });
+  }
+
+  const authenticatedUser = await verifyFirebaseToken(token);
+  if (!authenticatedUser || !authenticatedUser.uid) {
+    return res.status(401).json({
+      isError: true,
+      error: 'Invalid or expired authentication session. Please sign in again.',
+      message: 'Invalid or expired authentication session. Please sign in again.'
+    });
+  }
+
+  const verifiedUid = authenticatedUser.uid;
+
   try {
     let body = req.body;
     if (typeof body === 'string') {
@@ -318,6 +392,8 @@ export default async function handler(req, res) {
       }
     }
     body = body || {};
+    // Strip any client-supplied userId to prevent spoofing
+    delete body.userId;
 
     let {
       messages = [],

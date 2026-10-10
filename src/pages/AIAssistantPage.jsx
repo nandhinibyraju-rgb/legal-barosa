@@ -33,6 +33,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { 
   callAIApi, 
+  saveAIChat,
+  getUserAIChats,
+  getAIChatById,
+  deleteAIChat,
   createAICase, 
   getUserAICases, 
   updateAICaseData, 
@@ -43,6 +47,37 @@ import {
   saveGuestAISession, 
   clearGuestAISession 
 } from '../services/aiCaseService';
+
+const INITIAL_CASE_PROFILE = {
+  title: 'New Legal Situation Assessment',
+  caseType: 'General Legal Case',
+  caseSubType: '',
+  stage: 'Initial Case Intake',
+  urgency: 'Normal',
+  summary: 'Awaiting case facts and details...',
+  facts: [],
+  importantDates: [],
+  documents: [],
+  concerns: [],
+  possibleOptions: ['Initial information intake', 'Verify debt notices'],
+  recommendedNextStep: 'Describe your situation or upload any received notices to begin analysis.',
+  expertEscalation: false,
+  actionPlan: null,
+};
+
+const INITIAL_WELCOME_MESSAGES = [
+  {
+    id: 'welcome_init',
+    role: 'assistant',
+    text: "Hello, I am LegalBharosa AI. I'm here to help you understand your legal situation, analyze bank notices or agreements, organize your facts, and prepare a clear next-step plan.\n\nTo begin, describe what happened naturally—for instance, if you received an EMI notice, face recovery calls, or need loan settlement guidance.",
+    timestamp: new Date().toISOString(),
+    suggestedQuestions: [
+      'I received a legal notice from a bank',
+      'Recovery agents are calling my family members',
+      'I want to apply for a One-Time Settlement (OTS)'
+    ]
+  }
+];
 
 const QUICK_ACTIONS = [
   { id: 'loan', label: 'Understand My Loan Problem', prompt: 'Understand My Loan Problem' },
@@ -78,12 +113,12 @@ async function readFileData(file) {
             const buf = new Uint8Array(bufferReader.result);
             const decoder = new TextDecoder('latin1');
             const rawStr = decoder.decode(buf);
-            const matches = rawStr.match(/\(([^()]{2,})\)\s*(?:Tj|TJ|\')/g) || [];
+            const matches = rawStr.match(/\(([^()]{2,})\)\s*(?:Tj|TJ|')/g) || [];
             let text = '';
             if (matches.length > 0) {
-              text = matches.map(m => m.replace(/^[\(\[\s]+|[\)\]\s\w]+$/g, '')).join(' ');
+              text = matches.map(m => m.replace(/^[([]\s*|[)\]\s\w]+$/g, '')).join(' ');
             } else {
-              const cleanWords = rawStr.match(/[A-Za-z0-9\.\,\:\;\-\/₹]{3,}/g) || [];
+              const cleanWords = rawStr.match(/[A-Za-z0-9.,:;\-/₹]{3,}/g) || [];
               text = cleanWords.slice(0, 1500).join(' ');
             }
             resolve({ dataUrl, text: text.slice(0, 20000) });
@@ -105,7 +140,17 @@ async function readFileData(file) {
  */
 function formatChatTime(dateInput) {
   if (!dateInput) return '';
-  const date = dateInput.toDate ? dateInput.toDate() : new Date(dateInput);
+  let date;
+  if (typeof dateInput?.toDate === 'function') {
+    date = dateInput.toDate();
+  } else if (dateInput?.seconds) {
+    date = new Date(dateInput.seconds * 1000);
+  } else if (typeof dateInput === 'string' || typeof dateInput === 'number') {
+    date = new Date(dateInput);
+  } else {
+    date = new Date();
+  }
+
   if (isNaN(date.getTime())) return '';
   const now = new Date();
   const isToday = date.toDateString() === now.toDateString();
@@ -208,37 +253,10 @@ export default function AIAssistantPage({
   const [isLoadingCases, setIsLoadingCases] = useState(false);
 
   // Active Case Profile Structure
-  const [caseProfile, setCaseProfile] = useState({
-    title: 'New Legal Situation Assessment',
-    caseType: 'General Legal Case',
-    caseSubType: '',
-    stage: 'Initial Case Intake',
-    urgency: 'Normal',
-    summary: 'Awaiting case facts and details...',
-    facts: [],
-    importantDates: [],
-    documents: [],
-    concerns: [],
-    possibleOptions: ['Initial information intake', 'Verify debt notices'],
-    recommendedNextStep: 'Describe your situation or upload any received notices to begin analysis.',
-    expertEscalation: false,
-    actionPlan: null,
-  });
+  const [caseProfile, setCaseProfile] = useState(() => ({ ...INITIAL_CASE_PROFILE }));
 
   // Conversation Messages State
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      text: "Hello, I am LegalBharosa AI. I'm here to help you understand your legal situation, analyze bank notices or agreements, organize your facts, and prepare a clear next-step plan.\n\nTo begin, describe what happened naturally—for instance, if you received an EMI notice, face recovery calls, or need loan settlement guidance.",
-      timestamp: new Date().toISOString(),
-      suggestedQuestions: [
-        'I received a legal notice from a bank',
-        'Recovery agents are calling my family members',
-        'I want to apply for a One-Time Settlement (OTS)'
-      ]
-    }
-  ]);
+  const [messages, setMessages] = useState(() => [...INITIAL_WELCOME_MESSAGES]);
 
   const [inputMessage, setInputMessage] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -249,11 +267,12 @@ export default function AIAssistantPage({
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [whatsAppText, setWhatsAppText] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(false);
+  const [speechSupported] = useState(() => typeof window !== 'undefined' && Boolean(window.SpeechRecognition || window.webkitSpeechRecognition));
 
   const chatContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const recognitionRef = useRef(null);
+  const lastLoadedUidRef = useRef(null);
 
   // Auto-scroll conversation internally within chat container (prevents window jumping)
   const scrollToBottom = () => {
@@ -271,7 +290,6 @@ export default function AIAssistantPage({
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
-        setSpeechSupported(true);
         const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
@@ -347,61 +365,74 @@ export default function AIAssistantPage({
     }
   }, [user]);
 
-  // Load Saved Cases for Authenticated User
+  // Load Saved Chats for Authenticated User (Strict Account Isolation)
   useEffect(() => {
     async function loadUserData() {
-      if (user?.uid) {
+      const currentUid = user?.uid || null;
+
+      // If user identity changed (e.g. login, logout, switch account), immediately purge previous user's client state
+      if (lastLoadedUidRef.current !== currentUid) {
+        lastLoadedUidRef.current = currentUid;
+        setActiveCaseId(null);
+        setCaseProfile({ ...INITIAL_CASE_PROFILE });
+        setMessages([...INITIAL_WELCOME_MESSAGES]);
+        setAnalyzedDocs([]);
+        setSavedCases([]);
+      }
+
+      if (currentUid) {
         setIsLoadingCases(true);
         try {
-          const userCases = await getUserAICases(user.uid);
-          setSavedCases(userCases);
+          const userChats = await getUserAIChats(currentUid);
+          setSavedCases(userChats);
 
-          // If cases exist and none is active, pick the most recent one
-          if (userCases.length > 0 && !activeCaseId) {
-            const first = userCases[0];
-            setActiveCaseId(first.id);
-            setCaseProfile(first);
-            const history = await getAICaseMessages(user.uid, first.id);
-            if (history.length > 0) {
-              setMessages(history);
+          // If chats exist and none is active, pick the most recent one
+          if (userChats.length > 0 && !activeCaseId) {
+            const first = userChats[0];
+            const firstId = first.chatId || first.id;
+            setActiveCaseId(firstId);
+            const context = first.caseContext || first.caseProfile || first;
+            setCaseProfile(context);
+            if (Array.isArray(first.messages) && first.messages.length > 0) {
+              setMessages(first.messages);
+            } else {
+              const history = await getAICaseMessages(currentUid, firstId);
+              if (history.length > 0) {
+                setMessages(history);
+              }
+            }
+            if (Array.isArray(context.documents) && context.documents.length > 0) {
+              setAnalyzedDocs(context.documents.map((d, i) =>
+                typeof d === 'string' ? { id: 'doc_' + i, fileName: d } : d
+              ));
             }
           }
         } catch (err) {
-          console.warn('[AI Assistant] Could not load user cases:', err);
+          console.warn('[AI Assistant] Could not load user chats:', err);
         } finally {
           setIsLoadingCases(false);
         }
       } else {
+        // Logout must immediately clear private chat data from client state
         setSavedCases([]);
         setActiveCaseId(null);
+        setCaseProfile({ ...INITIAL_CASE_PROFILE });
+        setMessages([...INITIAL_WELCOME_MESSAGES]);
+        setAnalyzedDocs([]);
+        setIsLoadingCases(false);
       }
     }
 
     loadUserData();
   }, [user]);
 
-  // Start New Chat / Case
-  const handleStartNewCase = async () => {
+  // Start New Chat / Case (Completely separate conversation)
+  const handleStartNewCase = () => {
     if (!requireAuth()) return;
 
-    const freshProfile = {
-      title: 'New Legal Situation Assessment',
-      caseType: 'General Legal Case',
-      caseSubType: '',
-      stage: 'Initial Intake',
-      urgency: 'Normal',
-      summary: 'Awaiting case facts and details...',
-      facts: [],
-      importantDates: [],
-      documents: [],
-      concerns: [],
-      possibleOptions: ['Initial information intake', 'Verify debt notices'],
-      recommendedNextStep: 'Describe your situation or upload any received notices to begin analysis.',
-      expertEscalation: false,
-      actionPlan: null,
-    };
-
-    const freshMessages = [
+    setActiveCaseId(null);
+    setCaseProfile({ ...INITIAL_CASE_PROFILE });
+    setMessages([
       {
         id: 'welcome_' + Date.now(),
         role: 'assistant',
@@ -413,46 +444,57 @@ export default function AIAssistantPage({
           'I want to apply for a One-Time Settlement (OTS)'
         ]
       }
-    ];
-
-    setCaseProfile(freshProfile);
-    setMessages(freshMessages);
+    ]);
     setAnalyzedDocs([]);
-    setActiveCaseId(null);
     setFailedPrompt(null);
     if (mobileTab === 'chats') setMobileTab('chat');
   };
 
   // Switch to an existing saved case
   const handleSelectCase = async (c) => {
-    if (!user?.uid || c.id === activeCaseId) {
+    if (!user?.uid) return;
+    const selectedId = c.chatId || c.id;
+    if (selectedId === activeCaseId) {
       if (mobileTab === 'chats') setMobileTab('chat');
       return;
     }
-    setActiveCaseId(c.id);
-    setCaseProfile(c);
+    setActiveCaseId(selectedId);
+    const context = c.caseContext || c.caseProfile || c;
+    setCaseProfile(context);
     setIsProcessing(true);
     setFailedPrompt(null);
     if (mobileTab === 'chats') setMobileTab('chat');
 
     try {
-      const history = await getAICaseMessages(user.uid, c.id);
-      if (history.length > 0) {
-        setMessages(history);
+      if (Array.isArray(c.messages) && c.messages.length > 0) {
+        setMessages(c.messages);
       } else {
-        setMessages([
-          {
-            id: 'resume_' + Date.now(),
-            role: 'assistant',
-            text: `Resumed case: ${c.title || c.caseType}. How would you like to continue?`,
-            timestamp: new Date().toISOString(),
-            suggestedQuestions: [
-              'Create My Action Plan',
-              'Prepare for an Expert',
-              'What are my legal options?'
-            ]
-          }
-        ]);
+        const history = await getAICaseMessages(user.uid, selectedId);
+        if (history.length > 0) {
+          setMessages(history);
+        } else {
+          setMessages([
+            {
+              id: 'resume_' + Date.now(),
+              role: 'assistant',
+              text: `Resumed case: ${c.title || c.caseType || 'Legal Case'}. How would you like to continue?`,
+              timestamp: new Date().toISOString(),
+              suggestedQuestions: [
+                'Create My Action Plan',
+                'Prepare for an Expert',
+                'What are my legal options?'
+              ]
+            }
+          ]);
+        }
+      }
+
+      if (Array.isArray(context.documents) && context.documents.length > 0) {
+        setAnalyzedDocs(context.documents.map((d, i) =>
+          typeof d === 'string' ? { id: 'doc_' + i, fileName: d } : d
+        ));
+      } else {
+        setAnalyzedDocs([]);
       }
     } catch (e) {
       console.warn('Could not load case history:', e);
@@ -466,8 +508,8 @@ export default function AIAssistantPage({
     e.stopPropagation();
     if (!user?.uid || !caseId) return;
     try {
-      await deleteAICase(user.uid, caseId);
-      setSavedCases((prev) => prev.filter((c) => c.id !== caseId));
+      await deleteAIChat(user.uid, caseId);
+      setSavedCases((prev) => prev.filter((c) => c.id !== caseId && c.chatId !== caseId));
       if (activeCaseId === caseId) {
         handleStartNewCase();
       }
@@ -476,6 +518,7 @@ export default function AIAssistantPage({
     }
   };
 
+  // Trigger Action Plan generation directly from Case Profile
   // Trigger Action Plan generation directly from Case Profile
   const handleCreateActionPlan = async () => {
     if (!requireAuth()) return;
@@ -497,11 +540,33 @@ export default function AIAssistantPage({
         ],
         actionPlan: response.actionPlan || null,
       };
-      setMessages((prev) => [...prev, assistantMsg]);
-      if (response.caseProfile) {
-        setCaseProfile(response.caseProfile);
-        if (user?.uid && activeCaseId) {
-          updateAICaseData(user.uid, activeCaseId, response.caseProfile).catch(() => {});
+      const allMessages = [...messages, assistantMsg];
+      setMessages(allMessages);
+
+      if (response.caseProfile || response.actionPlan) {
+        const updated = {
+          ...caseProfile,
+          ...(response.caseProfile || {}),
+          actionPlan: response.actionPlan || caseProfile.actionPlan,
+        };
+        setCaseProfile(updated);
+        if (user?.uid) {
+          const chatIdToUse = activeCaseId || ('chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+          if (!activeCaseId) {
+            setActiveCaseId(chatIdToUse);
+          }
+          saveAIChat({
+            userId: user.uid,
+            chatId: chatIdToUse,
+            title: updated.title || 'Legal Action Plan',
+            messages: allMessages,
+            caseContext: updated,
+            caseProfile: updated,
+          }).then((saved) => {
+            setSavedCases((prev) => [saved, ...prev.filter(c => c.id !== chatIdToUse && c.chatId !== chatIdToUse)]);
+          }).catch((err) => {
+            console.warn('[AI Assistant] Save action plan chat failed:', err);
+          });
         }
       }
     } catch (err) {
@@ -533,11 +598,32 @@ export default function AIAssistantPage({
         ],
         expertSummary: response.expertSummary || null
       };
-      setMessages((prev) => [...prev, assistantMsg]);
-      if (response.caseProfile) {
-        setCaseProfile(response.caseProfile);
-        if (user?.uid && activeCaseId) {
-          updateAICaseData(user.uid, activeCaseId, response.caseProfile).catch(() => {});
+      const allMessages = [...messages, assistantMsg];
+      setMessages(allMessages);
+
+      if (response.caseProfile || response.expertSummary) {
+        const updated = {
+          ...caseProfile,
+          ...(response.caseProfile || {}),
+        };
+        setCaseProfile(updated);
+        if (user?.uid) {
+          const chatIdToUse = activeCaseId || ('chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+          if (!activeCaseId) {
+            setActiveCaseId(chatIdToUse);
+          }
+          saveAIChat({
+            userId: user.uid,
+            chatId: chatIdToUse,
+            title: updated.title || 'Advocate Case Brief',
+            messages: allMessages,
+            caseContext: updated,
+            caseProfile: updated,
+          }).then((saved) => {
+            setSavedCases((prev) => [saved, ...prev.filter(c => c.id !== chatIdToUse && c.chatId !== chatIdToUse)]);
+          }).catch((err) => {
+            console.warn('[AI Assistant] Save expert brief chat failed:', err);
+          });
         }
       }
     } catch (err) {
@@ -586,28 +672,7 @@ export default function AIAssistantPage({
     setIsProcessing(true);
 
     try {
-      let currentId = activeCaseId;
       const autoTitle = generateChatTitle(prompt, caseProfile);
-
-      // Create new Firestore case under authenticated user's UID
-      if (user?.uid && !currentId) {
-        try {
-          const created = await createAICase(user.uid, {
-            title: autoTitle,
-            caseType: caseProfile.caseType || 'Legal Situation Intake',
-            ...caseProfile
-          });
-          currentId = created.id;
-          setActiveCaseId(currentId);
-          setSavedCases((prev) => [created, ...prev.filter(c => c.id !== created.id)]);
-        } catch (fbErr) {
-          console.warn('[Firebase Case Save Warning]:', fbErr?.message || fbErr);
-        }
-      }
-
-      if (user?.uid && currentId) {
-        saveAICaseMessage(user.uid, currentId, userMsg).catch(() => {});
-      }
 
       // Compact sliding window: take only the last 10 clean conversational turns
       const recentHistory = updatedMessages
@@ -632,7 +697,7 @@ export default function AIAssistantPage({
           {
             id: 'err_' + Date.now(),
             role: 'assistant',
-            text: "Something went wrong while processing your request. Please check your connection and retry.",
+            text: response.message || response.reply || "Something went wrong while processing your request. Please check your connection and retry.",
             timestamp: new Date().toISOString(),
             isError: true,
             canRetry: true,
@@ -643,7 +708,7 @@ export default function AIAssistantPage({
       }
 
       const newProfile = response.caseProfile || response.caseUpdate;
-      const finalTitle = response.caseProfile?.title || newProfile?.title || autoTitle;
+      const finalTitle = response.caseProfile?.title || newProfile?.title || (caseProfile.title !== 'New Legal Situation Assessment' ? caseProfile.title : autoTitle);
 
       const assistantMsg = {
         id: 'ast_' + Date.now(),
@@ -655,26 +720,44 @@ export default function AIAssistantPage({
         highRisk: response.highRisk || (newProfile && (newProfile.urgency === 'High' || newProfile.urgency === 'Urgent' || newProfile.urgency === 'Critical')),
       };
 
-      setMessages((prev) => [...prev, assistantMsg]);
-
-      if (user?.uid && currentId) {
-        saveAICaseMessage(user.uid, currentId, assistantMsg).catch(() => {});
-      }
+      const finalMessages = [...updatedMessages, assistantMsg];
+      setMessages(finalMessages);
 
       // Update Case Profile with newly extracted intelligence
-      if (newProfile) {
-        const mergedProfile = {
-          ...caseProfile,
-          ...newProfile,
-          title: finalTitle,
-          actionPlan: response.actionPlan || newProfile.actionPlan || caseProfile.actionPlan,
-        };
-        setCaseProfile(mergedProfile);
+      const mergedProfile = {
+        ...caseProfile,
+        ...(newProfile || {}),
+        title: finalTitle,
+        actionPlan: response.actionPlan || newProfile?.actionPlan || caseProfile.actionPlan,
+      };
+      setCaseProfile(mergedProfile);
 
-        if (user?.uid && currentId) {
-          updateAICaseData(user.uid, currentId, mergedProfile).catch(() => {});
-          // Update title and profile in savedCases list
-          setSavedCases((prev) => prev.map((c) => c.id === currentId ? { ...c, ...mergedProfile, title: finalTitle } : c));
+      // Save to Firestore under authenticated user's UID (users/{uid}/aiChats/{chatId})
+      if (user?.uid) {
+        const chatIdToUse = activeCaseId || ('chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+        const isFirstExchange = !activeCaseId;
+
+        try {
+          const savedChat = await saveAIChat({
+            userId: user.uid,
+            chatId: chatIdToUse,
+            title: finalTitle,
+            messages: finalMessages,
+            caseContext: mergedProfile,
+            caseProfile: mergedProfile,
+          });
+
+          if (isFirstExchange) {
+            setActiveCaseId(chatIdToUse);
+          }
+
+          // Update Recent Chats immediately (most recent on top)
+          setSavedCases((prev) => {
+            const filtered = prev.filter((c) => c.id !== chatIdToUse && c.chatId !== chatIdToUse);
+            return [savedChat, ...filtered];
+          });
+        } catch (saveErr) {
+          console.warn('[AI Assistant] Firestore chat save error:', saveErr);
         }
       }
     } catch (err) {
@@ -763,19 +846,41 @@ export default function AIAssistantPage({
         ]
       };
 
-      setMessages((prev) => [...prev, analysisAssistantMsg]);
+      const allMessages = [...messages, docUploadMsg, analysisAssistantMsg];
+      setMessages(allMessages);
 
       // Merge extracted facts and dates into live profile
-      if (analysis.caseProfile) {
-        const updated = {
-          ...caseProfile,
-          ...analysis.caseProfile,
-          documents: [...(caseProfile.documents || []), file.name],
-        };
-        setCaseProfile(updated);
+      const updatedProfile = {
+        ...caseProfile,
+        ...(analysis.caseProfile || {}),
+        documents: Array.from(new Set([...(caseProfile.documents || []), file.name])),
+      };
+      setCaseProfile(updatedProfile);
 
-        if (user?.uid && activeCaseId) {
-          updateAICaseData(user.uid, activeCaseId, updated).catch(() => {});
+      if (user?.uid) {
+        const chatIdToUse = activeCaseId || ('chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+        const isFirstExchange = !activeCaseId;
+
+        try {
+          const savedChat = await saveAIChat({
+            userId: user.uid,
+            chatId: chatIdToUse,
+            title: updatedProfile.title || (`Analysis: ${file.name}`),
+            messages: allMessages,
+            caseContext: updatedProfile,
+            caseProfile: updatedProfile,
+          });
+
+          if (isFirstExchange) {
+            setActiveCaseId(chatIdToUse);
+          }
+
+          setSavedCases((prev) => {
+            const filtered = prev.filter((c) => c.id !== chatIdToUse && c.chatId !== chatIdToUse);
+            return [savedChat, ...filtered];
+          });
+        } catch (saveErr) {
+          console.warn('[AI Assistant] Error saving document chat:', saveErr);
         }
       }
     } catch (err) {

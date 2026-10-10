@@ -24,13 +24,21 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
     }
+    // User AI Documents (Strict Privacy: Only the authenticated owner UID can read or write)
+    match /users/{userId}/aiDocuments/{allPaths=**} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId && request.resource.size < 25 * 1024 * 1024;
+    }
+    // User Profile Photos (Public read for display, Owner write up to 5MB)
     match /profile-photos/{userId}/{allPaths=**} {
       allow read: if true;
-      allow write: if (isAuthenticated() && request.auth.uid == userId && request.resource.size < 5 * 1024 * 1024) || isAdmin();
+      allow write: if isAuthenticated() && request.auth.uid == userId && request.resource.size < 5 * 1024 * 1024;
+    }
+    match /users/{userId}/profile/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && request.auth.uid == userId && request.resource.size < 5 * 1024 * 1024;
     }
     match /{allPaths=**} {
-      allow read: if true;
-      allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
+      allow read, write: if isAdmin() && request.resource.size < 10 * 1024 * 1024;
     }
   }
 }

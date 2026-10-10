@@ -171,7 +171,7 @@ function DiagnosticCard({
   onClick,
   cardRef,
 }) {
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, x: 50, y: 50, isHovered: false });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -180,17 +180,24 @@ function DiagnosticCard({
     const percentX = (x / rect.width) * 2 - 1; // -1 to 1
     const percentY = (y / rect.height) * 2 - 1; // -1 to 1
     const maxTilt = 7.5;
-    setTilt({
-      rx: -percentY * maxTilt,
-      ry: percentX * maxTilt,
-      x: (x / rect.width) * 100,
-      y: (y / rect.height) * 100,
-      isHovered: true,
-    });
+    const rx = (-percentY * maxTilt).toFixed(2);
+    const ry = (percentX * maxTilt).toFixed(2);
+    const mx = ((x / rect.width) * 100).toFixed(1);
+    const my = ((y / rect.height) * 100).toFixed(1);
+
+    e.currentTarget.style.setProperty('--rx', `${rx}deg`);
+    e.currentTarget.style.setProperty('--ry', `${ry}deg`);
+    e.currentTarget.style.setProperty('--mx', `${mx}%`);
+    e.currentTarget.style.setProperty('--my', `${my}%`);
+    if (!isHovered) setIsHovered(true);
   };
 
-  const handleMouseLeave = () => {
-    setTilt({ rx: 0, ry: 0, x: 50, y: 50, isHovered: false });
+  const handleMouseLeave = (e) => {
+    e.currentTarget.style.removeProperty('--rx');
+    e.currentTarget.style.removeProperty('--ry');
+    e.currentTarget.style.removeProperty('--mx');
+    e.currentTarget.style.removeProperty('--my');
+    setIsHovered(false);
   };
 
   const { t } = useTranslation();
@@ -220,13 +227,13 @@ function DiagnosticCard({
       }}
       aria-label={`Problem: ${item.problem}. Tap to reveal solution.`}
       style={{
-        transform: tilt.isHovered
-          ? `perspective(800px) rotateX(${tilt.rx.toFixed(2)}deg) rotateY(${tilt.ry.toFixed(2)}deg) translateY(-6px)`
+        transform: isHovered
+          ? 'perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px)'
           : 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)',
-        boxShadow: tilt.isHovered
+        boxShadow: isHovered
           ? `0 18px 40px -8px ${item.glowColor}, 0 4px 16px -2px rgba(6,45,120,0.06), 0 0 0 1.5px ${item.borderGlow}`
           : '0 4px 20px rgba(6,45,120,0.05), 0 1px 2px rgba(0,0,0,0.04)',
-        transition: tilt.isHovered
+        transition: isHovered
           ? 'transform 0.12s ease-out, box-shadow 0.25s ease-out'
           : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
@@ -235,12 +242,12 @@ function DiagnosticCard({
       }`}
     >
       {/* Dynamic Cursor-following colored radial sheen */}
-      {tilt.isHovered && (
+      {isHovered && (
         <div
           aria-hidden="true"
           className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 220px at ${tilt.x}% ${tilt.y}%, ${item.glowColor}, transparent 70%)`,
+            background: `radial-gradient(circle 220px at var(--mx, 50%) var(--my, 50%), ${item.glowColor}, transparent 70%)`,
             opacity: 0.75,
           }}
         />

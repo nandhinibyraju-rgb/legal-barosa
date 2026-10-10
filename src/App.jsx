@@ -9,19 +9,19 @@ import VideoSection from './components/VideoSection';
 import HowItWorks from './components/HowItWorks';
 import ClientStoriesPreview from './components/ClientStoriesPreview';
 import OurServicesResolutionSection from './components/OurServicesResolutionSection';
-import AboutPage from './pages/AboutPage';
-import ServicesPage from './pages/ServicesPage';
-import HowItWorksPage from './pages/HowItWorksPage';
-import DashboardPage from './pages/DashboardPage';
-import AdminPage from './pages/AdminPage';
-import ServicePage from './pages/ServicePage';
-import BookConsultationPage from './pages/BookConsultationPage';
-import FAQPage from './pages/FAQPage';
-import ClientStoriesPage from './pages/ClientStoriesPage';
-import ArticlesPage from './pages/ArticlesPage';
-import ArticleDetailPage from './pages/ArticleDetailPage';
-import ProfilePage from './pages/ProfilePage';
-import ContactPage from './pages/ContactPage';
+const AboutPage = React.lazy(() => import('./pages/AboutPage'));
+const ServicesPage = React.lazy(() => import('./pages/ServicesPage'));
+const HowItWorksPage = React.lazy(() => import('./pages/HowItWorksPage'));
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+const AdminPage = React.lazy(() => import('./pages/AdminPage'));
+const ServicePage = React.lazy(() => import('./pages/ServicePage'));
+const BookConsultationPage = React.lazy(() => import('./pages/BookConsultationPage'));
+const FAQPage = React.lazy(() => import('./pages/FAQPage'));
+const ClientStoriesPage = React.lazy(() => import('./pages/ClientStoriesPage'));
+const ArticlesPage = React.lazy(() => import('./pages/ArticlesPage'));
+const ArticleDetailPage = React.lazy(() => import('./pages/ArticleDetailPage'));
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const AIAssistantPage = React.lazy(() => import('./pages/AIAssistantPage'));
 import Footer from './components/Footer';
 import ReviewsSlideoutWidget from './components/ReviewsSlideoutWidget';
@@ -403,10 +403,17 @@ export default function App() {
         </div>
       )}
 
-      {/* Client-Side Application Routes */}
-      <Routes>
-        {/* 1. Landing Page */}
-        <Route 
+      {/* Client-Side Application Routes with Lazy-Loading Suspense */}
+      <React.Suspense
+        fallback={
+          <div className="min-h-[70vh] w-full flex items-center justify-center bg-white">
+            <div className="w-8 h-8 border-3 border-[#0B2A5B]/20 border-t-[#168CFF] rounded-full animate-spin" />
+          </div>
+        }
+      >
+        <Routes>
+          {/* 1. Landing Page */}
+          <Route 
           path="/" 
           element={
             <HomePage
@@ -691,18 +698,12 @@ export default function App() {
         <Route 
           path="/ai-assistant" 
           element={
-            <React.Suspense fallback={
-              <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
-                <div className="w-8 h-8 border-3 border-[#0B2A5B] border-t-[#168CFF] rounded-full animate-spin" />
-              </div>
-            }>
-              <AIAssistantPage
-                user={user}
-                userProfile={userProfile}
-                onOpenConsult={handleOpenConsult}
-                onOpenSignIn={() => setSignInModalOpen(true)}
-              />
-            </React.Suspense>
+            <AIAssistantPage
+              user={user}
+              userProfile={userProfile}
+              onOpenConsult={handleOpenConsult}
+              onOpenSignIn={() => setSignInModalOpen(true)}
+            />
           } 
         />
         <Route path="/ai" element={<Navigate to="/ai-assistant" replace />} />
@@ -710,6 +711,7 @@ export default function App() {
         {/* Catch-all redirect to Home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </React.Suspense>
 
       {/* WhatsApp Feedback Confirmation Toast */}
       {whatsappToast && (
@@ -771,7 +773,10 @@ export default function App() {
         onClose={() => setSignInModalOpen(false)}
         onSuccess={() => {
           setSignInModalOpen(false);
-          navigate('/dashboard');
+          // Preserve AI assistant page so user's draft and context are restored seamlessly
+          if (!location.pathname.startsWith('/ai')) {
+            navigate('/dashboard');
+          }
         }}
       />
     </div>

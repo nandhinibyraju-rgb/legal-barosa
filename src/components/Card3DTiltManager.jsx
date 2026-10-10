@@ -119,11 +119,25 @@ export default function Card3DTiltManager() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    let rafId = null;
+    let pendingEvent = null;
+
+    const handleThrottledMouseMove = (e) => {
+      pendingEvent = e;
+      if (!rafId) {
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          if (pendingEvent) handleMouseMove(pendingEvent);
+        });
+      }
+    };
+
+    window.addEventListener('mousemove', handleThrottledMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeaveWindow, { passive: true });
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', handleThrottledMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeaveWindow);
       if (currentCard) {
         resetCard(currentCard);
